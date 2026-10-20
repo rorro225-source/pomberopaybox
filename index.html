@@ -103,7 +103,6 @@
                         <button type="button" onclick="openNewMemberModal()" class="bg-blue-600 hover:bg-blue-500 text-white px-2.5 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer">+ Nuevo Socio</button>
                         <button type="button" onclick="openRetireModal()" class="bg-amber-600 hover:bg-amber-500 text-white px-2.5 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer">Retirar Socio / Bajas</button>
                         <button type="button" onclick="openNewMonthModal()" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer">+ Mes</button>
-                        
                     </div>
 
                     <!-- Toggle Admin Button if currently in Socio mode -->
@@ -666,7 +665,7 @@
                     errEl.textContent = 'PIN incorrecto. Ingresa el PIN correcto para entrar como Administrador.';
                     errEl.classList.remove('hidden');
                 } else {
-                    alert('PIN incorrecto. El PIN de administrador es 1234.');
+                    alert('PIN incorrecto. Acceso denegado.');
                 }
             }
         }
@@ -689,7 +688,7 @@
         }
 
         function promptAdminPinQuick() {
-            const pin = prompt('Ingresa el PIN de Administrador (1234):');
+            const pin = prompt('Ingresa el PIN de Administrador confidencial:');
             if (pin !== null) {
                 if (pin.trim() === ADMIN_PIN || pin.trim().toLowerCase() === 'admin') {
                     activateAdminSession();
@@ -1266,13 +1265,6 @@
                 initApp();
                 renderLoginProfiles();
             }
-        }
-
-        );
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = 'index.html';
-            a.click();
         }
 
         // BOOTSTRAP
