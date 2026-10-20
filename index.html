@@ -51,7 +51,7 @@
                     </div>
                 </div>
                 <div class="sm:text-right bg-slate-900/70 sm:bg-transparent p-3 sm:p-0 rounded-xl border border-slate-800 sm:border-0">
-                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">SALDO ACTUAL EN CAJA</span>
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">SALDO ACTUAL EN FONDO</span>
                     <span id="loginTotalBalance" class="text-xl md:text-2xl font-black text-emerald-400">Gs. 3.380.000</span>
                 </div>
             </div>
@@ -109,9 +109,10 @@
                         🎮
                     </div>
                     <div>
-                        <div class="flex items-center gap-2">
+                        <div class="flex items-center gap-2 flex-wrap">
                             <h1 class="font-extrabold text-sm sm:text-base text-white tracking-tight">POMBERO GAMER TEAM • FONDO SOLIDARIO</h1>
                             <span id="roleBadgeHeader" class="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">Modo Socio</span>
+                            <span id="syncStatusBadge" class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">☁️ Sincronizado</span>
                         </div>
                         <p id="sessionRoleText" class="text-xs text-slate-400">Viendo como socio</p>
                     </div>
@@ -178,7 +179,7 @@
                 </div>
             </div>
 
-            <!-- Debtors Alert Widget (Feature 4) -->
+            <!-- Debtors Alert Widget (Admin Only) -->
             <div id="debtorsAlertCard" class="glass-card p-4 rounded-2xl mb-5 border border-amber-500/30 bg-amber-500/5 hidden no-print">
                 <div class="flex items-center justify-between">
                     <h3 class="text-xs font-bold text-amber-300 uppercase tracking-wider flex items-center gap-2">
@@ -267,34 +268,36 @@
                             <div class="min-w-0 flex-1">
                                 <span id="memberRoleBadge" class="inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-400 mb-1">Socio Activo</span>
                                 <h3 id="selectedMemberName" class="text-base font-extrabold text-white truncate">RODRIGO SERVIÁN RIVAS</h3>
-                                <p id="memberSinceText" class="text-xs text-slate-400">Activo desde ABRIL 2026</p>
+                                <p id="memberCurrentGameDisplay" class="text-xs text-emerald-400 font-bold truncate mt-0.5">🎮 Retro & Sims</p>
+                                <p id="memberSinceText" class="text-[11px] text-slate-400 mt-0.5">Activo desde ABRIL 2026</p>
                             </div>
                         </div>
 
-                        <!-- Current Game Field (New Request) -->
-                        <div class="mb-4 bg-slate-900/80 p-3.5 rounded-2xl border border-slate-800">
-                            <span class="text-[11px] text-slate-300 font-bold block mb-1">🎮 Juego que estoy jugando actualmente:</span>
-                            <div class="flex items-center gap-2">
-                                <input type="text" id="memberCurrentGameInput" placeholder="Ej. eFootball 2026, FC 26..." class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 flex-1">
-                                <button type="button" onclick="saveMemberCurrentGame()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold cursor-pointer">Guardar</button>
-                            </div>
-                        </div>
-
-                        <!-- Avatar Free Emoji Input & PIN configuration -->
-                        <div class="mb-4 space-y-3 bg-slate-900/80 p-3.5 rounded-2xl border border-slate-800">
-                            <div>
-                                <span class="text-[11px] text-slate-300 font-bold block mb-1">Cambiar Icono / Emojis (Escribe cualquier emoji):</span>
+                        <!-- Personal Editable Settings (Visible only to profile owner or Admin) -->
+                        <div id="memberPersonalConfigPanel" class="space-y-3 mb-4">
+                            <div class="bg-slate-900/80 p-3.5 rounded-2xl border border-slate-800">
+                                <span class="text-[11px] text-slate-300 font-bold block mb-1">🎮 Juego que estoy jugando actualmente:</span>
                                 <div class="flex items-center gap-2">
-                                    <input type="text" id="memberEmojiInput" placeholder="🎮" maxlength="4" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-base text-center w-16 text-white focus:outline-none focus:border-emerald-500">
-                                    <button type="button" onclick="saveMemberEmojiFree()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold cursor-pointer flex-1">Guardar Emoji</button>
+                                    <input type="text" id="memberCurrentGameInput" placeholder="Ej. eFootball 2026, FC 26..." class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 flex-1">
+                                    <button type="button" onclick="saveMemberCurrentGame()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold cursor-pointer">Guardar</button>
                                 </div>
                             </div>
 
-                            <div class="pt-2 border-t border-slate-800">
-                                <span class="text-[11px] text-slate-300 font-bold block mb-1">Tu PIN Personal de Acceso:</span>
-                                <div class="flex items-center gap-2">
-                                    <input type="text" id="memberPinEditInput" placeholder="Ej. 1234" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 flex-1">
-                                    <button type="button" onclick="saveMemberPin()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold cursor-pointer">Guardar PIN</button>
+                            <div class="space-y-3 bg-slate-900/80 p-3.5 rounded-2xl border border-slate-800">
+                                <div>
+                                    <span class="text-[11px] text-slate-300 font-bold block mb-1">Cambiar Icono / Emojis (Escribe cualquier emoji):</span>
+                                    <div class="flex items-center gap-2">
+                                        <input type="text" id="memberEmojiInput" placeholder="🎮" maxlength="4" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-base text-center w-16 text-white focus:outline-none focus:border-emerald-500">
+                                        <button type="button" onclick="saveMemberEmojiFree()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold cursor-pointer flex-1">Guardar Emoji</button>
+                                    </div>
+                                </div>
+
+                                <div class="pt-2 border-t border-slate-800">
+                                    <span class="text-[11px] text-slate-300 font-bold block mb-1">Tu PIN Personal de Acceso:</span>
+                                    <div class="flex items-center gap-2">
+                                        <input type="text" id="memberPinEditInput" placeholder="Ej. 1234" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 flex-1">
+                                        <button type="button" onclick="saveMemberPin()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold cursor-pointer">Guardar PIN</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -318,14 +321,14 @@
                         <div>
                             <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-2">Historial mes a mes del socio (con fecha exacta)</span>
                             <div id="memberMonthlyPills" class="space-y-1.5 max-h-48 overflow-y-auto no-scrollbar">
-                                <!-- Populated by JS with exact payment dates -->
+                                <!-- Populated by JS -->
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- View 2: Full Members Summary Table (When RESUMEN SOCIOS tab is clicked) -->
+            <!-- View 2: Full Members Summary Table & Loan History -->
             <div id="summaryViewContainer" class="hidden space-y-5">
                 <div class="glass-card rounded-3xl overflow-hidden shadow-xl mb-5">
                     <div class="p-5 border-b border-slate-800 flex flex-wrap items-center justify-between gap-2 bg-slate-900/60">
@@ -351,7 +354,7 @@
                     </div>
                 </div>
 
-                <!-- Loan / Credit History Tab Section (New Feature requested) -->
+                <!-- Loan / Credit History Tab Section -->
                 <div class="glass-card rounded-3xl p-6 shadow-xl">
                     <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-800">
                         <div>
@@ -364,9 +367,9 @@
                             <thead>
                                 <tr class="bg-slate-950/70 text-[11px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-800">
                                     <th class="py-3 px-4">Mes</th>
-                                    <th class="py-3 px-4">Concepto / Préstamo</th>
-                                    <th class="py-3 px-3">Fecha Entrega</th>
-                                    <th class="py-3 px-4 text-right">Monto Prestado</th>
+                                    <th class="py-3 px-4">Concepto / Préstamo / Devolución</th>
+                                    <th class="py-3 px-3">Fecha</th>
+                                    <th class="py-3 px-4 text-right">Monto Egreso</th>
                                     <th class="py-3 px-4 text-right">Devolución / Estado</th>
                                 </tr>
                             </thead>
@@ -600,20 +603,36 @@
 
         let currentActiveTab = 'OCTUBRE';
         let currentUserRole = 'socio';
+        let loggedInMemberId = 'm5';
         let currentSelectedMemberId = 'm5';
         let showRetiredInLogin = false;
+
+        function ensureMemberDefaults() {
+            membersData.forEach(m => {
+                const def = defaultMembers.find(d => d.id === m.id);
+                if (m.currentGame === undefined) {
+                    m.currentGame = def ? def.currentGame : '';
+                }
+                if (!m.emoji) {
+                    m.emoji = def ? def.emoji : '🎮';
+                }
+            });
+        }
 
         // Cloud Google Sheets Sync
         async function loadCloudState() {
             try {
-                const res = await fetch(SCRIPT_URL);
+                const res = await fetch(SCRIPT_URL + '?t=' + Date.now(), { cache: 'no-store' });
                 const data = await res.json();
-                if (data && data.monthsList) {
+                if (data && Array.isArray(data.monthsList) && Array.isArray(data.membersData)) {
                     monthsList = data.monthsList;
                     membersData = data.membersData;
-                    contributionsData = data.contributionsData;
-                    extraMovementsData = data.extraMovementsData;
-                    if (data.monthNotesData) monthNotesData = data.monthNotesData;
+                    contributionsData = data.contributionsData || {};
+                    extraMovementsData = data.extraMovementsData || {};
+                    monthNotesData = data.monthNotesData || {};
+                    ensureMemberDefaults();
+                } else {
+                    loadLocalFallback();
                 }
             } catch (e) {
                 console.warn('Usando respaldo local o error al conectar con Google Sheets:', e);
@@ -637,6 +656,7 @@
                     if (parsed.contributionsData) contributionsData = parsed.contributionsData;
                     if (parsed.extraMovementsData) extraMovementsData = parsed.extraMovementsData;
                     if (parsed.monthNotesData) monthNotesData = parsed.monthNotesData;
+                    ensureMemberDefaults();
                 }
             } catch (err) {
                 console.warn('Fallback local falló:', err);
@@ -652,6 +672,12 @@
                 monthNotesData
             };
 
+            const badge = document.getElementById('syncStatusBadge');
+            if (badge) {
+                badge.textContent = '⏳ Guardando...';
+                badge.className = 'text-[10px] font-semibold px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30';
+            }
+
             try {
                 localStorage.setItem('pombero_caja_local_backup', JSON.stringify(payload));
             } catch(e) {}
@@ -662,8 +688,16 @@
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify(payload)
                 });
+                if (badge) {
+                    badge.textContent = '☁️ Sincronizado';
+                    badge.className = 'text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20';
+                }
             } catch (e) {
                 console.error('Error al sincronizar con Google Sheets:', e);
+                if (badge) {
+                    badge.textContent = '⚠️ Guardado local';
+                    badge.className = 'text-[10px] font-semibold px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-300 border border-rose-500/30';
+                }
             }
         }
 
@@ -734,8 +768,8 @@
 
             navigator.clipboard.writeText(report).then(() => {
                 alert('¡Resumen copiado al portapapeles! Ya puedes pegarlo en el grupo de WhatsApp.');
-            }).catch(err => {
-                alert('No se pudo copiar automáticamente, pero puedes ver el reporte en consola.');
+            }).catch(() => {
+                prompt('Copia este resumen para WhatsApp:', report);
             });
         }
 
@@ -767,7 +801,7 @@
             });
         }
 
-        // Feature 4: Render Debtors Alert Widget for current/active month (Admin only)
+        // Render Debtors Alert Widget for current/active month (Admin only)
         function renderDebtorsAlert() {
             const activeMo = currentActiveTab === 'RESUMEN' ? monthsList[monthsList.length - 1] : currentActiveTab;
             const activeMembers = getActiveMembersForMonth(activeMo);
@@ -799,7 +833,7 @@
             }
         }
 
-        // Feature 3: Save Treasury Note
+        // Save Treasury Note
         function saveCurrentMonthNote() {
             const activeMo = currentActiveTab === 'RESUMEN' ? monthsList[monthsList.length - 1] : currentActiveTab;
             const noteText = document.getElementById('monthNoteInput').value.trim();
@@ -819,7 +853,7 @@
             if (loginTotalEl) loginTotalEl.textContent = formatGs(calc.finalBalance);
 
             membersData.forEach(m => {
-                const isRetired = m.retiradoDesde !== null;
+                const isRetired = m.retiradoDesde !== null && m.retiradoDesde !== '';
                 if (isRetired && !showRetiredInLogin) return;
 
                 const card = document.createElement('button');
@@ -829,7 +863,7 @@
                     : 'border-slate-800 bg-slate-900/60 hover:border-slate-600';
 
                 card.className = `p-4 rounded-2xl border ${borderClass} flex flex-col items-center text-center transition group cursor-pointer ${isRetired ? 'opacity-60' : ''}`;
-                card.onclick = () => loginAsMember(m.id);
+                card.onclick = () => loginAsMember(m.id, false);
 
                 const currentGameText = m.currentGame ? `🎮 ${m.currentGame}` : '🎮 Sin juego asignado';
 
@@ -858,29 +892,30 @@
                 alert('Por favor ingresa tu PIN personal.');
                 return;
             }
-            const found = membersData.find(m => m.pin && m.pin === inputPin);
+            const found = membersData.find(m => m.pin && String(m.pin).trim() === inputPin);
             if (found) {
                 document.getElementById('partnerQuickPinInput').value = '';
-                loginAsMember(found.id);
+                loginAsMember(found.id, true);
             } else {
                 alert('PIN de socio incorrecto. Verifica tu PIN personal.');
             }
         }
 
-        function loginAsMember(memberId) {
+        function loginAsMember(memberId, skipPinPrompt) {
             const mem = membersData.find(m => m.id === memberId);
             if (!mem) return;
 
-            if (mem.pin && mem.pin.trim() !== '') {
+            if (!skipPinPrompt && mem.pin && String(mem.pin).trim() !== '') {
                 const enteredPin = prompt(`Ingresa el PIN personal para acceder a ${mem.shortName || mem.name}:`);
                 if (enteredPin === null) return;
-                if (enteredPin.trim() !== mem.pin) {
+                if (enteredPin.trim() !== String(mem.pin).trim()) {
                     alert('PIN incorrecto. Acceso denegado a este perfil.');
                     return;
                 }
             }
 
             currentUserRole = 'socio';
+            loggedInMemberId = memberId;
             currentSelectedMemberId = memberId;
 
             document.getElementById('loginScreen').style.display = 'none';
@@ -890,7 +925,7 @@
             document.getElementById('adminColHeader').classList.add('hidden');
 
             const badge = document.getElementById('roleBadgeHeader');
-            badge.textContent = 'Modo Lectura (Socio)';
+            badge.textContent = 'Modo Socio';
             badge.className = 'text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700';
 
             document.getElementById('sessionRoleText').textContent = `Sesión iniciada como: ${mem.name}`;
@@ -923,6 +958,7 @@
 
         function activateAdminSession() {
             currentUserRole = 'admin';
+            loggedInMemberId = 'm5';
             currentSelectedMemberId = 'm5';
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('mainApp').style.display = 'flex';
@@ -1056,7 +1092,6 @@
                 container.appendChild(btn);
             });
 
-            // Add RESUMEN SOCIOS tab
             const isResumen = currentActiveTab === 'RESUMEN';
             const resBtn = document.createElement('button');
             resBtn.type = 'button';
@@ -1085,7 +1120,7 @@
             document.getElementById('kpiMonthIncome').textContent = formatGs(mStat.pureIncome);
             document.getElementById('kpiMonthExpense').textContent = formatGs(mStat.pureExpense);
 
-            // Populate monthly note input and toggle visibility for admin only
+            // Toggle visibility of treasury notes for admin only
             const treasurySection = document.getElementById('treasuryNotesSection');
             const noteInput = document.getElementById('monthNoteInput');
             if (treasurySection) {
@@ -1123,7 +1158,6 @@
             const isAdmin = currentUserRole === 'admin';
             document.getElementById('adminColHeader').classList.toggle('hidden', !isAdmin);
 
-            // 1. Carry-over row if not first month
             const mIdx = monthsList.indexOf(monthName);
             if (mIdx > 0) {
                 const trCarry = document.createElement('tr');
@@ -1138,7 +1172,6 @@
                 tbody.appendChild(trCarry);
             }
 
-            // 2. Active Member rows
             const moContribs = contributionsData[monthName] || {};
             activeMembers.forEach(m => {
                 const c = moContribs[m.id] || { amount: 0, date: '', status: 'empty' };
@@ -1162,8 +1195,10 @@
                     <td class="py-3 px-4 font-semibold text-white">
                         <div class="flex items-center gap-2.5">
                             ${avatarMini}
-                            <span>${m.name}</span>
-                            ${statusBadge}
+                            <div>
+                                <span class="block">${m.name} ${statusBadge}</span>
+                                ${m.currentGame ? `<span class="text-[10px] text-emerald-400 font-medium block">🎮 ${m.currentGame}</span>` : ''}
+                            </div>
                         </div>
                     </td>
                     <td class="py-3 px-3 text-xs text-slate-400">${c.date || '-'}</td>
@@ -1183,7 +1218,6 @@
                 tbody.appendChild(tr);
             });
 
-            // 3. Extra Movements / Loans
             const extras = extraMovementsData[monthName] || [];
             extras.forEach((ex, idx) => {
                 const tr = document.createElement('tr');
@@ -1193,7 +1227,7 @@
                     <td class="py-3 px-4 font-semibold ${isExpense ? 'text-amber-300' : 'text-blue-300'}">
                         <div class="flex items-center gap-2">
                             <span>${isExpense ? '📤' : '📥'}</span>
-                            <span>${ex.desc}</span>
+                            <span>${ex.desc || ''}</span>
                         </div>
                     </td>
                     <td class="py-3 px-3 text-xs text-slate-400">${ex.date || '-'}</td>
@@ -1208,7 +1242,6 @@
                 tbody.appendChild(tr);
             });
 
-            // Footer Totals matching Excel
             tfoot.innerHTML = `
                 <tr>
                     <td class="py-3.5 px-4 text-white">TOTAL ${monthName} 2026</td>
@@ -1316,7 +1349,12 @@
             if (!member) return;
 
             document.getElementById('selectedMemberName').textContent = member.name;
-            const isRetired = member.retiradoDesde !== null;
+            const gameDisplay = document.getElementById('memberCurrentGameDisplay');
+            if (gameDisplay) {
+                gameDisplay.textContent = member.currentGame ? `🎮 Jugando: ${member.currentGame}` : '🎮 Sin juego asignado';
+            }
+
+            const isRetired = member.retiradoDesde !== null && member.retiradoDesde !== '';
 
             const badge = document.getElementById('memberRoleBadge');
             if (isRetired) {
@@ -1334,15 +1372,23 @@
             const avatarContainer = document.getElementById('memberAvatarContainer');
             avatarContainer.innerHTML = `<span class="text-2xl">${member.emoji || '🎮'}</span>`;
 
-            // Set inputs
-            const pinInput = document.getElementById('memberPinEditInput');
-            if (pinInput) pinInput.value = member.pin || '';
+            // Only show personal edit panel if Admin or viewing own profile
+            const configPanel = document.getElementById('memberPersonalConfigPanel');
+            const canEditProfile = (currentUserRole === 'admin') || (currentSelectedMemberId === loggedInMemberId);
+            if (configPanel) {
+                configPanel.classList.toggle('hidden', !canEditProfile);
+            }
 
-            const emojiInput = document.getElementById('memberEmojiInput');
-            if (emojiInput) emojiInput.value = member.emoji || '🎮';
+            if (canEditProfile) {
+                const pinInput = document.getElementById('memberPinEditInput');
+                if (pinInput) pinInput.value = member.pin || '';
 
-            const gameInput = document.getElementById('memberCurrentGameInput');
-            if (gameInput) gameInput.value = member.currentGame || '';
+                const emojiInput = document.getElementById('memberEmojiInput');
+                if (emojiInput) emojiInput.value = member.emoji || '🎮';
+
+                const gameInput = document.getElementById('memberCurrentGameInput');
+                if (gameInput) gameInput.value = member.currentGame || '';
+            }
 
             const st = getMemberStats(member);
             document.getElementById('memberTotalContributed').textContent = formatGs(st.totalContributed);
@@ -1358,7 +1404,6 @@
                 alertText.textContent = 'Al día con todos los meses cerrados.';
             }
 
-            // Detailed Payment History with exact dates
             const pillsContainer = document.getElementById('memberMonthlyPills');
             pillsContainer.innerHTML = '';
             st.perMonthStatus.forEach(p => {
@@ -1378,7 +1423,7 @@
             });
         }
 
-        // Feature: Render Loan History Table in Summary view
+        // Render Loan History Table in Summary view
         function renderLoanHistoryTable() {
             const tbody = document.getElementById('loanHistoryTableBody');
             if (!tbody) return;
@@ -1388,14 +1433,14 @@
             monthsList.forEach(mo => {
                 const extras = extraMovementsData[mo] || [];
                 extras.forEach(ex => {
-                    const descUpper = ex.desc.toUpperCase();
-                    if (descUpper.includes('PRÉSTAMO') || descUpper.includes('GARANTÍA') || Number(ex.expense) > 0) {
+                    const descUpper = (ex.desc || '').toUpperCase();
+                    if (descUpper.includes('PRÉSTAMO') || descUpper.includes('PRESTAMO') || descUpper.includes('GARANTÍA') || descUpper.includes('GARANTIA') || descUpper.includes('DEVUELVE') || Number(ex.expense) > 0) {
                         loanRows.push({
                             month: mo,
-                            desc: ex.desc,
+                            desc: ex.desc || '',
                             date: ex.date || mo,
                             amount: ex.expense ? formatGs(ex.expense) : '-',
-                            status: ex.income ? `Devuelto/Ingreso (${formatGs(ex.income)})` : 'Activo en curso ⏳'
+                            status: ex.income ? `Devuelto/Ingreso (${formatGs(ex.income)})` : 'Egreso / En curso ⏳'
                         });
                     }
                 });
@@ -1420,7 +1465,7 @@
             });
         }
 
-        // Feature 1: Loyalty Ranking in Summary Table
+        // Loyalty Ranking in Summary Table
         function renderSummaryTable() {
             const tbody = document.getElementById('summaryMembersTableBody');
             tbody.innerHTML = '';
@@ -1431,7 +1476,7 @@
 
             ranked.forEach((item, index) => {
                 const { m, st } = item;
-                const isRetired = m.retiradoDesde !== null;
+                const isRetired = m.retiradoDesde !== null && m.retiradoDesde !== '';
                 const tr = document.createElement('tr');
                 tr.className = 'hover:bg-slate-900/50 transition';
 
@@ -1444,7 +1489,10 @@
                     <td class="py-3.5 px-4 font-bold text-white flex items-center gap-2.5">
                         <span class="text-base">${rankBadge}</span>
                         <span class="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-sm">${m.emoji || '🎮'}</span>
-                        <span>${m.name}</span>
+                        <div>
+                            <span class="block">${m.name}</span>
+                            ${m.currentGame ? `<span class="text-[10px] text-emerald-400 font-medium block">🎮 ${m.currentGame}</span>` : ''}
+                        </div>
                     </td>
                     <td class="py-3.5 px-4 text-xs">
                         ${isRetired
@@ -1461,17 +1509,6 @@
                 `;
                 tbody.appendChild(tr);
             });
-        }
-
-        function setMemberEmoji(emoji) {
-            const mem = membersData.find(m => m.id === currentSelectedMemberId);
-            if (mem) {
-                mem.emoji = emoji;
-                saveState();
-                updateMemberProfileCard();
-                renderLoginProfiles();
-                updateDashboard();
-            }
         }
 
         function saveMemberEmojiFree() {
@@ -1495,6 +1532,7 @@
                 saveState();
                 updateMemberProfileCard();
                 renderLoginProfiles();
+                updateDashboard();
                 alert(`¡Juego actual actualizado para ${mem.name}!`);
             }
         }
