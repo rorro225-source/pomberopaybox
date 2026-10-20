@@ -43,11 +43,17 @@
                 <div class="flex items-center justify-between mb-4">
                     <h2 class="text-sm font-bold text-slate-200 flex items-center gap-2">
                         <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                        Selecciona tu perfil de Socio para ingresar:
+                        Selecciona tu perfil de Socio (o ingresa tu PIN personal):
                     </h2>
                     <button type="button" onclick="toggleRetiredLogin()" id="retiredToggleBtn" class="text-xs text-slate-400 hover:text-emerald-400 transition underline cursor-pointer">
                         Ver ex-socios retirados
                     </button>
+                </div>
+
+                <!-- Quick PIN login for partners -->
+                <div class="mb-4 bg-slate-900/60 p-3 rounded-2xl border border-slate-800 flex items-center gap-2">
+                    <input type="password" id="partnerQuickPinInput" placeholder="Ingresa tu PIN personal de socio..." class="bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 flex-1">
+                    <button type="button" onclick="loginByPartnerPin()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-xl font-bold text-xs transition cursor-pointer whitespace-nowrap">Ingresar con PIN</button>
                 </div>
 
                 <div id="loginProfilesGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -63,14 +69,12 @@
                     </div>
                     <div>
                         <h3 class="text-xs sm:text-sm font-bold text-white">¿Eres Rodrigo Servián (Administrador)?</h3>
-                        <p class="text-[11px] text-slate-400">Ingresa directo con tu PIN para habilitar toda la edición contable</p>
+                        <p class="text-[11px] text-slate-400">Ingresa con tu PIN confidencial</p>
                     </div>
                 </div>
                 <form onsubmit="handleAdminLoginForm(event)" class="flex items-center gap-2 w-full sm:w-auto">
-                    <input type="password" id="adminPinInput" placeholder="PIN Admin Securizado" autocomplete="off" class="bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 w-full sm:w-44">
-                    <button type="submit" id="btnEntrarAdmin" class="bg-purple-600 hover:bg-purple-500 active:bg-purple-700 text-white px-5 py-2.5 rounded-xl font-bold text-sm transition shadow-lg shadow-purple-600/30 whitespace-nowrap cursor-pointer">
-                        Entrar Admin
-                    </button>
+                    <input type="password" id="adminPinInput" placeholder="PIN Admin" autocomplete="off" class="bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 w-full sm:w-36">
+                    <button type="submit" id="btnEntrarAdmin" class="bg-purple-600 hover:bg-purple-500 text-white px-4 py-2 rounded-xl font-bold text-xs transition cursor-pointer whitespace-nowrap">Entrar Admin</button>
                 </form>
             </div>
             <p id="loginErrorMsg" class="text-xs text-rose-400 font-semibold text-right mt-2 hidden"></p>
@@ -99,9 +103,9 @@
                 <div class="flex flex-wrap items-center gap-2">
                     <!-- Admin Toolbar -->
                     <div id="adminControls" class="hidden flex flex-wrap items-center gap-1.5 bg-purple-950/40 border border-purple-700/40 p-1.5 rounded-xl">
-                        <button type="button" onclick="openMovementModal()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-2.5 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer">+ Movimiento / Préstamo</button>
+                        <button type="button" onclick="openMovementModal()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-2.5 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer">+ Movimiento</button>
                         <button type="button" onclick="openNewMemberModal()" class="bg-blue-600 hover:bg-blue-500 text-white px-2.5 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer">+ Nuevo Socio</button>
-                        <button type="button" onclick="openRetireModal()" class="bg-amber-600 hover:bg-amber-500 text-white px-2.5 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer">Retirar Socio / Bajas</button>
+                        <button type="button" onclick="openRetireModal()" class="bg-amber-600 hover:bg-amber-500 text-white px-2.5 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer">Bajas</button>
                         <button type="button" onclick="openNewMonthModal()" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer">+ Mes</button>
                     </div>
 
@@ -111,7 +115,7 @@
                     </button>
 
                     <button type="button" onclick="logoutToLogin()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-xl text-xs font-bold transition border border-slate-700 cursor-pointer">
-                        Cambiar Usuario
+                        Cerrar Sesión
                     </button>
                 </div>
             </div>
@@ -178,10 +182,8 @@
                                     </tr>
                                 </thead>
                                 <tbody id="monthTableBody" class="divide-y divide-slate-800/60 text-xs sm:text-sm">
-                                    <!-- Populated by JS -->
                                 </tbody>
                                 <tfoot id="monthTableFoot" class="bg-slate-950/90 border-t-2 border-slate-800 font-bold text-xs sm:text-sm">
-                                    <!-- Populated by JS -->
                                 </tfoot>
                             </table>
                         </div>
@@ -202,10 +204,6 @@
                                 <div id="memberAvatarContainer" class="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center text-2xl shadow-lg overflow-hidden border border-white/10">
                                     🎮
                                 </div>
-                                <label class="absolute inset-0 bg-black/70 rounded-2xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition cursor-pointer text-[10px] font-bold text-white text-center p-1">
-                                    Subir Foto
-                                    <input type="file" accept="image/*" class="hidden" onchange="uploadProfilePhoto(event)">
-                                </label>
                             </div>
                             <div class="min-w-0 flex-1">
                                 <span id="memberRoleBadge" class="inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-400 mb-1">Socio Activo</span>
@@ -214,18 +212,29 @@
                             </div>
                         </div>
 
-                        <!-- Avatar Emoji Picker -->
-                        <div class="mb-4">
-                            <span class="text-[11px] text-slate-400 block mb-1.5">Cambiar ícono gamer o subir foto tocando el avatar:</span>
-                            <div class="flex items-center gap-1.5 flex-wrap">
-                                <button type="button" onclick="setMemberEmoji('🎮')" class="w-8 h-8 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 flex items-center justify-center text-sm cursor-pointer">🎮</button>
-                                <button type="button" onclick="setMemberEmoji('🔥')" class="w-8 h-8 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 flex items-center justify-center text-sm cursor-pointer">🔥</button>
-                                <button type="button" onclick="setMemberEmoji('👑')" class="w-8 h-8 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 flex items-center justify-center text-sm cursor-pointer">👑</button>
-                                <button type="button" onclick="setMemberEmoji('⚡')" class="w-8 h-8 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 flex items-center justify-center text-sm cursor-pointer">⚡</button>
-                                <button type="button" onclick="setMemberEmoji('🛡️')" class="w-8 h-8 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 flex items-center justify-center text-sm cursor-pointer">🛡️</button>
-                                <button type="button" onclick="setMemberEmoji('🐉')" class="w-8 h-8 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 flex items-center justify-center text-sm cursor-pointer">🐉</button>
-                                <button type="button" onclick="setMemberEmoji('🎯')" class="w-8 h-8 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 flex items-center justify-center text-sm cursor-pointer">🎯</button>
-                                <button type="button" onclick="setMemberEmoji('🚀')" class="w-8 h-8 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 flex items-center justify-center text-sm cursor-pointer">🚀</button>
+                        <!-- Avatar Emoji Picker & PIN configuration -->
+                        <div class="mb-4 space-y-3 bg-slate-900/80 p-3.5 rounded-2xl border border-slate-800">
+                            <div>
+                                <span class="text-[11px] text-slate-300 font-bold block mb-1.5">Elegir Emoji de Perfil:</span>
+                                <div class="flex items-center gap-1.5 flex-wrap">
+                                    <button type="button" onclick="setMemberEmoji('🎮')" class="w-8 h-8 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 flex items-center justify-center text-sm cursor-pointer">🎮</button>
+                                    <button type="button" onclick="setMemberEmoji('🔥')" class="w-8 h-8 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 flex items-center justify-center text-sm cursor-pointer">🔥</button>
+                                    <button type="button" onclick="setMemberEmoji('👑')" class="w-8 h-8 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 flex items-center justify-center text-sm cursor-pointer">👑</button>
+                                    <button type="button" onclick="setMemberEmoji('⚡')" class="w-8 h-8 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 flex items-center justify-center text-sm cursor-pointer">⚡</button>
+                                    <button type="button" onclick="setMemberEmoji('🛡️')" class="w-8 h-8 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 flex items-center justify-center text-sm cursor-pointer">🛡️</button>
+                                    <button type="button" onclick="setMemberEmoji('🐉')" class="w-8 h-8 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 flex items-center justify-center text-sm cursor-pointer">🐉</button>
+                                    <button type="button" onclick="setMemberEmoji('🎯')" class="w-8 h-8 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 flex items-center justify-center text-sm cursor-pointer">🎯</button>
+                                    <button type="button" onclick="setMemberEmoji('🚀')" class="w-8 h-8 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 flex items-center justify-center text-sm cursor-pointer">🚀</button>
+                                </div>
+                            </div>
+
+                            <div class="pt-2 border-t border-slate-800">
+                                <span class="text-[11px] text-slate-300 font-bold block mb-1">Tu PIN Personal de Acceso:</span>
+                                <div class="flex items-center gap-2">
+                                    <input type="text" id="memberPinEditInput" placeholder="Ej. 1234" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 flex-1">
+                                    <button type="button" onclick="saveMemberPin()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold cursor-pointer">Guardar PIN</button>
+                                </div>
+                                <span class="text-[10px] text-slate-400 block mt-1">Con este PIN podrás ingresar directamente desde la pantalla de login.</span>
                             </div>
                         </div>
 
@@ -336,6 +345,10 @@
                     <input type="text" id="newMemberShortInput" placeholder="Ej. Carlos Giménez" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white">
                 </div>
                 <div>
+                    <label class="text-xs text-slate-300 font-semibold block mb-1">PIN Personal (opcional)</label>
+                    <input type="text" id="newMemberPinInput" placeholder="Ej. 5678" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white">
+                </div>
+                <div>
                     <label class="text-xs text-slate-300 font-semibold block mb-1">Mostrar en la planilla desde el mes de:</label>
                     <select id="newMemberStartMonth" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white"></select>
                 </div>
@@ -370,25 +383,24 @@
     </div>
 
     <script>
-        const STORAGE_KEY = 'pombero_caja_2026_v3';
+        const STORAGE_KEY = 'pombero_caja_2026_v4';
         const ADMIN_PIN = '82465888';
 
         const defaultMonths = ['ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO', 'SETIEMBRE', 'OCTUBRE', 'NOVIEMBRE'];
 
         const defaultMembers = [
-            { id: 'm1', name: 'JUAN ANDRÉS KALABURA MACIEL', shortName: 'Kalabura', emoji: '🎮', color: 'from-emerald-500 to-teal-600', startMonth: 'ABRIL', retiradoDesde: null, avatar: null },
-            { id: 'm2', name: 'JUAN MARCELO VERA ARÉVALOS', shortName: 'Marcelo Vera', emoji: '🕹️', color: 'from-slate-600 to-slate-700', startMonth: 'ABRIL', retiradoDesde: 'JUNIO', avatar: null },
-            { id: 'm3', name: 'MARCOS NEHEMÍAS CARDOZO INSFRAN', shortName: 'Marcos Cardozo', emoji: '⚔️', color: 'from-slate-600 to-slate-700', startMonth: 'ABRIL', retiradoDesde: 'JULIO', avatar: null },
-            { id: 'm4', name: 'FABIO HERNÁN FIGUEREDO NUÑEZ', shortName: 'Hernán Figueredo', emoji: '🔥', color: 'from-orange-500 to-red-600', startMonth: 'ABRIL', retiradoDesde: null, avatar: null },
-            { id: 'm5', name: 'RODRIGO SERVIÁN RIVAS', shortName: 'Rodrigo Servián', emoji: '👑', color: 'from-purple-500 to-indigo-600', startMonth: 'ABRIL', retiradoDesde: null, avatar: null, isAdminMember: true },
-            { id: 'm6', name: 'PABLO FERRAZZA', shortName: 'Pablo Ferrazza', emoji: '⚡', color: 'from-amber-500 to-orange-600', startMonth: 'ABRIL', retiradoDesde: null, avatar: null },
-            { id: 'm7', name: 'ADAM EUGENIO ALDERETE', shortName: 'Adam Alderete', emoji: '🛡️', color: 'from-blue-500 to-cyan-600', startMonth: 'ABRIL', retiradoDesde: null, avatar: null },
-            { id: 'm8', name: 'HENRY ARIEL CHÁVEZ WOTTRICH', shortName: 'Henry Chávez', emoji: '🐉', color: 'from-rose-500 to-pink-600', startMonth: 'ABRIL', retiradoDesde: null, avatar: null },
-            { id: 'm9', name: 'JUANMA FLORES', shortName: 'Juanma Flores', emoji: '🎯', color: 'from-lime-500 to-emerald-600', startMonth: 'ABRIL', retiradoDesde: null, avatar: null },
-            { id: 'm10', name: 'HUGO MARTÍN BENÍTEZ HAUPT', shortName: 'Hugo Benítez', emoji: '🚀', color: 'from-indigo-500 to-blue-600', startMonth: 'ABRIL', retiradoDesde: null, avatar: null }
+            { id: 'm1', name: 'JUAN ANDRÉS KALABURA MACIEL', shortName: 'Kalabura', emoji: '🎮', color: 'from-emerald-500 to-teal-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '1111' },
+            { id: 'm2', name: 'JUAN MARCELO VERA ARÉVALOS', shortName: 'Marcelo Vera', emoji: '🕹️', color: 'from-slate-600 to-slate-700', startMonth: 'ABRIL', retiradoDesde: 'JUNIO', pin: '2222' },
+            { id: 'm3', name: 'MARCOS NEHEMÍAS CARDOZO INSFRAN', shortName: 'Marcos Cardozo', emoji: '⚔️', color: 'from-slate-600 to-slate-700', startMonth: 'ABRIL', retiradoDesde: 'JULIO', pin: '3333' },
+            { id: 'm4', name: 'FABIO HERNÁN FIGUEREDO NUÑEZ', shortName: 'Hernán Figueredo', emoji: '🔥', color: 'from-orange-500 to-red-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '4444' },
+            { id: 'm5', name: 'RODRIGO SERVIÁN RIVAS', shortName: 'Rodrigo Servián', emoji: '👑', color: 'from-purple-500 to-indigo-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '5555', isAdminMember: true },
+            { id: 'm6', name: 'PABLO FERRAZZA', shortName: 'Pablo Ferrazza', emoji: '⚡', color: 'from-amber-500 to-orange-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '6666' },
+            { id: 'm7', name: 'ADAM EUGENIO ALDERETE', shortName: 'Adam Alderete', emoji: '🛡️', color: 'from-blue-500 to-cyan-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '7777' },
+            { id: 'm8', name: 'HENRY ARIEL CHÁVEZ WOTTRICH', shortName: 'Henry Chávez', emoji: '🐉', color: 'from-rose-500 to-pink-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '8888' },
+            { id: 'm9', name: 'JUANMA FLORES', shortName: 'Juanma Flores', emoji: '🎯', color: 'from-lime-500 to-emerald-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '9999' },
+            { id: 'm10', name: 'HUGO MARTÍN BENÍTEZ HAUPT', shortName: 'Hugo Benítez', emoji: '🚀', color: 'from-indigo-500 to-blue-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '1010' }
         ];
 
-        // Contributions per month by member ID: { amount: number, date: string, status: 'paid' | 'pending' | 'empty' }
         const defaultContributions = {
             'ABRIL': {
                 'm1': { amount: 50000, date: '2026-05-05', status: 'paid' },
@@ -605,13 +617,9 @@
                 card.className = `p-4 rounded-2xl border ${borderClass} flex flex-col items-center text-center transition group cursor-pointer ${isRetired ? 'opacity-60' : ''}`;
                 card.onclick = () => loginAsMember(m.id);
 
-                const avatarHtml = m.avatar
-                    ? `<img src="${m.avatar}" class="w-full h-full object-cover rounded-2xl">`
-                    : `<span class="text-2xl">${m.emoji || '🎮'}</span>`;
-
                 card.innerHTML = `
-                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br ${m.color || 'from-emerald-500 to-teal-600'} flex items-center justify-center mb-2.5 shadow-lg group-hover:scale-105 transition overflow-hidden">
-                        ${avatarHtml}
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br ${m.color || 'from-emerald-500 to-teal-600'} flex items-center justify-center mb-2.5 shadow-lg group-hover:scale-105 transition overflow-hidden text-2xl">
+                        ${m.emoji || '🎮'}
                     </div>
                     <span class="text-xs sm:text-sm font-extrabold text-white truncate w-full">${m.shortName || m.name}</span>
                     <span class="text-[11px] text-slate-400 mt-0.5">${isRetired ? 'Retirado (' + m.retiradoDesde + ')' : (m.isAdminMember ? 'Administrador' : 'Socio Activo')}</span>
@@ -625,6 +633,21 @@
             const btn = document.getElementById('retiredToggleBtn');
             if (btn) btn.textContent = showRetiredInLogin ? 'Ocultar ex-socios retirados' : 'Ver ex-socios retirados';
             renderLoginProfiles();
+        }
+
+        function loginByPartnerPin() {
+            const inputPin = document.getElementById('partnerQuickPinInput').value.trim();
+            if (!inputPin) {
+                alert('Por favor ingresa tu PIN personal.');
+                return;
+            }
+            const found = membersData.find(m => m.pin && m.pin === inputPin);
+            if (found) {
+                document.getElementById('partnerQuickPinInput').value = '';
+                loginAsMember(found.id);
+            } else {
+                alert('PIN de socio incorrecto. Verifica tu PIN personal.');
+            }
         }
 
         function loginAsMember(memberId) {
@@ -662,7 +685,7 @@
                 activateAdminSession();
             } else {
                 if (errEl) {
-                    errEl.textContent = 'PIN incorrecto. Ingresa el PIN correcto para entrar como Administrador.';
+                    errEl.textContent = 'PIN incorrecto. Acceso denegado.';
                     errEl.classList.remove('hidden');
                 } else {
                     alert('PIN incorrecto. Acceso denegado.');
@@ -889,9 +912,7 @@
                     statusBadge = '<span class="ml-2 px-2 py-0.5 rounded-md text-[10px] font-semibold bg-slate-800 text-slate-400">SIN CARGAR</span>';
                 }
 
-                const avatarMini = m.avatar
-                    ? `<img src="${m.avatar}" class="w-7 h-7 rounded-lg object-cover">`
-                    : `<span class="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-xs">${m.emoji || '🎮'}</span>`;
+                const avatarMini = `<span class="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-xs">${m.emoji || '🎮'}</span>`;
 
                 tr.innerHTML = `
                     <td class="py-3 px-4 font-semibold text-white">
@@ -1063,11 +1084,11 @@
                 : `Activo desde ${member.startMonth} 2026`;
 
             const avatarContainer = document.getElementById('memberAvatarContainer');
-            if (member.avatar) {
-                avatarContainer.innerHTML = `<img src="${member.avatar}" class="w-full h-full object-cover">`;
-            } else {
-                avatarContainer.innerHTML = `<span class="text-2xl">${member.emoji || '🎮'}</span>`;
-            }
+            avatarContainer.innerHTML = `<span class="text-2xl">${member.emoji || '🎮'}</span>`;
+
+            // Set PIN input value
+            const pinInput = document.getElementById('memberPinEditInput');
+            if (pinInput) pinInput.value = member.pin || '';
 
             const st = getMemberStats(member);
             document.getElementById('memberTotalContributed').textContent = formatGs(st.totalContributed);
@@ -1135,7 +1156,6 @@
         function setMemberEmoji(emoji) {
             const mem = membersData.find(m => m.id === currentSelectedMemberId);
             if (mem) {
-                mem.avatar = null;
                 mem.emoji = emoji;
                 saveState();
                 updateMemberProfileCard();
@@ -1144,21 +1164,14 @@
             }
         }
 
-        function uploadProfilePhoto(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const mem = membersData.find(m => m.id === currentSelectedMemberId);
-                if (mem) {
-                    mem.avatar = e.target.result;
-                    saveState();
-                    updateMemberProfileCard();
-                    renderLoginProfiles();
-                    updateDashboard();
-                }
-            };
-            reader.readAsDataURL(file);
+        function saveMemberPin() {
+            const mem = membersData.find(m => m.id === currentSelectedMemberId);
+            const pinVal = document.getElementById('memberPinEditInput').value.trim();
+            if (mem) {
+                mem.pin = pinVal;
+                saveState();
+                alert(`¡PIN personal guardado con éxito para ${mem.name}!`);
+            }
         }
 
         // MODALS
@@ -1230,6 +1243,7 @@
             event.preventDefault();
             const fullName = document.getElementById('newMemberNameInput').value.trim().toUpperCase();
             const shortName = document.getElementById('newMemberShortInput').value.trim() || fullName.split(' ').slice(0, 2).join(' ');
+            const pinVal = document.getElementById('newMemberPinInput').value.trim();
             const startMo = document.getElementById('newMemberStartMonth').value;
             if (!fullName) return;
 
@@ -1242,13 +1256,14 @@
                 color: 'from-emerald-500 to-teal-600',
                 startMonth: startMo,
                 retiradoDesde: null,
-                avatar: null
+                pin: pinVal
             });
 
             saveState();
             closeModals();
             document.getElementById('newMemberNameInput').value = '';
             document.getElementById('newMemberShortInput').value = '';
+            document.getElementById('newMemberPinInput').value = '';
             initApp();
             renderLoginProfiles();
         }
