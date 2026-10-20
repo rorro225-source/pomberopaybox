@@ -7,8 +7,22 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #060913; color: #f1f5f9; }
-        .glass-card { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        :root {
+            --bg-main: #060913;
+            --text-main: #f1f5f9;
+            --card-bg: rgba(15, 23, 42, 0.85);
+            --card-border: rgba(255, 255, 255, 0.08);
+        }
+        @media (prefers-color-scheme: light) {
+            :root {
+                --bg-main: #f1f5f9;
+                --text-main: #0f172a;
+                --card-bg: rgba(255, 255, 255, 0.95);
+                --card-border: rgba(0, 0, 0, 0.08);
+            }
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-main); color: var(--text-main); transition: background-color 0.3s, color 0.3s; }
+        .glass-card { background: var(--card-bg); backdrop-filter: blur(16px); border: 1px solid var(--card-border); }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
@@ -35,7 +49,7 @@
 
     <!-- LOGIN OVERLAY -->
     <div id="loginScreen" class="fixed inset-0 z-50 bg-[#060913]/95 backdrop-blur-xl flex flex-col items-center justify-center p-4 overflow-y-auto" style="display: none;">
-        <div class="max-w-4xl w-full glass-card rounded-3xl p-6 md:p-8 shadow-2xl border border-slate-800/90 my-auto">
+        <div class="max-w-3xl w-full glass-card rounded-3xl p-6 md:p-8 shadow-2xl border border-slate-800/90 my-auto">
             
             <!-- Header Login -->
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-800/80">
@@ -51,7 +65,7 @@
                     </div>
                 </div>
                 <div class="sm:text-right bg-slate-900/70 sm:bg-transparent p-3 sm:p-0 rounded-xl border border-slate-800 sm:border-0">
-                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">SALDO ACTUAL EN FONDO</span>
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">SALDO ACTUAL EN CAJA</span>
                     <span id="loginTotalBalance" class="text-xl md:text-2xl font-black text-emerald-400">Gs. 3.380.000</span>
                 </div>
             </div>
@@ -109,10 +123,9 @@
                         🎮
                     </div>
                     <div>
-                        <div class="flex items-center gap-2 flex-wrap">
+                        <div class="flex items-center gap-2">
                             <h1 class="font-extrabold text-sm sm:text-base text-white tracking-tight">POMBERO GAMER TEAM • FONDO SOLIDARIO</h1>
                             <span id="roleBadgeHeader" class="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">Modo Socio</span>
-                            <span id="syncStatusBadge" class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">☁️ Sincronizado</span>
                         </div>
                         <p id="sessionRoleText" class="text-xs text-slate-400">Viendo como socio</p>
                     </div>
@@ -179,7 +192,7 @@
                 </div>
             </div>
 
-            <!-- Debtors Alert Widget (Admin Only) -->
+            <!-- Debtors Alert Widget (Feature 4) -->
             <div id="debtorsAlertCard" class="glass-card p-4 rounded-2xl mb-5 border border-amber-500/30 bg-amber-500/5 hidden no-print">
                 <div class="flex items-center justify-between">
                     <h3 class="text-xs font-bold text-amber-300 uppercase tracking-wider flex items-center gap-2">
@@ -239,8 +252,8 @@
                             </table>
                         </div>
 
-                        <!-- Monthly Treasury Notes (Admin Only) -->
-                        <div id="treasuryNotesSection" class="p-4 bg-slate-950/50 border-t border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 hidden">
+                        <!-- Monthly Treasury Notes (Feature 3) -->
+                        <div class="p-4 bg-slate-950/50 border-t border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
                             <span class="text-xs font-bold text-slate-300">📝 Notas de Tesorería del Mes:</span>
                             <div class="flex items-center gap-2 w-full sm:w-2/3">
                                 <input type="text" id="monthNoteInput" placeholder="Ej. Quedó pendiente vuelto del sorteo..." class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 flex-1">
@@ -268,36 +281,26 @@
                             <div class="min-w-0 flex-1">
                                 <span id="memberRoleBadge" class="inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-400 mb-1">Socio Activo</span>
                                 <h3 id="selectedMemberName" class="text-base font-extrabold text-white truncate">RODRIGO SERVIÁN RIVAS</h3>
-                                <p id="memberCurrentGameDisplay" class="text-xs text-emerald-400 font-bold truncate mt-0.5">🎮 Retro & Sims</p>
-                                <p id="memberSinceText" class="text-[11px] text-slate-400 mt-0.5">Activo desde ABRIL 2026</p>
+                                <p id="memberSinceText" class="text-xs text-slate-400">Activo desde ABRIL 2026</p>
                             </div>
                         </div>
 
-                        <!-- Personal Editable Settings (Visible only to profile owner or Admin) -->
-                        <div id="memberPersonalConfigPanel" class="space-y-3 mb-4">
-                            <div class="bg-slate-900/80 p-3.5 rounded-2xl border border-slate-800">
-                                <span class="text-[11px] text-slate-300 font-bold block mb-1">🎮 Juego que estoy jugando actualmente:</span>
+                        <!-- Avatar Free Emoji Input & PIN configuration -->
+                        <div class="mb-4 space-y-3 bg-slate-900/80 p-3.5 rounded-2xl border border-slate-800">
+                            <div>
+                                <span class="text-[11px] text-slate-300 font-bold block mb-1">Cambiar Icono / Emojis (Escribe cualquier emoji):</span>
                                 <div class="flex items-center gap-2">
-                                    <input type="text" id="memberCurrentGameInput" placeholder="Ej. eFootball 2026, FC 26..." class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 flex-1">
-                                    <button type="button" onclick="saveMemberCurrentGame()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold cursor-pointer">Guardar</button>
+                                    <input type="text" id="memberEmojiInput" placeholder="🎮" maxlength="4" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-base text-center w-16 text-white focus:outline-none focus:border-emerald-500">
+                                    <button type="button" onclick="saveMemberEmojiFree()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold cursor-pointer flex-1">Guardar Emoji</button>
                                 </div>
+                                <span class="text-[10px] text-slate-400 block mt-1">Usa el teclado de emojis de tu celular o PC (ej. ⚡, 🚀, 🔥, 🏆).</span>
                             </div>
 
-                            <div class="space-y-3 bg-slate-900/80 p-3.5 rounded-2xl border border-slate-800">
-                                <div>
-                                    <span class="text-[11px] text-slate-300 font-bold block mb-1">Cambiar Icono / Emojis (Escribe cualquier emoji):</span>
-                                    <div class="flex items-center gap-2">
-                                        <input type="text" id="memberEmojiInput" placeholder="🎮" maxlength="4" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-base text-center w-16 text-white focus:outline-none focus:border-emerald-500">
-                                        <button type="button" onclick="saveMemberEmojiFree()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold cursor-pointer flex-1">Guardar Emoji</button>
-                                    </div>
-                                </div>
-
-                                <div class="pt-2 border-t border-slate-800">
-                                    <span class="text-[11px] text-slate-300 font-bold block mb-1">Tu PIN Personal de Acceso:</span>
-                                    <div class="flex items-center gap-2">
-                                        <input type="text" id="memberPinEditInput" placeholder="Ej. 1234" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 flex-1">
-                                        <button type="button" onclick="saveMemberPin()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold cursor-pointer">Guardar PIN</button>
-                                    </div>
+                            <div class="pt-2 border-t border-slate-800">
+                                <span class="text-[11px] text-slate-300 font-bold block mb-1">Tu PIN Personal de Acceso:</span>
+                                <div class="flex items-center gap-2">
+                                    <input type="text" id="memberPinEditInput" placeholder="Ej. 1234" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 flex-1">
+                                    <button type="button" onclick="saveMemberPin()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold cursor-pointer">Guardar PIN</button>
                                 </div>
                             </div>
                         </div>
@@ -321,15 +324,15 @@
                         <div>
                             <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-2">Historial mes a mes del socio (con fecha exacta)</span>
                             <div id="memberMonthlyPills" class="space-y-1.5 max-h-48 overflow-y-auto no-scrollbar">
-                                <!-- Populated by JS -->
+                                <!-- Populated by JS with exact payment dates -->
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- View 2: Full Members Summary Table & Loan History -->
-            <div id="summaryViewContainer" class="hidden space-y-5">
+            <!-- View 2: Full Members Summary Table (When RESUMEN SOCIOS tab is clicked) -->
+            <div id="summaryViewContainer" class="hidden">
                 <div class="glass-card rounded-3xl overflow-hidden shadow-xl mb-5">
                     <div class="p-5 border-b border-slate-800 flex flex-wrap items-center justify-between gap-2 bg-slate-900/60">
                         <div>
@@ -353,32 +356,6 @@
                         </table>
                     </div>
                 </div>
-
-                <!-- Loan / Credit History Tab Section -->
-                <div class="glass-card rounded-3xl p-6 shadow-xl">
-                    <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-800">
-                        <div>
-                            <h2 class="font-extrabold text-base sm:text-lg text-white">📜 Historial de Préstamos, Créditos y Garantías</h2>
-                            <p class="text-xs text-slate-400">Registro detallado de salidas de fondos, garantías dejadas y devoluciones</p>
-                        </div>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse text-xs sm:text-sm">
-                            <thead>
-                                <tr class="bg-slate-950/70 text-[11px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-800">
-                                    <th class="py-3 px-4">Mes</th>
-                                    <th class="py-3 px-4">Concepto / Préstamo / Devolución</th>
-                                    <th class="py-3 px-3">Fecha</th>
-                                    <th class="py-3 px-4 text-right">Monto Egreso</th>
-                                    <th class="py-3 px-4 text-right">Devolución / Estado</th>
-                                </tr>
-                            </thead>
-                            <tbody id="loanHistoryTableBody" class="divide-y divide-slate-800/60">
-                                <!-- Populated by JS -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
             </div>
         </main>
     </div>
@@ -393,14 +370,14 @@
                     <select id="movMonth" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white"></select>
                 </div>
                 <div>
-                    <label class="text-xs text-slate-300 font-semibold block mb-1">Concepto / Descripción (Incluir garantía si es préstamo)</label>
-                    <input type="text" id="movDesc" required placeholder="Ej. Préstamo a socio, con garantía de control..." class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white">
+                    <label class="text-xs text-slate-300 font-semibold block mb-1">Concepto / Descripción</label>
+                    <input type="text" id="movDesc" required placeholder="Ej. Préstamo a socio o Devolución con intereses" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white">
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="text-xs text-slate-300 font-semibold block mb-1">Tipo de Movimiento</label>
                         <select id="movType" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white">
-                            <option value="ingreso">Ingreso Extra / Devolución (+)</option>
+                            <option value="ingreso">Ingreso Extra (+)</option>
                             <option value="egreso">Egreso / Préstamo (-)</option>
                         </select>
                     </div>
@@ -479,16 +456,16 @@
         const defaultMonths = ['ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO', 'SETIEMBRE', 'OCTUBRE', 'NOVIEMBRE'];
 
         const defaultMembers = [
-            { id: 'm1', name: 'JUAN ANDRÉS KALABURA MACIEL', shortName: 'Kalabura', emoji: '🎮', currentGame: 'eFootball 2026', color: 'from-emerald-500 to-teal-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '1111' },
-            { id: 'm2', name: 'JUAN MARCELO VERA ARÉVALOS', shortName: 'Marcelo Vera', emoji: '🕹️', currentGame: 'EA FC 26', color: 'from-slate-600 to-slate-700', startMonth: 'ABRIL', retiradoDesde: 'JUNIO', pin: '2222' },
-            { id: 'm3', name: 'MARCOS NEHEMÍAS CARDOZO INSFRAN', shortName: 'Marcos Cardozo', emoji: '⚔️', currentGame: 'Valorant', color: 'from-slate-600 to-slate-700', startMonth: 'ABRIL', retiradoDesde: 'JULIO', pin: '3333' },
-            { id: 'm4', name: 'FABIO HERNÁN FIGUEREDO NUÑEZ', shortName: 'Hernán Figueredo', emoji: '🔥', currentGame: 'Assetto Corsa', color: 'from-orange-500 to-red-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '4444' },
-            { id: 'm5', name: 'RODRIGO SERVIÁN RIVAS', shortName: 'Rodrigo Servián', emoji: '👑', currentGame: 'Retro & Sims', color: 'from-purple-500 to-indigo-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '5555', isAdminMember: true },
-            { id: 'm6', name: 'PABLO FERRAZZA', shortName: 'Pablo Ferrazza', emoji: '⚡', currentGame: 'GTA V', color: 'from-amber-500 to-orange-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '6666' },
-            { id: 'm7', name: 'ADAM EUGENIO ALDERETE', shortName: 'Adam Alderete', emoji: '🛡️', currentGame: 'Call of Duty', color: 'from-blue-500 to-cyan-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '7777' },
-            { id: 'm8', name: 'HENRY ARIEL CHÁVEZ WOTTRICH', shortName: 'Henry Chávez', emoji: '🐉', currentGame: 'Mortal Kombat 1', color: 'from-rose-500 to-pink-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '8888' },
-            { id: 'm9', name: 'JUANMA FLORES', shortName: 'Juanma Flores', emoji: '🎯', currentGame: 'Fortnite', color: 'from-lime-500 to-emerald-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '9999' },
-            { id: 'm10', name: 'HUGO MARTÍN BENÍTEZ HAUPT', shortName: 'Hugo Benítez', emoji: '🚀', currentGame: 'Euro Truck Simulator 2', color: 'from-indigo-500 to-blue-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '1010' }
+            { id: 'm1', name: 'JUAN ANDRÉS KALABURA MACIEL', shortName: 'Kalabura', emoji: '🎮', color: 'from-emerald-500 to-teal-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '1111' },
+            { id: 'm2', name: 'JUAN MARCELO VERA ARÉVALOS', shortName: 'Marcelo Vera', emoji: '🕹️', color: 'from-slate-600 to-slate-700', startMonth: 'ABRIL', retiradoDesde: 'JUNIO', pin: '2222' },
+            { id: 'm3', name: 'MARCOS NEHEMÍAS CARDOZO INSFRAN', shortName: 'Marcos Cardozo', emoji: '⚔️', color: 'from-slate-600 to-slate-700', startMonth: 'ABRIL', retiradoDesde: 'JULIO', pin: '3333' },
+            { id: 'm4', name: 'FABIO HERNÁN FIGUEREDO NUÑEZ', shortName: 'Hernán Figueredo', emoji: '🔥', color: 'from-orange-500 to-red-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '4444' },
+            { id: 'm5', name: 'RODRIGO SERVIÁN RIVAS', shortName: 'Rodrigo Servián', emoji: '👑', color: 'from-purple-500 to-indigo-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '5555', isAdminMember: true },
+            { id: 'm6', name: 'PABLO FERRAZZA', shortName: 'Pablo Ferrazza', emoji: '⚡', color: 'from-amber-500 to-orange-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '6666' },
+            { id: 'm7', name: 'ADAM EUGENIO ALDERETE', shortName: 'Adam Alderete', emoji: '🛡️', color: 'from-blue-500 to-cyan-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '7777' },
+            { id: 'm8', name: 'HENRY ARIEL CHÁVEZ WOTTRICH', shortName: 'Henry Chávez', emoji: '🐉', color: 'from-rose-500 to-pink-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '8888' },
+            { id: 'm9', name: 'JUANMA FLORES', shortName: 'Juanma Flores', emoji: '🎯', color: 'from-lime-500 to-emerald-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '9999' },
+            { id: 'm10', name: 'HUGO MARTÍN BENÍTEZ HAUPT', shortName: 'Hugo Benítez', emoji: '🚀', color: 'from-indigo-500 to-blue-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '1010' }
         ];
 
         const defaultContributions = {
@@ -599,40 +576,24 @@
         let membersData = JSON.parse(JSON.stringify(defaultMembers));
         let contributionsData = JSON.parse(JSON.stringify(defaultContributions));
         let extraMovementsData = JSON.parse(JSON.stringify(defaultExtraMovements));
-        let monthNotesData = {};
+        let monthNotesData = {}; // Feature 3: Treasury notes per month
 
         let currentActiveTab = 'OCTUBRE';
         let currentUserRole = 'socio';
-        let loggedInMemberId = 'm5';
         let currentSelectedMemberId = 'm5';
         let showRetiredInLogin = false;
-
-        function ensureMemberDefaults() {
-            membersData.forEach(m => {
-                const def = defaultMembers.find(d => d.id === m.id);
-                if (m.currentGame === undefined) {
-                    m.currentGame = def ? def.currentGame : '';
-                }
-                if (!m.emoji) {
-                    m.emoji = def ? def.emoji : '🎮';
-                }
-            });
-        }
 
         // Cloud Google Sheets Sync
         async function loadCloudState() {
             try {
-                const res = await fetch(SCRIPT_URL + '?t=' + Date.now(), { cache: 'no-store' });
+                const res = await fetch(SCRIPT_URL);
                 const data = await res.json();
-                if (data && Array.isArray(data.monthsList) && Array.isArray(data.membersData)) {
+                if (data && data.monthsList) {
                     monthsList = data.monthsList;
                     membersData = data.membersData;
-                    contributionsData = data.contributionsData || {};
-                    extraMovementsData = data.extraMovementsData || {};
-                    monthNotesData = data.monthNotesData || {};
-                    ensureMemberDefaults();
-                } else {
-                    loadLocalFallback();
+                    contributionsData = data.contributionsData;
+                    extraMovementsData = data.extraMovementsData;
+                    if (data.monthNotesData) monthNotesData = data.monthNotesData;
                 }
             } catch (e) {
                 console.warn('Usando respaldo local o error al conectar con Google Sheets:', e);
@@ -656,7 +617,6 @@
                     if (parsed.contributionsData) contributionsData = parsed.contributionsData;
                     if (parsed.extraMovementsData) extraMovementsData = parsed.extraMovementsData;
                     if (parsed.monthNotesData) monthNotesData = parsed.monthNotesData;
-                    ensureMemberDefaults();
                 }
             } catch (err) {
                 console.warn('Fallback local falló:', err);
@@ -672,12 +632,6 @@
                 monthNotesData
             };
 
-            const badge = document.getElementById('syncStatusBadge');
-            if (badge) {
-                badge.textContent = '⏳ Guardando...';
-                badge.className = 'text-[10px] font-semibold px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30';
-            }
-
             try {
                 localStorage.setItem('pombero_caja_local_backup', JSON.stringify(payload));
             } catch(e) {}
@@ -688,16 +642,8 @@
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify(payload)
                 });
-                if (badge) {
-                    badge.textContent = '☁️ Sincronizado';
-                    badge.className = 'text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20';
-                }
             } catch (e) {
                 console.error('Error al sincronizar con Google Sheets:', e);
-                if (badge) {
-                    badge.textContent = '⚠️ Guardado local';
-                    badge.className = 'text-[10px] font-semibold px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-300 border border-rose-500/30';
-                }
             }
         }
 
@@ -768,8 +714,8 @@
 
             navigator.clipboard.writeText(report).then(() => {
                 alert('¡Resumen copiado al portapapeles! Ya puedes pegarlo en el grupo de WhatsApp.');
-            }).catch(() => {
-                prompt('Copia este resumen para WhatsApp:', report);
+            }).catch(err => {
+                alert('No se pudo copiar automáticamente, pero puedes ver el reporte en consola.');
             });
         }
 
@@ -801,7 +747,7 @@
             });
         }
 
-        // Render Debtors Alert Widget for current/active month (Admin only)
+        // Feature 4: Render Debtors Alert Widget for current/active month
         function renderDebtorsAlert() {
             const activeMo = currentActiveTab === 'RESUMEN' ? monthsList[monthsList.length - 1] : currentActiveTab;
             const activeMembers = getActiveMembersForMonth(activeMo);
@@ -833,7 +779,7 @@
             }
         }
 
-        // Save Treasury Note
+        // Feature 3: Save Treasury Note
         function saveCurrentMonthNote() {
             const activeMo = currentActiveTab === 'RESUMEN' ? monthsList[monthsList.length - 1] : currentActiveTab;
             const noteText = document.getElementById('monthNoteInput').value.trim();
@@ -853,7 +799,7 @@
             if (loginTotalEl) loginTotalEl.textContent = formatGs(calc.finalBalance);
 
             membersData.forEach(m => {
-                const isRetired = m.retiradoDesde !== null && m.retiradoDesde !== '';
+                const isRetired = m.retiradoDesde !== null;
                 if (isRetired && !showRetiredInLogin) return;
 
                 const card = document.createElement('button');
@@ -863,16 +809,13 @@
                     : 'border-slate-800 bg-slate-900/60 hover:border-slate-600';
 
                 card.className = `p-4 rounded-2xl border ${borderClass} flex flex-col items-center text-center transition group cursor-pointer ${isRetired ? 'opacity-60' : ''}`;
-                card.onclick = () => loginAsMember(m.id, false);
-
-                const currentGameText = m.currentGame ? `🎮 ${m.currentGame}` : '🎮 Sin juego asignado';
+                card.onclick = () => loginAsMember(m.id);
 
                 card.innerHTML = `
                     <div class="w-14 h-14 rounded-2xl bg-gradient-to-br ${m.color || 'from-emerald-500 to-teal-600'} flex items-center justify-center mb-2.5 shadow-lg group-hover:scale-105 transition overflow-hidden text-2xl">
                         ${m.emoji || '🎮'}
                     </div>
                     <span class="text-xs sm:text-sm font-extrabold text-white truncate w-full">${m.shortName || m.name}</span>
-                    <span class="text-[10px] text-emerald-400 font-semibold truncate w-full mt-0.5">${currentGameText}</span>
                     <span class="text-[11px] text-slate-400 mt-0.5">${isRetired ? 'Retirado (' + m.retiradoDesde + ')' : (m.isAdminMember ? 'Administrador' : 'Socio Activo')}</span>
                 `;
                 grid.appendChild(card);
@@ -892,30 +835,29 @@
                 alert('Por favor ingresa tu PIN personal.');
                 return;
             }
-            const found = membersData.find(m => m.pin && String(m.pin).trim() === inputPin);
+            const found = membersData.find(m => m.pin && m.pin === inputPin);
             if (found) {
                 document.getElementById('partnerQuickPinInput').value = '';
-                loginAsMember(found.id, true);
+                loginAsMember(found.id);
             } else {
                 alert('PIN de socio incorrecto. Verifica tu PIN personal.');
             }
         }
 
-        function loginAsMember(memberId, skipPinPrompt) {
+        function loginAsMember(memberId) {
             const mem = membersData.find(m => m.id === memberId);
             if (!mem) return;
 
-            if (!skipPinPrompt && mem.pin && String(mem.pin).trim() !== '') {
+            if (mem.pin && mem.pin.trim() !== '') {
                 const enteredPin = prompt(`Ingresa el PIN personal para acceder a ${mem.shortName || mem.name}:`);
                 if (enteredPin === null) return;
-                if (enteredPin.trim() !== String(mem.pin).trim()) {
+                if (enteredPin.trim() !== mem.pin) {
                     alert('PIN incorrecto. Acceso denegado a este perfil.');
                     return;
                 }
             }
 
             currentUserRole = 'socio';
-            loggedInMemberId = memberId;
             currentSelectedMemberId = memberId;
 
             document.getElementById('loginScreen').style.display = 'none';
@@ -925,7 +867,7 @@
             document.getElementById('adminColHeader').classList.add('hidden');
 
             const badge = document.getElementById('roleBadgeHeader');
-            badge.textContent = 'Modo Socio';
+            badge.textContent = 'Modo Lectura (Socio)';
             badge.className = 'text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700';
 
             document.getElementById('sessionRoleText').textContent = `Sesión iniciada como: ${mem.name}`;
@@ -958,7 +900,6 @@
 
         function activateAdminSession() {
             currentUserRole = 'admin';
-            loggedInMemberId = 'm5';
             currentSelectedMemberId = 'm5';
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('mainApp').style.display = 'flex';
@@ -1092,6 +1033,7 @@
                 container.appendChild(btn);
             });
 
+            // Add RESUMEN SOCIOS tab
             const isResumen = currentActiveTab === 'RESUMEN';
             const resBtn = document.createElement('button');
             resBtn.type = 'button';
@@ -1120,23 +1062,16 @@
             document.getElementById('kpiMonthIncome').textContent = formatGs(mStat.pureIncome);
             document.getElementById('kpiMonthExpense').textContent = formatGs(mStat.pureExpense);
 
-            // Toggle visibility of treasury notes for admin only
-            const treasurySection = document.getElementById('treasuryNotesSection');
+            // Populate monthly note input
             const noteInput = document.getElementById('monthNoteInput');
-            if (treasurySection) {
-                if (currentUserRole === 'admin') {
-                    treasurySection.classList.remove('hidden');
-                    if (noteInput) noteInput.value = monthNotesData[activeMonth] || '';
-                } else {
-                    treasurySection.classList.add('hidden');
-                }
+            if (noteInput) {
+                noteInput.value = monthNotesData[activeMonth] || '';
             }
 
             if (currentActiveTab === 'RESUMEN') {
                 document.getElementById('monthlyViewContainer').classList.add('hidden');
                 document.getElementById('summaryViewContainer').classList.remove('hidden');
                 renderSummaryTable();
-                renderLoanHistoryTable();
             } else {
                 document.getElementById('monthlyViewContainer').classList.remove('hidden');
                 document.getElementById('summaryViewContainer').classList.add('hidden');
@@ -1158,6 +1093,7 @@
             const isAdmin = currentUserRole === 'admin';
             document.getElementById('adminColHeader').classList.toggle('hidden', !isAdmin);
 
+            // 1. Carry-over row if not first month
             const mIdx = monthsList.indexOf(monthName);
             if (mIdx > 0) {
                 const trCarry = document.createElement('tr');
@@ -1172,6 +1108,7 @@
                 tbody.appendChild(trCarry);
             }
 
+            // 2. Active Member rows
             const moContribs = contributionsData[monthName] || {};
             activeMembers.forEach(m => {
                 const c = moContribs[m.id] || { amount: 0, date: '', status: 'empty' };
@@ -1195,10 +1132,8 @@
                     <td class="py-3 px-4 font-semibold text-white">
                         <div class="flex items-center gap-2.5">
                             ${avatarMini}
-                            <div>
-                                <span class="block">${m.name} ${statusBadge}</span>
-                                ${m.currentGame ? `<span class="text-[10px] text-emerald-400 font-medium block">🎮 ${m.currentGame}</span>` : ''}
-                            </div>
+                            <span>${m.name}</span>
+                            ${statusBadge}
                         </div>
                     </td>
                     <td class="py-3 px-3 text-xs text-slate-400">${c.date || '-'}</td>
@@ -1218,6 +1153,7 @@
                 tbody.appendChild(tr);
             });
 
+            // 3. Extra Movements / Loans
             const extras = extraMovementsData[monthName] || [];
             extras.forEach((ex, idx) => {
                 const tr = document.createElement('tr');
@@ -1227,7 +1163,7 @@
                     <td class="py-3 px-4 font-semibold ${isExpense ? 'text-amber-300' : 'text-blue-300'}">
                         <div class="flex items-center gap-2">
                             <span>${isExpense ? '📤' : '📥'}</span>
-                            <span>${ex.desc || ''}</span>
+                            <span>${ex.desc}</span>
                         </div>
                     </td>
                     <td class="py-3 px-3 text-xs text-slate-400">${ex.date || '-'}</td>
@@ -1242,6 +1178,7 @@
                 tbody.appendChild(tr);
             });
 
+            // Footer Totals matching Excel
             tfoot.innerHTML = `
                 <tr>
                     <td class="py-3.5 px-4 text-white">TOTAL ${monthName} 2026</td>
@@ -1349,12 +1286,7 @@
             if (!member) return;
 
             document.getElementById('selectedMemberName').textContent = member.name;
-            const gameDisplay = document.getElementById('memberCurrentGameDisplay');
-            if (gameDisplay) {
-                gameDisplay.textContent = member.currentGame ? `🎮 Jugando: ${member.currentGame}` : '🎮 Sin juego asignado';
-            }
-
-            const isRetired = member.retiradoDesde !== null && member.retiradoDesde !== '';
+            const isRetired = member.retiradoDesde !== null;
 
             const badge = document.getElementById('memberRoleBadge');
             if (isRetired) {
@@ -1372,23 +1304,12 @@
             const avatarContainer = document.getElementById('memberAvatarContainer');
             avatarContainer.innerHTML = `<span class="text-2xl">${member.emoji || '🎮'}</span>`;
 
-            // Only show personal edit panel if Admin or viewing own profile
-            const configPanel = document.getElementById('memberPersonalConfigPanel');
-            const canEditProfile = (currentUserRole === 'admin') || (currentSelectedMemberId === loggedInMemberId);
-            if (configPanel) {
-                configPanel.classList.toggle('hidden', !canEditProfile);
-            }
+            // Set inputs
+            const pinInput = document.getElementById('memberPinEditInput');
+            if (pinInput) pinInput.value = member.pin || '';
 
-            if (canEditProfile) {
-                const pinInput = document.getElementById('memberPinEditInput');
-                if (pinInput) pinInput.value = member.pin || '';
-
-                const emojiInput = document.getElementById('memberEmojiInput');
-                if (emojiInput) emojiInput.value = member.emoji || '🎮';
-
-                const gameInput = document.getElementById('memberCurrentGameInput');
-                if (gameInput) gameInput.value = member.currentGame || '';
-            }
+            const emojiInput = document.getElementById('memberEmojiInput');
+            if (emojiInput) emojiInput.value = member.emoji || '🎮';
 
             const st = getMemberStats(member);
             document.getElementById('memberTotalContributed').textContent = formatGs(st.totalContributed);
@@ -1404,6 +1325,7 @@
                 alertText.textContent = 'Al día con todos los meses cerrados.';
             }
 
+            // Feature 2: Detailed Payment History with exact dates
             const pillsContainer = document.getElementById('memberMonthlyPills');
             pillsContainer.innerHTML = '';
             st.perMonthStatus.forEach(p => {
@@ -1423,60 +1345,19 @@
             });
         }
 
-        // Render Loan History Table in Summary view
-        function renderLoanHistoryTable() {
-            const tbody = document.getElementById('loanHistoryTableBody');
-            if (!tbody) return;
-            tbody.innerHTML = '';
-
-            let loanRows = [];
-            monthsList.forEach(mo => {
-                const extras = extraMovementsData[mo] || [];
-                extras.forEach(ex => {
-                    const descUpper = (ex.desc || '').toUpperCase();
-                    if (descUpper.includes('PRÉSTAMO') || descUpper.includes('PRESTAMO') || descUpper.includes('GARANTÍA') || descUpper.includes('GARANTIA') || descUpper.includes('DEVUELVE') || Number(ex.expense) > 0) {
-                        loanRows.push({
-                            month: mo,
-                            desc: ex.desc || '',
-                            date: ex.date || mo,
-                            amount: ex.expense ? formatGs(ex.expense) : '-',
-                            status: ex.income ? `Devuelto/Ingreso (${formatGs(ex.income)})` : 'Egreso / En curso ⏳'
-                        });
-                    }
-                });
-            });
-
-            if (loanRows.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-slate-500">No hay préstamos registrados en el periodo.</td></tr>`;
-                return;
-            }
-
-            loanRows.forEach(l => {
-                const tr = document.createElement('tr');
-                tr.className = 'hover:bg-slate-900/50 transition';
-                tr.innerHTML = `
-                    <td class="py-3 px-4 font-bold text-slate-300">${l.month}</td>
-                    <td class="py-3 px-4 text-white font-semibold">${l.desc}</td>
-                    <td class="py-3 px-3 text-xs text-slate-400">${l.date}</td>
-                    <td class="py-3 px-4 text-right font-bold text-amber-400">${l.amount}</td>
-                    <td class="py-3 px-4 text-right font-semibold text-emerald-400">${l.status}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        // Loyalty Ranking in Summary Table
+        // Feature 1: Loyalty Ranking in Summary Table
         function renderSummaryTable() {
             const tbody = document.getElementById('summaryMembersTableBody');
             tbody.innerHTML = '';
 
+            // Compute stats & sort by paidCount descending
             const ranked = membersData.map(m => {
                 return { m, st: getMemberStats(m) };
             }).sort((a, b) => b.st.paidCount - a.st.paidCount);
 
             ranked.forEach((item, index) => {
                 const { m, st } = item;
-                const isRetired = m.retiradoDesde !== null && m.retiradoDesde !== '';
+                const isRetired = m.retiradoDesde !== null;
                 const tr = document.createElement('tr');
                 tr.className = 'hover:bg-slate-900/50 transition';
 
@@ -1489,10 +1370,7 @@
                     <td class="py-3.5 px-4 font-bold text-white flex items-center gap-2.5">
                         <span class="text-base">${rankBadge}</span>
                         <span class="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-sm">${m.emoji || '🎮'}</span>
-                        <div>
-                            <span class="block">${m.name}</span>
-                            ${m.currentGame ? `<span class="text-[10px] text-emerald-400 font-medium block">🎮 ${m.currentGame}</span>` : ''}
-                        </div>
+                        <span>${m.name}</span>
                     </td>
                     <td class="py-3.5 px-4 text-xs">
                         ${isRetired
@@ -1511,6 +1389,17 @@
             });
         }
 
+        function setMemberEmoji(emoji) {
+            const mem = membersData.find(m => m.id === currentSelectedMemberId);
+            if (mem) {
+                mem.emoji = emoji;
+                saveState();
+                updateMemberProfileCard();
+                renderLoginProfiles();
+                updateDashboard();
+            }
+        }
+
         function saveMemberEmojiFree() {
             const mem = membersData.find(m => m.id === currentSelectedMemberId);
             const emojiVal = document.getElementById('memberEmojiInput').value.trim();
@@ -1521,19 +1410,6 @@
                 renderLoginProfiles();
                 updateDashboard();
                 alert(`¡Ícono actualizado con éxito para ${mem.name}!`);
-            }
-        }
-
-        function saveMemberCurrentGame() {
-            const mem = membersData.find(m => m.id === currentSelectedMemberId);
-            const gameVal = document.getElementById('memberCurrentGameInput').value.trim();
-            if (mem) {
-                mem.currentGame = gameVal;
-                saveState();
-                updateMemberProfileCard();
-                renderLoginProfiles();
-                updateDashboard();
-                alert(`¡Juego actual actualizado para ${mem.name}!`);
             }
         }
 
@@ -1627,7 +1503,6 @@
                 name: fullName,
                 shortName: shortName,
                 emoji: '🎮',
-                currentGame: '',
                 color: 'from-emerald-500 to-teal-600',
                 startMonth: startMo,
                 retiradoDesde: null,
