@@ -1,0 +1,2812 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FONDO CONJUNTO SOLIDARIO - POMBERO GAMER TEAM 2026</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & Rajdhani (Gamer/Fintech numbers) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            gamer: {
+              bg: '#090d16',
+              card: '#111827',
+              panel: '#161f33',
+              border: '#1e293b',
+              accent: '#10b981',
+              cyber: '#8b5cf6',
+              gold: '#f59e0b'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Custom scrollbars for compact single-screen dashboard */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.6);
+      border-radius: 8px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(71, 85, 105, 0.7);
+      border-radius: 8px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(16, 185, 129, 0.7);
+    }
+    .glass-panel {
+      background: rgba(17, 24, 39, 0.88);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .gamer-glow {
+      box-shadow: 0 0 25px -5px rgba(16, 185, 129, 0.25);
+    }
+    .admin-glow {
+      box-shadow: 0 0 25px -5px rgba(139, 92, 246, 0.35);
+    }
+    @keyframes pulse-subtle {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.65; }
+    }
+    .animate-pulse-subtle {
+      animation: pulse-subtle 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+  </style>
+</head>
+<body class="bg-[#090d16] text-slate-100 font-sans antialiased selection:bg-emerald-500 selection:text-slate-950 lg:h-screen lg:overflow-hidden flex flex-col">
+
+  <!-- TOP NAVIGATION BAR -->
+  <header class="shrink-0 bg-slate-900/95 border-b border-slate-800/90 px-3 sm:px-5 py-2.5 flex flex-wrap items-center justify-between gap-2 z-30">
+    <!-- Left: Brand Identity -->
+    <div class="flex items-center gap-3">
+      <div class="relative w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 via-teal-600 to-violet-700 p-0.5 shadow-lg shadow-emerald-950/50 flex items-center justify-center shrink-0">
+        <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
+          <!-- Pombero Gamer Icon SVG -->
+          <svg class="w-6 h-6 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 12h4m-2-2v4m7-1h.01M18 11h.01"/>
+            <rect x="2" y="6" width="20" height="12" rx="4"/>
+            <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+          </svg>
+        </div>
+        <span id="cloudStatusDot" class="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-400 ring-2 ring-slate-950" title="Sincronizado en tiempo real"></span>
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <h1 class="text-sm sm:text-base font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-100 to-emerald-400 bg-clip-text text-transparent">
+            POMBERO GAMER TEAM
+          </h1>
+          <span class="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+            Caja Mutual 2026
+          </span>
+        </div>
+        <p class="text-[11px] text-slate-400 flex items-center gap-1.5">
+          <span>Fondo Conjunto Solidario</span>
+          <span>•</span>
+          <span id="cloudStatusText" class="text-emerald-400/90 font-medium">Conectando nube...</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Right: User Switcher, Role Toggle & Actions -->
+    <div class="flex items-center flex-wrap gap-2">
+      <!-- Current Member Selector ("Ingresar como Socio") -->
+      <div class="flex items-center bg-slate-950/90 border border-slate-800 rounded-xl px-2.5 py-1.5 gap-2">
+        <div id="activeUserAvatarTop" class="w-6 h-6 rounded-full bg-slate-800 overflow-hidden flex items-center justify-center shrink-0 text-xs font-bold border border-emerald-500/40"></div>
+        <div class="flex flex-col">
+          <label for="userSelect" class="text-[9px] uppercase tracking-wider text-slate-400 font-semibold leading-none">Sesión activa</label>
+          <select id="userSelect" onchange="window.app.handleUserSwitch(this.value)" class="bg-transparent text-xs font-semibold text-slate-100 focus:outline-none cursor-pointer pr-1 max-w-[145px] sm:max-w-[190px] truncate">
+            <!-- Populated by JS -->
+          </select>
+        </div>
+        <button onclick="window.app.openLoginModal()" class="ml-1 px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-[10px] font-bold text-emerald-300 border border-emerald-500/30 transition-all" title="Abrir pantalla de Login para cambiar de cuenta">
+          Cambiar / Login
+        </button>
+      </div>
+
+      <!-- Admin Mode Toggle Button -->
+      <button id="adminToggleBtn" onclick="window.app.toggleAdminMode()" class="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all border bg-slate-800/80 hover:bg-slate-800 text-slate-300 border-slate-700">
+        <i data-lucide="shield-lock" class="w-3.5 h-3.5 text-violet-400"></i>
+        <span id="adminBtnText">Modo Admin</span>
+      </button>
+
+      <!-- Add Socio Button (Visible in Admin mode) -->
+      <button id="addMemberBtnTop" onclick="window.app.openMemberModal()" class="hidden items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-slate-950 shadow-lg shadow-emerald-950/30 transition-all" title="Agregar nuevo socio indicando desde qué mes participa">
+        <i data-lucide="user-plus" class="w-3.5 h-3.5"></i>
+        <span class="hidden sm:inline">+ Nuevo Socio</span>
+      </button>
+
+      <!-- Retire Socio / Bajas Button (Visible in Admin mode) -->
+      <button id="retireMemberBtnTop" onclick="window.app.openRetireModal()" class="hidden items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 transition-all" title="Avisar retiro de un socio para ocultarlo desde un mes específico">
+        <i data-lucide="user-minus" class="w-3.5 h-3.5"></i>
+        <span class="hidden sm:inline">Retirar Socio / Bajas</span>
+      </button>
+
+      <!-- WhatsApp Summary Copy -->
+      <button onclick="window.app.copyWhatsAppSummary()" class="flex items-center gap-1.5 px-2.5 py-2 rounded-xl text-xs font-semibold bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 transition-all" title="Copiar resumen para WhatsApp">
+        <i data-lucide="share-2" class="w-3.5 h-3.5"></i>
+        <span class="hidden md:inline">Resumen WhatsApp</span>
+      </button>
+
+      <!-- Publish / Launch Web Modal Button -->
+      <button onclick="window.app.openPublishModal()" class="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-extrabold bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 shadow-lg shadow-amber-950/40 transition-all" title="Descargar y publicar la web en internet para tus amigos">
+        <i data-lucide="rocket" class="w-3.5 h-3.5"></i>
+        <span>Lanzar en Internet</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- KPI SUMMARY BAR + MONTH TABS (COMPACT SINGLE SCREEN HEADER) -->
+  <section class="shrink-0 bg-slate-950/60 border-b border-slate-800/80 px-3 sm:px-5 pt-2.5 pb-0 flex flex-col gap-2.5">
+    <!-- 4 Compact KPI Cards -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
+      <!-- KPI 1: SALDO ACTUAL DE LA CAJA (ACUMULADO GENERAL) -->
+      <div class="glass-panel rounded-xl p-2.5 sm:px-3.5 sm:py-2.5 border-l-4 border-l-emerald-500 flex items-center justify-between">
+        <div>
+          <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Saldo Actual Acumulado</span>
+          <div id="kpiGlobalBalance" class="text-base sm:text-xl font-extrabold font-mono text-emerald-400 tracking-tight">Gs. 3.380.000</div>
+          <span id="kpiGlobalSub" class="text-[10px] text-slate-400">Caja disponible al día de hoy</span>
+        </div>
+        <div class="w-9 h-9 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
+          <i data-lucide="vault" class="w-5 h-5"></i>
+        </div>
+      </div>
+
+      <!-- KPI 2: SALDO AL CIERRE DEL MES SELECCIONADO -->
+      <div class="glass-panel rounded-xl p-2.5 sm:px-3.5 sm:py-2.5 border-l-4 border-l-cyan-500 flex items-center justify-between">
+        <div>
+          <div class="flex items-center gap-1.5">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Cierre Mes:</span>
+            <span id="kpiMonthNameBadge" class="text-[10px] font-extrabold uppercase px-1.5 py-0.2 rounded bg-cyan-500/20 text-cyan-300">OCTUBRE</span>
+          </div>
+          <div id="kpiMonthClosing" class="text-base sm:text-xl font-extrabold font-mono text-white tracking-tight">Gs. 3.330.000</div>
+          <span id="kpiMonthPrevCarry" class="text-[10px] text-slate-400">Saldo ant: Gs. 3.130.000</span>
+        </div>
+        <div class="w-9 h-9 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 shrink-0">
+          <i data-lucide="calendar-check-2" class="w-5 h-5"></i>
+        </div>
+      </div>
+
+      <!-- KPI 3: INGRESOS Y EGRESOS DEL MES -->
+      <div class="glass-panel rounded-xl p-2.5 sm:px-3.5 sm:py-2.5 border-l-4 border-l-violet-500 flex items-center justify-between">
+        <div class="w-full pr-2">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Flujo Puro del Mes</span>
+          <div class="flex items-baseline justify-between gap-2 mt-0.5">
+            <span id="kpiMonthPureIn" class="text-xs sm:text-sm font-bold font-mono text-emerald-400">+Gs. 200.000</span>
+            <span id="kpiMonthPureOut" class="text-xs sm:text-sm font-bold font-mono text-rose-400">-Gs. 0</span>
+          </div>
+          <span id="kpiMonthTotalInAccum" class="text-[10px] text-slate-400 block truncate">Ing. Total c/ arrastre: Gs. 3.330.000</span>
+        </div>
+        <div class="w-9 h-9 rounded-lg bg-violet-500/10 border border-violet-500/20 flex items-center justify-center text-violet-400 shrink-0">
+          <i data-lucide="arrow-up-down" class="w-5 h-5"></i>
+        </div>
+      </div>
+
+      <!-- KPI 4: RENDIMIENTO EXTRA & ESTADO CUOTAS -->
+      <div class="glass-panel rounded-xl p-2.5 sm:px-3.5 sm:py-2.5 border-l-4 border-l-amber-500 flex items-center justify-between">
+        <div>
+          <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Rendimiento + Moras 2026</span>
+          <div id="kpiExtraYield" class="text-base sm:text-xl font-extrabold font-mono text-amber-400 tracking-tight">+Gs. 785.000</div>
+          <span id="kpiPendingCount" class="text-[10px] text-amber-300/90 font-medium">Intereses, sorteos y recargos</span>
+        </div>
+        <div class="w-9 h-9 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 shrink-0">
+          <i data-lucide="trending-up" class="w-5 h-5"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Month Navigation Tabs -->
+    <div class="flex items-center justify-between gap-2 overflow-x-auto no-scrollbar pt-0.5">
+      <div id="monthTabsContainer" class="flex items-center gap-1">
+        <!-- Rendered dynamically by JS -->
+      </div>
+
+      <!-- Admin Actions on Tab Bar -->
+      <div id="adminTabActions" class="hidden items-center gap-1.5 pb-1.5 shrink-0">
+        <button onclick="window.app.openAddMonthModal()" class="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold bg-violet-500/20 hover:bg-violet-500/30 text-violet-300 border border-violet-500/30 transition-all">
+          <i data-lucide="calendar-plus" class="w-3.5 h-3.5"></i>
+          <span>+ Mes</span>
+        </button>
+        <button onclick="window.app.confirmResetSpreadsheetData()" class="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-slate-800 hover:bg-rose-950/60 text-slate-300 hover:text-rose-300 border border-slate-700 transition-all" title="Restaurar datos exactos del Excel original">
+          <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+          <span class="hidden md:inline">Restaurar Planilla</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN WORKSPACE: SINGLE SCREEN SPLIT VIEW -->
+  <main class="flex-1 min-h-0 px-3 sm:px-5 py-3 grid grid-cols-1 lg:grid-cols-12 gap-3 lg:overflow-hidden">
+    
+    <!-- LEFT/CENTER COLUMN (8 cols): MONTHLY LEDGER OR SOCIOS MATRIX -->
+    <div class="lg:col-span-8 flex flex-col min-h-0 glass-panel rounded-2xl overflow-hidden border border-slate-800/90 shadow-xl">
+      
+      <!-- Panel Header -->
+      <div class="shrink-0 px-4 py-2.5 bg-slate-900/90 border-b border-slate-800 flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-2">
+          <span id="ledgerTitleBadge" class="px-2.5 py-0.5 rounded-md text-xs font-extrabold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+            OCTUBRE 2026
+          </span>
+          <h2 id="ledgerSubtitle" class="text-xs sm:text-sm font-bold text-slate-200">
+            Libro Contable Mensual y Estado de Aportes
+          </h2>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <!-- Filter inside month -->
+          <div class="relative">
+            <input id="searchLedgerInput" type="text" oninput="window.app.handleSearch(this.value)" placeholder="Buscar socio o concepto..." class="bg-slate-950/90 border border-slate-800 rounded-lg pl-7 pr-2.5 py-1 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-emerald-500 w-40 sm:w-52" />
+            <i data-lucide="search" class="w-3.5 h-3.5 text-slate-500 absolute left-2.5 top-1.5"></i>
+          </div>
+
+          <!-- Admin Add Extra Movement Button -->
+          <button id="addExtraMovBtn" onclick="window.app.openMovementModal()" class="hidden items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-slate-950 transition-all shadow">
+            <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
+            <span>+ Movimiento / Préstamo</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Scrollable Table Area -->
+      <div id="ledgerContentArea" class="flex-1 overflow-y-auto divide-y divide-slate-800/60">
+        <!-- Populated dynamically by JS -->
+      </div>
+
+      <!-- Sticky Ledger Footer (Totals of Active Month) -->
+      <div id="ledgerFooterTotals" class="shrink-0 bg-slate-950/95 border-t border-slate-800 px-4 py-2.5 flex flex-wrap items-center justify-between gap-3">
+        <!-- Populated dynamically by JS -->
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN (4 cols): PERSONAL SITUATION & MEMBER INSPECTOR -->
+    <div class="lg:col-span-4 flex flex-col min-h-0 glass-panel rounded-2xl overflow-hidden border border-slate-800/90 shadow-xl">
+      
+      <!-- Member Inspector Header -->
+      <div class="shrink-0 px-4 py-2.5 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between gap-2">
+        <div class="flex items-center gap-2">
+          <i data-lucide="id-card" class="w-4 h-4 text-emerald-400"></i>
+          <h3 id="inspectorHeaderTitle" class="text-xs sm:text-sm font-bold text-slate-100">Situación del Socio</h3>
+        </div>
+        <span id="inspectorRoleBadge" class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-slate-800 text-slate-300 border border-slate-700">
+          Modo Lectura
+        </span>
+      </div>
+
+      <!-- Quick Member Avatar Strip (Admin or quick switch) -->
+      <div class="shrink-0 px-3 py-2 bg-slate-950/50 border-b border-slate-800/80">
+        <div class="flex items-center justify-between mb-1">
+          <span class="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Integrantes del Equipo (Clic para ver ficha)</span>
+          <span id="membersCountLabel" class="text-[10px] font-mono text-emerald-400">10 Socios</span>
+        </div>
+        <div id="memberAvatarStrip" class="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Scrollable Member Profile & History -->
+      <div id="memberInspectorBody" class="flex-1 overflow-y-auto p-3.5 space-y-3.5">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ==========================================
+       MODALS (NO BROWSER ALERTS/CONFIRMS)
+       ========================================== -->
+
+  <!-- 1. ADMIN PIN MODAL -->
+  <div id="adminPinModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="bg-slate-900 border border-violet-500/40 rounded-2xl max-w-sm w-full p-5 shadow-2xl admin-glow">
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-violet-500/20 text-violet-400 flex items-center justify-center">
+            <i data-lucide="key-round" class="w-4 h-4"></i>
+          </div>
+          <h3 class="text-base font-bold text-white">Acceso Administrador</h3>
+        </div>
+        <button onclick="window.app.closeModal('adminPinModal')" class="text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <p class="text-xs text-slate-300 mb-3">
+        Ingresa el PIN de Administrador (Rodrigo Servián) para habilitar la edición contable, carga de préstamos y gestión de socios.
+      </p>
+      <div class="bg-violet-950/40 border border-violet-500/30 rounded-xl p-2.5 mb-3 text-[11px] text-violet-200 flex items-center justify-between">
+        <span>PIN actual configurado:</span>
+        <span class="font-mono font-bold text-violet-300">Por defecto: 1234</span>
+      </div>
+      <form onsubmit="window.app.submitAdminPin(event)" class="space-y-3">
+        <div>
+          <input id="adminPinInput" type="password" inputmode="numeric" placeholder="Ingresa el PIN..." class="w-full bg-slate-950 border border-slate-700 focus:border-violet-500 rounded-xl px-3.5 py-2.5 text-center font-mono text-lg tracking-widest text-white focus:outline-none" required />
+          <p id="adminPinError" class="text-xs text-rose-400 mt-1 hidden">PIN incorrecto. Intenta nuevamente.</p>
+        </div>
+        <div class="flex items-center justify-end gap-2 pt-1">
+          <button type="button" onclick="window.app.closeModal('adminPinModal')" class="px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700">
+            Cancelar
+          </button>
+          <button type="submit" class="px-4 py-2 rounded-xl text-xs font-bold bg-violet-600 hover:bg-violet-500 text-white shadow-lg">
+            Desbloquear Contabilidad
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. EDIT/ADD MEMBER MODAL (WITH PHOTO UPLOAD & AVATARS) -->
+  <div id="memberModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-md w-full p-5 shadow-2xl max-h-[92vh] overflow-y-auto">
+      <div class="flex items-center justify-between mb-3">
+        <h3 id="memberModalTitle" class="text-base font-bold text-white">Perfil de Socio</h3>
+        <button onclick="window.app.closeModal('memberModal')" class="text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form onsubmit="window.app.saveMemberForm(event)" class="space-y-3.5">
+        <input type="hidden" id="memberFormId" />
+
+        <!-- Profile Picture Preview & Upload -->
+        <div class="flex flex-col items-center gap-2.5 bg-slate-950/70 border border-slate-800 rounded-xl p-3.5">
+          <div id="memberFormAvatarPreview" class="w-20 h-20 rounded-2xl bg-slate-800 border-2 border-emerald-500/60 overflow-hidden flex items-center justify-center text-2xl font-extrabold text-emerald-300 shadow-lg">
+          </div>
+          <div class="flex flex-wrap items-center justify-center gap-2">
+            <label class="cursor-pointer px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-slate-950 transition-all flex items-center gap-1.5">
+              <i data-lucide="camera" class="w-3.5 h-3.5"></i>
+              <span>Subir Foto desde PC / Celular</span>
+              <input type="file" id="memberPhotoInput" accept="image/*" class="hidden" onchange="window.app.handlePhotoUpload(event)" />
+            </label>
+            <button type="button" onclick="window.app.clearMemberPhoto()" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300">
+              Usar Iniciales
+            </button>
+          </div>
+          <!-- Preset Gamer Avatars -->
+          <div class="w-full pt-1">
+            <span class="text-[10px] uppercase tracking-wider text-slate-400 block text-center mb-1.5">O elige un ícono Gamer rápido:</span>
+            <div class="flex items-center justify-center gap-1.5 flex-wrap" id="presetAvatarsRow">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+        </div>
+
+        <div id="memberFormAdminFields" class="space-y-3">
+          <div>
+            <label class="text-xs font-semibold text-slate-300 block mb-1">Nombre Completo en Planilla</label>
+            <input id="memberFormName" type="text" placeholder="Ej: CARLOS GÓMEZ" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white uppercase focus:outline-none focus:border-emerald-500" required />
+          </div>
+          <div class="grid grid-cols-2 gap-2.5">
+            <div>
+              <label class="text-xs font-semibold text-slate-300 block mb-1">Apodo / Gamer Tag</label>
+              <input id="memberFormNickname" type="text" placeholder="Ej: Charly" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500" />
+            </div>
+            <div>
+              <label class="text-xs font-semibold text-slate-300 block mb-1">Rol en la Caja</label>
+              <select id="memberFormRole" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+                <option value="SOCIO">Socio</option>
+                <option value="ADMIN">Administrador</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- PIN Personal Opcional del Socio -->
+          <div class="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800 flex items-center justify-between gap-2">
+            <div>
+              <label class="text-[11px] font-bold text-slate-200 block">PIN Personal de Acceso (Opcional)</label>
+              <span class="text-[10px] text-slate-400">Si lo dejas vacío, el socio entra con 1 clic sin clave.</span>
+            </div>
+            <input id="memberFormPin" type="text" maxlength="8" placeholder="Sin PIN" class="w-28 bg-slate-900 border border-slate-700 rounded-xl px-2.5 py-1.5 text-center font-mono text-xs font-bold text-emerald-300 focus:outline-none focus:border-emerald-500" />
+          </div>
+
+          <!-- Período de Actividad (Desde qué mes mostrar y Baja opcional) -->
+          <div class="p-3 rounded-xl bg-slate-950/90 border border-slate-800 space-y-2.5">
+            <div class="text-[11px] font-bold text-emerald-400 flex items-center gap-1.5">
+              <i data-lucide="calendar-range" class="w-3.5 h-3.5"></i>
+              <span>Visibilidad del Socio por Meses</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <div>
+                <label class="text-[11px] font-semibold text-slate-300 block mb-1">Mostrar desde el mes de:</label>
+                <select id="memberFormDesdeMes" class="w-full bg-slate-900 border border-emerald-500/40 rounded-xl px-2.5 py-2 text-xs font-bold text-emerald-300 focus:outline-none focus:border-emerald-500">
+                  <!-- Populated dynamically with monthsOrder -->
+                </select>
+              </div>
+              <div>
+                <label class="text-[11px] font-semibold text-slate-300 block mb-1">Ocultar por retiro desde:</label>
+                <select id="memberFormRetiradoMes" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-2.5 py-2 text-xs font-semibold text-slate-200 focus:outline-none focus:border-amber-500">
+                  <!-- Populated dynamically with null + monthsOrder -->
+                </select>
+              </div>
+            </div>
+            <p class="text-[10px] text-slate-400 leading-relaxed">
+              El socio solo aparecerá en las pestañas mensuales desde su mes de ingreso y dejará de mostrarse automáticamente a partir de su mes de retiro.
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-800">
+          <button type="button" onclick="window.app.closeModal('memberModal')" class="px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700">
+            Cancelar
+          </button>
+          <button type="submit" class="px-4 py-2 rounded-xl text-xs font-bold bg-emerald-500 hover:bg-emerald-400 text-slate-950">
+            Guardar Cambios
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 3. ADD / EDIT EXTRA MOVEMENT MODAL (ADMIN ONLY) -->
+  <div id="movementModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-md w-full p-5 shadow-2xl">
+      <div class="flex items-center justify-between mb-3">
+        <h3 id="movementModalTitle" class="text-base font-bold text-white">Registrar Movimiento del Mes</h3>
+        <button onclick="window.app.closeModal('movementModal')" class="text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <form onsubmit="window.app.saveMovementForm(event)" class="space-y-3">
+        <input type="hidden" id="movFormId" />
+        <div>
+          <label class="text-xs font-semibold text-slate-300 block mb-1">Concepto / Descripción (Préstamo, Garantía, Sorteo, Galeto, etc.)</label>
+          <textarea id="movFormConcept" rows="2" placeholder="Ej: PRÉSTAMO A SOCIO, CONTROL DE GARANTÍA..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500" required></textarea>
+        </div>
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="text-xs font-semibold text-slate-300 block mb-1">Tipo de Movimiento</label>
+            <select id="movFormType" onchange="window.app.toggleMovTypeFields()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+              <option value="INGRESO">Ingreso / Devolución (+)</option>
+              <option value="EGRESO">Egreso / Préstamo / Gasto (-)</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-xs font-semibold text-slate-300 block mb-1">Fecha o Referencia</label>
+            <input id="movFormDate" type="text" placeholder="Ej: 2026-10-20" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500" />
+          </div>
+        </div>
+        <div>
+          <label class="text-xs font-semibold text-slate-300 block mb-1">Monto en Guaraníes (Gs.)</label>
+          <input id="movFormAmount" type="number" step="1000" min="0" placeholder="Ej: 300000" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-sm font-mono font-bold text-emerald-400 focus:outline-none focus:border-emerald-500" required />
+        </div>
+        <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-800">
+          <button type="button" onclick="window.app.closeModal('movementModal')" class="px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700">
+            Cancelar
+          </button>
+          <button type="submit" class="px-4 py-2 rounded-xl text-xs font-bold bg-emerald-500 hover:bg-emerald-400 text-slate-950">
+            Guardar en Planilla
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 4. EDIT CONTRIBUTION MODAL (ADMIN ONLY) -->
+  <div id="contribModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-sm w-full p-5 shadow-2xl">
+      <div class="flex items-center justify-between mb-2">
+        <h3 class="text-sm font-bold text-white">Editar Aporte Mensual</h3>
+        <button onclick="window.app.closeModal('contribModal')" class="text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <p id="contribModalMemberName" class="text-xs font-bold text-emerald-400 mb-3"></p>
+      <form onsubmit="window.app.saveContribForm(event)" class="space-y-3">
+        <input type="hidden" id="contribMemberId" />
+        <div>
+          <label class="text-xs font-semibold text-slate-300 block mb-1">Estado Rápido</label>
+          <div class="grid grid-cols-2 gap-1.5">
+            <button type="button" onclick="window.app.setContribPreset('PAGADO', 50000)" class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30">
+              Al Día (50.000)
+            </button>
+            <button type="button" onclick="window.app.setContribPreset('PAGADO_MORA', 55000)" class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 hover:bg-cyan-500/30">
+              Con Mora (55.000)
+            </button>
+            <button type="button" onclick="window.app.setContribPreset('PENDIENTE', 0)" class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30">
+              PENDIENTE (0)
+            </button>
+            <button type="button" onclick="window.app.setContribPreset('EN_ESPERA', 0)" class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700">
+              En Espera / N/A
+            </button>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="text-xs font-semibold text-slate-300 block mb-1">Monto (Gs.)</label>
+            <input id="contribAmountInput" type="number" step="1000" min="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs font-mono font-bold text-white" required />
+          </div>
+          <div>
+            <label class="text-xs font-semibold text-slate-300 block mb-1">Fecha de Pago</label>
+            <input id="contribDateInput" type="text" placeholder="2026-10-20" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" />
+          </div>
+        </div>
+        <div>
+          <label class="text-xs font-semibold text-slate-300 block mb-1">Estado Contable</label>
+          <select id="contribStatusInput" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
+            <option value="PAGADO">PAGADO AL DÍA</option>
+            <option value="PAGADO_MORA">PAGADO CON MORA (55.000)</option>
+            <option value="PENDIENTE">PENDIENTE DE PAGO</option>
+            <option value="EN_ESPERA">EN ESPERA (AÚN NO VENCE)</option>
+            <option value="NO_APLICA">NO APLICA / INACTIVO</option>
+          </select>
+        </div>
+        <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-800">
+          <button type="button" onclick="window.app.closeModal('contribModal')" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300">
+            Cancelar
+          </button>
+          <button type="submit" class="px-4 py-1.5 rounded-xl text-xs font-bold bg-emerald-500 text-slate-950">
+            Actualizar Aporte
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 5. ADD NEW MONTH MODAL -->
+  <div id="addMonthModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-sm w-full p-5 shadow-2xl">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="text-base font-bold text-white">Habilitar Nuevo Mes</h3>
+        <button onclick="window.app.closeModal('addMonthModal')" class="text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <p class="text-xs text-slate-300 mb-3">
+        El nuevo mes arrastrará automáticamente el Saldo Final Positivo del mes anterior y creará la grilla de socios activos.
+      </p>
+      <form onsubmit="window.app.createNewMonth(event)" class="space-y-3">
+        <div>
+          <label class="text-xs font-semibold text-slate-300 block mb-1">Nombre del Mes</label>
+          <input id="newMonthNameInput" type="text" placeholder="Ej: DICIEMBRE" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white uppercase focus:outline-none focus:border-emerald-500" required />
+        </div>
+        <div class="flex items-center justify-end gap-2 pt-2">
+          <button type="button" onclick="window.app.closeModal('addMonthModal')" class="px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300">
+            Cancelar
+          </button>
+          <button type="submit" class="px-4 py-2 rounded-xl text-xs font-bold bg-violet-600 hover:bg-violet-500 text-white">
+            Crear Pestaña Mensual
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 6. PUBLISH & SHARE GUIDE MODAL -->
+  <div id="publishModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="bg-slate-900 border border-amber-500/40 rounded-2xl max-w-xl w-full p-5 shadow-2xl max-h-[92vh] overflow-y-auto">
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center gap-2">
+          <div class="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center">
+            <i data-lucide="rocket" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-extrabold text-white">Centro de Lanzamiento en Internet</h3>
+            <p class="text-[11px] text-amber-300/90">Publica tu Caja Mutual gratis con pantalla de Login para todos los socios</p>
+          </div>
+        </div>
+        <button onclick="window.app.closeModal('publishModal')" class="text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3.5 text-xs text-slate-300 leading-relaxed">
+        <!-- PASO 1: DESCARGAR ARCHIVO LISTO -->
+        <div class="p-3.5 rounded-xl bg-gradient-to-br from-emerald-950/60 to-slate-950 border border-emerald-500/40 space-y-2">
+          <div class="flex items-center justify-between">
+            <h4 class="font-extrabold text-emerald-300 flex items-center gap-1.5 text-sm">
+              <span class="w-5 h-5 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center text-[11px] font-black">1</span>
+              Descarga tu archivo Web con todos los datos actuales
+            </h4>
+            <span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300">1 Clic</span>
+          </div>
+          <p class="text-slate-300 text-xs">
+            Este botón empaqueta toda tu contabilidad actual, fotos de perfil, bajas y el portal de Login dentro de un único archivo <code class="text-emerald-300 font-mono font-bold">index.html</code> listo para subir a Internet:
+          </p>
+          <div class="flex flex-wrap gap-2 pt-1">
+            <button onclick="window.app.downloadStandaloneHtml()" class="px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs flex items-center gap-2 shadow-lg shadow-emerald-950/50 transition-all">
+              <i data-lucide="file-down" class="w-4 h-4"></i>
+              <span>Descargar index.html Listo para Subir</span>
+            </button>
+            <button onclick="window.app.exportBackupJson()" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs flex items-center gap-1.5 border border-slate-700">
+              <i data-lucide="download" class="w-3.5 h-3.5"></i> Respaldo .JSON
+            </button>
+            <label class="cursor-pointer px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs flex items-center gap-1.5 border border-slate-700">
+              <i data-lucide="upload" class="w-3.5 h-3.5"></i> Importar .JSON
+              <input type="file" accept=".json" class="hidden" onchange="window.app.importBackupJson(event)" />
+            </label>
+          </div>
+        </div>
+
+        <!-- PASO 2: SUBIR A NETLIFY DROP O TIINY HOST -->
+        <div class="p-3.5 rounded-xl bg-slate-950/90 border border-slate-800 space-y-2">
+          <h4 class="font-extrabold text-amber-300 flex items-center gap-1.5 text-sm">
+            <span class="w-5 h-5 rounded-full bg-amber-400 text-slate-950 flex items-center justify-center text-[11px] font-black">2</span>
+            Súbelo gratis en 30 segundos y obtén tu link web
+          </h4>
+          <ol class="list-decimal list-inside space-y-1.5 text-slate-300">
+            <li>Crea una carpeta nueva en tu escritorio llamada <code class="px-1.5 py-0.5 rounded bg-slate-800 text-emerald-300 font-mono">pombero-caja</code> y mete adentro el archivo <code class="px-1.5 py-0.5 rounded bg-slate-800 text-emerald-300 font-mono">index.html</code> que acabas de descargar.</li>
+            <li>Entra a <strong>app.netlify.com/drop</strong> (o a <strong>tiiny.host</strong>).</li>
+            <li>Arrastra la carpeta <code class="font-mono text-emerald-300">pombero-caja</code> dentro del recuadro de esa página.</li>
+            <li>¡Listo! Te dará un link como <span class="font-mono text-cyan-300">pombero-gamer.netlify.app</span> para enviar al grupo de WhatsApp.</li>
+          </ol>
+        </div>
+
+        <!-- PASO 3: LOGIN Y SEGURIDAD -->
+        <div class="p-3.5 rounded-xl bg-violet-950/30 border border-violet-500/30 space-y-2">
+          <h4 class="font-extrabold text-violet-300 flex items-center gap-1.5 text-sm">
+            <span class="w-5 h-5 rounded-full bg-violet-400 text-slate-950 flex items-center justify-center text-[11px] font-black">3</span>
+            Cómo entran tus amigos y cómo editas tú
+          </h4>
+          <p class="text-slate-300">
+            Al abrir el link, tus amigos verán la <strong>Pantalla de Login del Pombero Gamer Team</strong>: eligen su tarjeta de socio para ver su situación personal en modo lectura. Tú entras con el botón <strong>Acceso Administrador (PIN actual: <span id="currentPinDisplay" class="font-mono text-violet-300">1234</span>)</strong> para editar pagos, préstamos o bajas.
+          </p>
+          <div id="changePinBox" class="hidden pt-2 border-t border-violet-500/20 flex flex-wrap items-center gap-2">
+            <span class="text-[11px] text-violet-200 font-semibold">Cambiar tu PIN de Admin:</span>
+            <input id="newAdminPinInput" type="text" placeholder="Nuevo PIN (ej. 2026)" class="bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-white font-mono w-36" />
+            <button onclick="window.app.updateAdminPin()" class="px-3 py-1 rounded-lg bg-violet-600 hover:bg-violet-500 text-white font-bold text-xs">
+              Guardar PIN
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between mt-4 pt-3 border-t border-slate-800">
+        <button onclick="window.app.closeModal('publishModal'); window.app.openLoginModal();" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/30 flex items-center gap-1.5">
+          <i data-lucide="log-in" class="w-3.5 h-3.5"></i>
+          Probar Pantalla de Login Ahora
+        </button>
+        <button onclick="window.app.closeModal('publishModal')" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-white">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. CONFIRM RESET MODAL -->
+  <div id="confirmResetModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="bg-slate-900 border border-rose-500/40 rounded-2xl max-w-sm w-full p-5 shadow-2xl">
+      <h3 class="text-base font-bold text-white mb-2">¿Restaurar datos originales de la planilla?</h3>
+      <p class="text-xs text-slate-300 mb-4">
+        Esto recargará exactamente los movimientos originales de Abril a Noviembre 2026 del archivo Excel <span class="font-mono text-emerald-300">CAJA POMBERO GAMER TEAM.xlsx</span>.
+      </p>
+      <div class="flex items-center justify-end gap-2">
+        <button onclick="window.app.closeModal('confirmResetModal')" class="px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300">
+          Cancelar
+        </button>
+        <button onclick="window.app.executeResetSpreadsheetData()" class="px-4 py-2 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-500 text-white">
+          Sí, Restaurar Planilla
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. RETIRE MEMBER / BAJAS MODAL (ADMIN ONLY) -->
+  <div id="retireMemberModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="bg-slate-900 border border-amber-500/40 rounded-2xl max-w-md w-full p-5 shadow-2xl max-h-[92vh] overflow-y-auto">
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center">
+            <i data-lucide="user-minus" class="w-4 h-4"></i>
+          </div>
+          <h3 class="text-base font-bold text-white">Avisar Retiro / Baja de Socio</h3>
+        </div>
+        <button onclick="window.app.closeModal('retireMemberModal')" class="text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <p class="text-xs text-slate-300 mb-3 leading-relaxed">
+        Indica qué socio se retiró de la caja y <strong>a partir de qué mes ya no debe aparecer</strong> en las listas mensuales. Sus aportes de meses anteriores quedan guardados intactos en la contabilidad.
+      </p>
+
+      <form onsubmit="window.app.saveRetireForm(event)" class="space-y-3.5">
+        <div>
+          <label class="text-xs font-semibold text-slate-300 block mb-1">Seleccionar Socio</label>
+          <select id="retireMemberSelect" onchange="window.app.handleRetireMemberSelectChange(this.value)" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-xs font-bold text-white focus:outline-none focus:border-amber-500">
+            <!-- Populated by JS -->
+          </select>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-slate-950/90 border border-amber-500/30 space-y-2.5">
+          <label class="text-xs font-bold text-amber-300 block">
+            ¿Desde qué mes ya NO debe mostrarse en la planilla?
+          </label>
+          <select id="retireFromMonthSelect" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-amber-500">
+            <!-- Populated by JS -->
+          </select>
+          <p class="text-[11px] text-slate-400">
+            Ejemplo: Si eliges <strong>JUNIO</strong>, el socio se verá en Abril y Mayo, pero estará oculto desde Junio en adelante. Elige <em>"Socio Activo (No retirar)"</em> si deseas reactivarlo.
+          </p>
+        </div>
+
+        <!-- Current Retired Members List -->
+        <div class="p-3 rounded-xl bg-slate-950/60 border border-slate-800">
+          <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 block mb-2">
+            Bajas / Retiros Registrados Actualmente:
+          </span>
+          <div id="retiredMembersQuickList" class="space-y-1.5">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-800">
+          <button type="button" onclick="window.app.closeModal('retireMemberModal')" class="px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700">
+            Cancelar
+          </button>
+          <button type="submit" class="px-4 py-2 rounded-xl text-xs font-bold bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-lg">
+            Guardar Estado del Socio
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 9. FULL LOGIN PORTAL MODAL (SOCIOS & ADMIN LOGIN) -->
+  <div id="loginPortalModal" class="fixed inset-0 bg-[#070b12]/95 backdrop-blur-md z-50 hidden items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-slate-900/95 border border-slate-700/80 rounded-3xl max-w-2xl w-full p-5 sm:p-7 shadow-2xl gamer-glow my-auto">
+      <!-- Top Header -->
+      <div class="flex items-center justify-between gap-3 pb-4 border-b border-slate-800">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-500 via-teal-600 to-violet-700 p-0.5 shadow-lg flex items-center justify-center shrink-0">
+            <div class="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center">
+              <svg class="w-7 h-7 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 12h4m-2-2v4m7-1h.01M18 11h.01"/>
+                <rect x="2" y="6" width="20" height="12" rx="4"/>
+                <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+              </svg>
+            </div>
+          </div>
+          <div>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+              Portal de Acceso • Caja Mutual 2026
+            </span>
+            <h2 class="text-lg sm:text-xl font-black tracking-tight text-white mt-0.5">
+              POMBERO GAMER TEAM
+            </h2>
+          </div>
+        </div>
+        <div class="text-right hidden sm:block">
+          <span class="text-[10px] uppercase font-bold text-slate-400 block">Saldo Actual en Caja</span>
+          <span id="loginModalPotAmount" class="text-base font-mono font-extrabold text-emerald-400">Gs. 3.380.000</span>
+        </div>
+      </div>
+
+      <!-- Member Selection Grid -->
+      <div class="mt-4">
+        <div class="flex items-center justify-between mb-2.5">
+          <h3 class="text-xs sm:text-sm font-bold text-slate-200 flex items-center gap-1.5">
+            <i data-lucide="users" class="w-4 h-4 text-emerald-400"></i>
+            <span>Selecciona tu perfil de Socio para ingresar:</span>
+          </h3>
+          <button type="button" onclick="window.app.toggleShowRetiredInLogin()" id="toggleRetiredLoginBtn" class="text-[11px] font-semibold text-slate-400 hover:text-amber-300">
+            Ver ex-socios retirados
+          </button>
+        </div>
+
+        <div id="loginMembersGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 max-h-[290px] overflow-y-auto pr-1">
+          <!-- Populated dynamically by JS -->
+        </div>
+      </div>
+
+      <!-- Optional Member PIN Prompt Box (Shown only if selected member has a personal PIN) -->
+      <div id="loginMemberPinBox" class="hidden mt-4 p-3.5 rounded-2xl bg-slate-950 border border-emerald-500/40">
+        <form onsubmit="window.app.confirmMemberPinLogin(event)" class="flex flex-wrap items-center justify-between gap-2">
+          <div class="text-xs">
+            <span class="text-slate-400">Ingresando como:</span>
+            <strong id="loginPromptMemberName" class="text-emerald-300 ml-1"></strong>
+          </div>
+          <div class="flex items-center gap-2">
+            <input id="loginMemberPinInput" type="password" placeholder="Tu PIN personal" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs font-mono text-white w-36 focus:outline-none focus:border-emerald-500" required />
+            <button type="submit" class="px-3.5 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs">
+              Entrar
+            </button>
+          </div>
+        </form>
+        <p id="loginMemberPinError" class="text-[11px] text-rose-400 mt-1 hidden">PIN personal incorrecto.</p>
+      </div>
+
+      <!-- Direct Admin Login Bar at Bottom -->
+      <div class="mt-5 pt-4 border-t border-slate-800 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+        <div class="flex items-center gap-2 text-xs text-slate-300">
+          <div class="w-8 h-8 rounded-xl bg-violet-500/15 border border-violet-500/30 flex items-center justify-center text-violet-400 shrink-0">
+            <i data-lucide="shield-check" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <div class="font-bold text-violet-300">¿Eres Rodrigo Servián (Administrador)?</div>
+            <div class="text-[11px] text-slate-400">Ingresa directo con tu PIN para habilitar toda la edición contable</div>
+          </div>
+        </div>
+
+        <form onsubmit="window.app.loginDirectAsAdmin(event)" class="flex items-center gap-2">
+          <input id="directAdminPinInput" type="password" inputmode="numeric" placeholder="PIN Admin (1234)" class="bg-slate-950 border border-violet-500/40 focus:border-violet-400 rounded-xl px-3 py-2 text-xs font-mono text-white w-36 focus:outline-none" required />
+          <button type="submit" class="px-4 py-2 rounded-xl text-xs font-extrabold bg-violet-600 hover:bg-violet-500 text-white shadow-lg shrink-0">
+            Entrar Admin
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toastContainer" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- APPLICATION LOGIC & FIREBASE CLOUD PERSISTENCE -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    // Preset Gamer Avatars (Emojis/Icons)
+    const PRESET_AVATARS = ['🎮', '🕹️', '👾', '🐉', '🔥', '⚡', '🛡️', '👑', '🦊', '🐺', '🎯', '🚀'];
+
+    // Exact Initial Data from CAJA POMBERO GAMER TEAM.xlsx (2026)
+    function getInitialSpreadsheetData() {
+      if (window.__BAKED_INITIAL_STATE__) {
+        return JSON.parse(JSON.stringify(window.__BAKED_INITIAL_STATE__));
+      }
+      return {
+        adminPin: "1234",
+        updatedAt: Date.now(),
+        members: [
+          { id: "m1", name: "JUAN ANDRÉS KALABURA MACIEL", nickname: "Kalabura", role: "SOCIO", desdeMes: "ABRIL", retiradoDesdeMes: null, avatar: "🎮", photoUrl: "", color: "from-emerald-500 to-teal-700" },
+          { id: "m2", name: "JUAN MARCELO VERA ARÉVALOS", nickname: "Marcelo Vera", role: "SOCIO", desdeMes: "ABRIL", retiradoDesdeMes: "JUNIO", avatar: "🕹️", photoUrl: "", color: "from-slate-500 to-slate-700" },
+          { id: "m3", name: "MARCOS NEHEMÍAS CARDOZO INSFRAN", nickname: "Marcos Cardozo", role: "SOCIO", desdeMes: "ABRIL", retiradoDesdeMes: "JULIO", avatar: "👾", photoUrl: "", color: "from-indigo-500 to-blue-700" },
+          { id: "m4", name: "FABIO HERNÁN FIGUEREDO NUÑEZ", nickname: "Hernán Figueredo", role: "SOCIO", desdeMes: "ABRIL", retiradoDesdeMes: null, avatar: "🔥", photoUrl: "", color: "from-orange-500 to-red-700" },
+          { id: "m5", name: "RODRIGO SERVIÁN RIVAS", nickname: "Rodrigo Servián", role: "ADMIN", desdeMes: "ABRIL", retiradoDesdeMes: null, avatar: "👑", photoUrl: "", color: "from-violet-500 to-purple-800" },
+          { id: "m6", name: "PABLO FERRAZZA", nickname: "Pablo Ferrazza", role: "SOCIO", desdeMes: "ABRIL", retiradoDesdeMes: null, avatar: "⚡", photoUrl: "", color: "from-amber-500 to-yellow-700" },
+          { id: "m7", name: "ADAM EUGENIO ALDERETE", nickname: "Adam Alderete", role: "SOCIO", desdeMes: "ABRIL", retiradoDesdeMes: null, avatar: "🛡️", photoUrl: "", color: "from-cyan-500 to-blue-700" },
+          { id: "m8", name: "HENRY ARIEL CHÁVEZ WOTTRICH", nickname: "Henry Chávez", role: "SOCIO", desdeMes: "ABRIL", retiradoDesdeMes: null, avatar: "🐉", photoUrl: "", color: "from-rose-500 to-pink-700" },
+          { id: "m9", name: "JUANMA FLORES", nickname: "Juanma Flores", role: "SOCIO", desdeMes: "ABRIL", retiradoDesdeMes: null, avatar: "🎯", photoUrl: "", color: "from-lime-500 to-emerald-700" },
+          { id: "m10", name: "HUGO MARTÍN BENÍTEZ HAUPT", nickname: "Hugo Benítez", role: "SOCIO", desdeMes: "ABRIL", retiradoDesdeMes: null, avatar: "🚀", photoUrl: "", color: "from-sky-500 to-indigo-700" }
+        ],
+        monthsOrder: ["ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SETIEMBRE", "OCTUBRE", "NOVIEMBRE"],
+        monthsData: {
+          "ABRIL": {
+            contributions: {
+              "m1": { date: "2026-05-05", amount: 50000, status: "PAGADO" },
+              "m2": { date: "ABRIL", amount: 50000, status: "PAGADO" },
+              "m3": { date: "ABRIL", amount: 50000, status: "PAGADO" },
+              "m4": { date: "ABRIL", amount: 50000, status: "PAGADO" },
+              "m5": { date: "ABRIL", amount: 50000, status: "PAGADO" },
+              "m6": { date: "ABRIL", amount: 50000, status: "PAGADO" },
+              "m7": { date: "ABRIL", amount: 50000, status: "PAGADO" },
+              "m8": { date: "ABRIL", amount: 50000, status: "PAGADO" },
+              "m9": { date: "ABRIL", amount: 50000, status: "PAGADO" },
+              "m10": { date: "ABRIL", amount: 50000, status: "PAGADO" }
+            },
+            movements: [
+              { id: "ab1", concept: "INTERESES CAJA FALLIDA", date: "ABRIL", type: "INGRESO", amount: 186000 },
+              { id: "ab2", concept: "PARA GALETO TRANSFERIDO A GABRIEL FERRAZZA", date: "2026-04-14", type: "EGRESO", amount: 186000 },
+              { id: "ab3", concept: "INGRESO DE SORTEO DE ABRIL, 9 NÚMEROS A 25MIL", date: "ABRIL", type: "INGRESO", amount: 225000 },
+              { id: "ab4", concept: "PREMIO A PABLO FERRAZZA", date: "ABRIL", type: "EGRESO", amount: 150000 },
+              { id: "ab5", concept: "APORTE EXTRA DE ADAM", date: "ABRIL", type: "INGRESO", amount: 10000 }
+            ]
+          },
+          "MAYO": {
+            contributions: {
+              "m1": { date: "2026-06-09", amount: 55000, status: "PAGADO_MORA" },
+              "m2": { date: "ABRIL", amount: 50000, status: "PAGADO" },
+              "m3": { date: "2026-05-01", amount: 50000, status: "PAGADO" },
+              "m4": { date: "2026-05-27", amount: 55000, status: "PAGADO_MORA" },
+              "m5": { date: "2026-05-01", amount: 50000, status: "PAGADO" },
+              "m6": { date: "2026-05-09", amount: 50000, status: "PAGADO" },
+              "m7": { date: "2026-05-03", amount: 50000, status: "PAGADO" },
+              "m8": { date: "2026-05-03", amount: 50000, status: "PAGADO" },
+              "m9": { date: "2026-05-27", amount: 55000, status: "PAGADO_MORA" },
+              "m10": { date: "2026-05-25", amount: 55000, status: "PAGADO_MORA" }
+            },
+            movements: []
+          },
+          "JUNIO": {
+            contributions: {
+              "m1": { date: "2026-07-10", amount: 55000, status: "PAGADO_MORA" },
+              "m2": { date: "", amount: 0, status: "NO_APLICA" },
+              "m3": { date: "2026-06-03", amount: 50000, status: "PAGADO" },
+              "m4": { date: "2026-06-02", amount: 50000, status: "PAGADO" },
+              "m5": { date: "2026-06-02", amount: 50000, status: "PAGADO" },
+              "m6": { date: "2026-06-12", amount: 55000, status: "PAGADO_MORA" },
+              "m7": { date: "2026-06-01", amount: 50000, status: "PAGADO" },
+              "m8": { date: "2026-08-08", amount: 55000, status: "PAGADO_MORA" },
+              "m9": { date: "2026-06-06", amount: 50000, status: "PAGADO" },
+              "m10": { date: "2026-06-02", amount: 50000, status: "PAGADO" }
+            },
+            movements: []
+          },
+          "JULIO": {
+            contributions: {
+              "m1": { date: "2026-07-10", amount: 50000, status: "PAGADO" },
+              "m2": { date: "", amount: 0, status: "NO_APLICA" },
+              "m3": { date: "", amount: 0, status: "NO_APLICA" },
+              "m4": { date: "2026-07-10", amount: 50000, status: "PAGADO" },
+              "m5": { date: "2026-07-05", amount: 50000, status: "PAGADO" },
+              "m6": { date: "2026-08-19", amount: 55000, status: "PAGADO_MORA" },
+              "m7": { date: "2026-07-06", amount: 50000, status: "PAGADO" },
+              "m8": { date: "2026-08-08", amount: 55000, status: "PAGADO_MORA" },
+              "m9": { date: "2026-07-19", amount: 55000, status: "PAGADO_MORA" },
+              "m10": { date: "2026-06-15", amount: 50000, status: "PAGADO" }
+            },
+            movements: []
+          },
+          "AGOSTO": {
+            contributions: {
+              "m1": { date: "2026-09-10", amount: 55000, status: "PAGADO_MORA" },
+              "m2": { date: "", amount: 0, status: "NO_APLICA" },
+              "m3": { date: "", amount: 0, status: "NO_APLICA" },
+              "m4": { date: "2026-08-08", amount: 50000, status: "PAGADO" },
+              "m5": { date: "2026-08-19", amount: 55000, status: "PAGADO_MORA" },
+              "m6": { date: "2026-08-19", amount: 55000, status: "PAGADO_MORA" },
+              "m7": { date: "2026-08-10", amount: 50000, status: "PAGADO" },
+              "m8": { date: "2026-08-08", amount: 50000, status: "PAGADO" },
+              "m9": { date: "", amount: 0, status: "PENDIENTE" },
+              "m10": { date: "2026-07-18", amount: 50000, status: "PAGADO" }
+            },
+            movements: [
+              { id: "ag1", concept: "PRESTAMO A HERNÁN, DOS CONTROLES, UN RAZER WOLVERINE IMPECABLE Y UN ROG RAIKIRI IMPECABLE DE GARANTÍA", date: "2026-08-24", type: "EGRESO", amount: 300000 },
+              { id: "ag2", concept: "Hernán devuelve capital más intereses", date: "2026-08-31", type: "INGRESO", amount: 375000 },
+              { id: "ag3", concept: "PRESTAMO A PABLO, MOTO KENTON DAKAR DE GARANTÍA", date: "2026-08-25", type: "EGRESO", amount: 2000000 }
+            ]
+          },
+          "SETIEMBRE": {
+            contributions: {
+              "m1": { date: "2026-09-15", amount: 55000, status: "PAGADO_MORA" },
+              "m2": { date: "", amount: 0, status: "NO_APLICA" },
+              "m3": { date: "", amount: 0, status: "NO_APLICA" },
+              "m4": { date: "2026-09-06", amount: 50000, status: "PAGADO" },
+              "m5": { date: "2026-09-01", amount: 50000, status: "PAGADO" },
+              "m6": { date: "2026-09-10", amount: 50000, status: "PAGADO" },
+              "m7": { date: "2026-09-03", amount: 50000, status: "PAGADO" },
+              "m8": { date: "", amount: 0, status: "PENDIENTE" },
+              "m9": { date: "", amount: 0, status: "PENDIENTE" },
+              "m10": { date: "2026-08-17", amount: 50000, status: "PAGADO" }
+            },
+            movements: [
+              { id: "se1", concept: "Pablo devuelve capital más intereses", date: "2026-09-05", type: "INGRESO", amount: 2400000 }
+            ]
+          },
+          "OCTUBRE": {
+            contributions: {
+              "m1": { date: "", amount: 0, status: "PENDIENTE" },
+              "m2": { date: "", amount: 0, status: "NO_APLICA" },
+              "m3": { date: "", amount: 0, status: "NO_APLICA" },
+              "m4": { date: "", amount: 0, status: "PENDIENTE" },
+              "m5": { date: "2026-10-08", amount: 50000, status: "PAGADO" },
+              "m6": { date: "2026-10-06", amount: 50000, status: "PAGADO" },
+              "m7": { date: "2026-10-10", amount: 50000, status: "PAGADO" },
+              "m8": { date: "", amount: 0, status: "PENDIENTE" },
+              "m9": { date: "", amount: 0, status: "PENDIENTE" },
+              "m10": { date: "2026-09-25", amount: 50000, status: "PAGADO" }
+            },
+            movements: []
+          },
+          "NOVIEMBRE": {
+            contributions: {
+              "m1": { date: "", amount: 0, status: "EN_ESPERA" },
+              "m2": { date: "", amount: 0, status: "NO_APLICA" },
+              "m3": { date: "", amount: 0, status: "NO_APLICA" },
+              "m4": { date: "", amount: 0, status: "EN_ESPERA" },
+              "m5": { date: "", amount: 0, status: "EN_ESPERA" },
+              "m6": { date: "", amount: 0, status: "EN_ESPERA" },
+              "m7": { date: "", amount: 0, status: "EN_ESPERA" },
+              "m8": { date: "", amount: 0, status: "EN_ESPERA" },
+              "m9": { date: "", amount: 0, status: "EN_ESPERA" },
+              "m10": { date: "2026-10-16", amount: 50000, status: "PAGADO" }
+            },
+            movements: []
+          }
+        }
+      };
+    }
+
+    // Format Guaranies currency
+    function formatGs(amount, includePrefix = true) {
+      const num = Number(amount) || 0;
+      const formatted = Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+      return includePrefix ? `Gs. ${formatted}` : formatted;
+    }
+
+    // Main Application Controller
+    class PomberoMutualApp {
+      constructor() {
+        this.state = getInitialSpreadsheetData();
+        this.activeTab = "OCTUBRE"; // Default to current active month (October 2026)
+        this.currentUserId = "m5"; // Default to Rodrigo Servián
+        this.inspectedMemberId = "m5";
+        this.isAdmin = false;
+        this.searchQuery = "";
+        this.tempPhotoDataUrl = "";
+        this.tempAvatarEmoji = "🎮";
+        this.showRetiredInLogin = false;
+        this.pendingLoginMemberId = null;
+
+        // Firebase references
+        this.db = null;
+        this.auth = null;
+        this.firebaseUser = null;
+        this.appId = typeof __app_id !== 'undefined' ? __app_id : 'pombero-gamer-caja-2026';
+
+        this.initUI();
+        this.initFirebase();
+      }
+
+      initUI() {
+        this.renderPresetAvatars();
+        this.renderAll();
+      }
+
+      async initFirebase() {
+        try {
+          if (typeof __firebase_config === 'undefined' || !__firebase_config) {
+            this.setCloudStatus(false, "Modo Memoria Activo");
+            return;
+          }
+          const firebaseConfig = JSON.parse(__firebase_config);
+          const app = initializeApp(firebaseConfig);
+          this.db = getFirestore(app);
+          this.auth = getAuth(app);
+
+          // RULE 3: Authenticate FIRST before any Firestore query
+          if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+            await signInWithCustomToken(this.auth, __initial_auth_token);
+          } else {
+            await signInAnonymously(this.auth);
+          }
+
+          onAuthStateChanged(this.auth, (user) => {
+            this.firebaseUser = user;
+            if (user) {
+              this.subscribeToLedger();
+            }
+          });
+        } catch (err) {
+          console.error("Firebase init fallback:", err);
+          this.setCloudStatus(false, "Modo Local Activo");
+        }
+      }
+
+      getLedgerDocRef() {
+        // RULE 1: Strict Public Path for shared multi-user data
+        return doc(this.db, 'artifacts', this.appId, 'public', 'data', 'pombero_caja_2026', 'ledger_main');
+      }
+
+      subscribeToLedger() {
+        if (!this.firebaseUser || !this.db) return;
+        const docRef = this.getLedgerDocRef();
+
+        onSnapshot(
+          docRef,
+          async (snapshot) => {
+            if (snapshot.exists()) {
+              const cloudData = snapshot.data();
+              if (cloudData && cloudData.members && cloudData.monthsOrder) {
+                // Parse serialized monthsData if stored as JSON string or object
+                this.state = {
+                  adminPin: cloudData.adminPin || "1234",
+                  updatedAt: cloudData.updatedAt || Date.now(),
+                  members: typeof cloudData.members === 'string' ? JSON.parse(cloudData.members) : cloudData.members,
+                  monthsOrder: typeof cloudData.monthsOrder === 'string' ? JSON.parse(cloudData.monthsOrder) : cloudData.monthsOrder,
+                  monthsData: typeof cloudData.monthsData === 'string' ? JSON.parse(cloudData.monthsData) : cloudData.monthsData
+                };
+                this.ensureLifecycleDefaults();
+                this.setCloudStatus(true, "Sincronizado en vivo");
+                this.renderAll();
+              }
+            } else {
+              // First time: seed initial spreadsheet data to Firestore
+              await this.saveToCloud("Planilla inicial sincronizada en la nube");
+              this.setCloudStatus(true, "Sincronizado en vivo");
+            }
+          },
+          (error) => {
+            console.error("Error en suscripción Firestore:", error);
+            this.setCloudStatus(false, "Modo Local");
+          }
+        );
+      }
+
+      // Ensure members loaded from older snapshots have accurate desdeMes and retiradoDesdeMes
+      ensureLifecycleDefaults() {
+        if (!this.state || !Array.isArray(this.state.members)) return;
+        const firstMonth = this.state.monthsOrder?.[0] || "ABRIL";
+        for (const m of this.state.members) {
+          if (!m.desdeMes) m.desdeMes = firstMonth;
+          if (typeof m.retiradoDesdeMes === 'undefined') {
+            if (m.id === "m2" || m.name.includes("JUAN MARCELO VERA")) {
+              m.retiradoDesdeMes = "JUNIO";
+            } else if (m.id === "m3" || m.name.includes("MARCOS NEHEM")) {
+              m.retiradoDesdeMes = "JULIO";
+            } else if (m.role === "INACTIVO") {
+              m.retiradoDesdeMes = "JULIO";
+            } else {
+              m.retiradoDesdeMes = null;
+            }
+          }
+        }
+      }
+
+      // Check if a member was active in a specific month
+      isMemberActiveInMonth(member, monthName) {
+        if (!member || !monthName) return true;
+        const months = this.state.monthsOrder || [];
+        const mIdx = months.indexOf(monthName);
+        if (mIdx === -1) return true;
+
+        const startIdx = member.desdeMes ? months.indexOf(member.desdeMes) : 0;
+        const effectiveStart = startIdx === -1 ? 0 : startIdx;
+        if (mIdx < effectiveStart) return false;
+
+        if (member.retiradoDesdeMes) {
+          const retireIdx = months.indexOf(member.retiradoDesdeMes);
+          if (retireIdx !== -1 && mIdx >= retireIdx) {
+            return false;
+          }
+        }
+        return true;
+      }
+
+      // Get human-readable lifecycle status for a member
+      getMemberLifecycleLabel(member) {
+        const desde = member.desdeMes || "ABRIL";
+        if (member.retiradoDesdeMes) {
+          const months = this.state.monthsOrder || [];
+          const rIdx = months.indexOf(member.retiradoDesdeMes);
+          const lastActiveMonth = rIdx > 0 ? months[rIdx - 1] : desde;
+          return {
+            isRetired: true,
+            shortBadge: `RETIRADO DESDE ${member.retiradoDesdeMes}`,
+            detailText: `Participó: ${desde} a ${lastActiveMonth} (Baja desde ${member.retiradoDesdeMes})`
+          };
+        }
+        return {
+          isRetired: false,
+          shortBadge: desde === "ABRIL" ? "SOCIO ACTIVO" : `ACTIVO DESDE ${desde}`,
+          detailText: `Socio activo desde ${desde} 2026`
+        };
+      }
+
+      async saveToCloud(toastMsg = "Cambios guardados") {
+        this.state.updatedAt = Date.now();
+        this.renderAll();
+
+        if (this.firebaseUser && this.db) {
+          try {
+            const docRef = this.getLedgerDocRef();
+            await setDoc(docRef, {
+              adminPin: this.state.adminPin || "1234",
+              updatedAt: this.state.updatedAt,
+              members: JSON.stringify(this.state.members),
+              monthsOrder: JSON.stringify(this.state.monthsOrder),
+              monthsData: JSON.stringify(this.state.monthsData)
+            });
+            if (toastMsg) this.showToast(toastMsg, "emerald");
+          } catch (err) {
+            console.error("Error guardando en nube:", err);
+            this.showToast("Guardado en sesión (error de red)", "amber");
+          }
+        } else {
+          if (toastMsg) this.showToast(toastMsg, "emerald");
+        }
+      }
+
+      setCloudStatus(online, text) {
+        const dot = document.getElementById('cloudStatusDot');
+        const label = document.getElementById('cloudStatusText');
+        if (dot) {
+          dot.className = `absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full ring-2 ring-slate-950 ${online ? 'bg-emerald-400' : 'bg-amber-400'}`;
+        }
+        if (label) {
+          label.textContent = text;
+          label.className = online ? 'text-emerald-400/90 font-medium' : 'text-amber-400/90 font-medium';
+        }
+      }
+
+      // ==========================================
+      // CASCADING ACCOUNTING ENGINE
+      // ==========================================
+      calculateAllMonthsCascade() {
+        const results = {};
+        let carryOverBalance = 0;
+        let totalExtraYield = 0;
+        let totalPendingCount = 0;
+
+        for (const monthName of this.state.monthsOrder) {
+          const mData = this.state.monthsData[monthName] || { contributions: {}, movements: [] };
+          const prevBalance = carryOverBalance;
+
+          let contribIncome = 0;
+          let moraIncome = 0;
+          let monthPending = 0;
+          let activeMembersCount = 0;
+
+          for (const member of this.state.members) {
+            const activeInMonth = this.isMemberActiveInMonth(member, monthName);
+            if (activeInMonth) activeMembersCount++;
+
+            const c = mData.contributions?.[member.id];
+            if (c && activeInMonth) {
+              const amt = Number(c.amount) || 0;
+              contribIncome += amt;
+              if (amt > 50000) moraIncome += (amt - 50000);
+              if (c.status === "PENDIENTE") {
+                monthPending++;
+                totalPendingCount++;
+              }
+            }
+          }
+
+          let extraIncome = 0;
+          let extraExpense = 0;
+          for (const mov of (mData.movements || [])) {
+            const amt = Number(mov.amount) || 0;
+            if (mov.type === "INGRESO") {
+              extraIncome += amt;
+            } else {
+              extraExpense += amt;
+            }
+          }
+
+          // Pure flow of the month (excluding previous month carry-over)
+          const pureMonthIncome = contribIncome + extraIncome;
+          const pureMonthExpense = extraExpense;
+
+          // Spreadsheet formula: Total Ingresos includes SALDO FINAL POSITIVO DEL MES ANTERIOR
+          const totalIngresosSpreadsheet = prevBalance + pureMonthIncome;
+          const totalEgresosSpreadsheet = pureMonthExpense;
+          const closingBalance = totalIngresosSpreadsheet - totalEgresosSpreadsheet;
+
+          totalExtraYield += moraIncome + (extraIncome - extraExpense);
+
+          results[monthName] = {
+            prevBalance,
+            contribIncome,
+            extraIncome,
+            pureMonthIncome,
+            pureMonthExpense,
+            totalIngresosSpreadsheet,
+            totalEgresosSpreadsheet,
+            closingBalance,
+            monthPending,
+            activeMembersCount
+          };
+
+          carryOverBalance = closingBalance;
+        }
+
+        return {
+          byMonth: results,
+          finalGlobalBalance: carryOverBalance,
+          totalExtraYield,
+          totalPendingCount
+        };
+      }
+
+      // Helper to render avatar HTML
+      getAvatarHTML(member, sizeClass = "w-8 h-8", textClass = "text-xs") {
+        if (!member) return "";
+        if (member.photoUrl) {
+          return `<img src="${member.photoUrl}" alt="${member.name}" class="${sizeClass} rounded-xl object-cover border border-emerald-500/40 shrink-0" />`;
+        }
+        const initials = member.name.split(" ").slice(0, 2).map(w => w[0]).join("");
+        const gradient = member.color || "from-emerald-500 to-teal-700";
+        return `
+          <div class="${sizeClass} rounded-xl bg-gradient-to-br ${gradient} flex items-center justify-center ${textClass} font-extrabold text-white shadow-inner shrink-0 border border-white/15">
+            <span>${member.avatar || initials}</span>
+          </div>
+        `;
+      }
+
+      // ==========================================
+      // RENDERING VIEWS
+      // ==========================================
+      renderAll() {
+        const calc = this.calculateAllMonthsCascade();
+        this.renderTopBar();
+        this.renderKPIs(calc);
+        this.renderMonthTabs(calc);
+        this.renderLedgerArea(calc);
+        this.renderInspector(calc);
+        if (window.lucide) window.lucide.createIcons();
+      }
+
+      renderTopBar() {
+        const select = document.getElementById('userSelect');
+        if (select) {
+          const activeList = this.state.members.filter(m => !m.retiradoDesdeMes);
+          const retiredList = this.state.members.filter(m => !!m.retiradoDesdeMes);
+
+          let optionsHTML = `<optgroup label="Socios Activos (${activeList.length})" class="bg-slate-900 text-emerald-300">`;
+          optionsHTML += activeList.map(m => `
+            <option value="${m.id}" ${m.id === this.currentUserId ? 'selected' : ''} class="bg-slate-900 text-white">
+              ${m.nickname || m.name} ${m.role === 'ADMIN' ? '⭐' : ''}
+            </option>
+          `).join('');
+          optionsHTML += `</optgroup>`;
+
+          if (retiredList.length > 0) {
+            optionsHTML += `<optgroup label="Socios Retirados (${retiredList.length})" class="bg-slate-900 text-amber-300">`;
+            optionsHTML += retiredList.map(m => `
+              <option value="${m.id}" ${m.id === this.currentUserId ? 'selected' : ''} class="bg-slate-900 text-slate-400">
+                ${m.nickname || m.name} (Retirado en ${m.retiradoDesdeMes})
+              </option>
+            `).join('');
+            optionsHTML += `</optgroup>`;
+          }
+          select.innerHTML = optionsHTML;
+        }
+
+        const currentMember = this.state.members.find(m => m.id === this.currentUserId) || this.state.members[0];
+        const avatarContainer = document.getElementById('activeUserAvatarTop');
+        if (avatarContainer && currentMember) {
+          avatarContainer.innerHTML = currentMember.photoUrl
+            ? `<img src="${currentMember.photoUrl}" class="w-full h-full object-cover" />`
+            : `<span>${currentMember.avatar || currentMember.name[0]}</span>`;
+        }
+
+        // Admin mode button styling
+        const adminBtn = document.getElementById('adminToggleBtn');
+        const adminBtnText = document.getElementById('adminBtnText');
+        const addMemberBtnTop = document.getElementById('addMemberBtnTop');
+        const retireMemberBtnTop = document.getElementById('retireMemberBtnTop');
+        const adminTabActions = document.getElementById('adminTabActions');
+        const addExtraMovBtn = document.getElementById('addExtraMovBtn');
+        const changePinBox = document.getElementById('changePinBox');
+
+        if (this.isAdmin) {
+          adminBtn.className = "flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all border bg-violet-600/25 text-violet-200 border-violet-400/50 admin-glow";
+          adminBtnText.textContent = "Admin Activo (Salir)";
+          addMemberBtnTop.classList.remove('hidden');
+          addMemberBtnTop.classList.add('flex');
+          if (retireMemberBtnTop) {
+            retireMemberBtnTop.classList.remove('hidden');
+            retireMemberBtnTop.classList.add('flex');
+          }
+          adminTabActions.classList.remove('hidden');
+          adminTabActions.classList.add('flex');
+          if (this.activeTab !== 'MATRIZ_SOCIOS') {
+            addExtraMovBtn.classList.remove('hidden');
+            addExtraMovBtn.classList.add('flex');
+          } else {
+            addExtraMovBtn.classList.add('hidden');
+          }
+          if (changePinBox) changePinBox.classList.remove('hidden');
+        } else {
+          adminBtn.className = "flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all border bg-slate-800/80 hover:bg-slate-800 text-slate-300 border-slate-700";
+          adminBtnText.textContent = "Modo Admin";
+          addMemberBtnTop.classList.add('hidden');
+          addMemberBtnTop.classList.remove('flex');
+          if (retireMemberBtnTop) {
+            retireMemberBtnTop.classList.add('hidden');
+            retireMemberBtnTop.classList.remove('flex');
+          }
+          adminTabActions.classList.add('hidden');
+          adminTabActions.classList.remove('flex');
+          addExtraMovBtn.classList.add('hidden');
+          addExtraMovBtn.classList.remove('flex');
+          if (changePinBox) changePinBox.classList.add('hidden');
+        }
+      }
+
+      renderKPIs(calc) {
+        const lastMonth = this.state.monthsOrder[this.state.monthsOrder.length - 1];
+        document.getElementById('kpiGlobalBalance').textContent = formatGs(calc.finalGlobalBalance);
+        document.getElementById('kpiGlobalSub').textContent = `Acumulado hasta ${lastMonth} 2026`;
+
+        const activeMonthName = this.activeTab === 'MATRIZ_SOCIOS' ? 'OCTUBRE' : this.activeTab;
+        const mCalc = calc.byMonth[activeMonthName] || { prevBalance: 0, pureMonthIncome: 0, pureMonthExpense: 0, totalIngresosSpreadsheet: 0, closingBalance: 0 };
+
+        document.getElementById('kpiMonthNameBadge').textContent = activeMonthName;
+        document.getElementById('kpiMonthClosing').textContent = formatGs(mCalc.closingBalance);
+        document.getElementById('kpiMonthPrevCarry').textContent = `Saldo mes ant: ${formatGs(mCalc.prevBalance)}`;
+
+        document.getElementById('kpiMonthPureIn').textContent = `+${formatGs(mCalc.pureMonthIncome)}`;
+        document.getElementById('kpiMonthPureOut').textContent = `-${formatGs(mCalc.pureMonthExpense)}`;
+        document.getElementById('kpiMonthTotalInAccum').textContent = `Total Ing. c/ arrastre: ${formatGs(mCalc.totalIngresosSpreadsheet)}`;
+
+        const sign = calc.totalExtraYield >= 0 ? '+' : '';
+        document.getElementById('kpiExtraYield').textContent = `${sign}${formatGs(calc.totalExtraYield)}`;
+        document.getElementById('kpiPendingCount').textContent = calc.totalPendingCount > 0
+          ? `${calc.totalPendingCount} cuotas marcadas como PENDIENTE`
+          : `Todas las cuotas activas al día`;
+      }
+
+      renderMonthTabs(calc) {
+        const container = document.getElementById('monthTabsContainer');
+        if (!container) return;
+
+        const monthButtons = this.state.monthsOrder.map(mName => {
+          const isActive = this.activeTab === mName;
+          const mCalc = calc.byMonth[mName];
+          const pendingCount = mCalc ? mCalc.monthPending : 0;
+
+          return `
+            <button
+              onclick="window.app.setActiveTab('${mName}')"
+              class="px-3 py-1.5 rounded-t-xl text-xs font-extrabold tracking-wide transition-all flex items-center gap-1.5 shrink-0 border-b-2 ${
+                isActive
+                  ? 'bg-slate-900 text-emerald-400 border-emerald-400 shadow-inner'
+                  : 'bg-slate-900/40 hover:bg-slate-900/80 text-slate-400 hover:text-slate-200 border-transparent'
+              }"
+            >
+              <span>${mName}</span>
+              ${pendingCount > 0
+                ? `<span class="px-1.5 py-0.2 rounded-full text-[10px] font-mono bg-amber-500/20 text-amber-300 border border-amber-500/30" title="${pendingCount} pendientes">${pendingCount}</span>`
+                : `<span class="text-[10px] font-mono ${isActive ? 'text-emerald-300/90' : 'text-slate-500'}">${formatGs(mCalc?.closingBalance || 0, false)}</span>`
+              }
+            </button>
+          `;
+        }).join('');
+
+        const isMatrix = this.activeTab === 'MATRIZ_SOCIOS';
+        const matrixBtn = `
+          <button
+            onclick="window.app.setActiveTab('MATRIZ_SOCIOS')"
+            class="px-3 py-1.5 rounded-t-xl text-xs font-extrabold tracking-wide transition-all flex items-center gap-1.5 shrink-0 border-b-2 ml-1 ${
+              isMatrix
+                ? 'bg-violet-950/60 text-violet-300 border-violet-400'
+                : 'bg-slate-900/40 hover:bg-slate-900/80 text-violet-300/80 border-transparent'
+            }"
+          >
+            <i data-lucide="layout-grid" class="w-3.5 h-3.5"></i>
+            <span>RESUMEN SOCIOS</span>
+          </button>
+        `;
+
+        container.innerHTML = monthButtons + matrixBtn;
+      }
+
+      renderLedgerArea(calc) {
+        const area = document.getElementById('ledgerContentArea');
+        const footer = document.getElementById('ledgerFooterTotals');
+        const badge = document.getElementById('ledgerTitleBadge');
+        const subtitle = document.getElementById('ledgerSubtitle');
+
+        if (this.activeTab === 'MATRIZ_SOCIOS') {
+          badge.textContent = "MATRIZ ANUAL 2026";
+          badge.className = "px-2.5 py-0.5 rounded-md text-xs font-extrabold uppercase tracking-wider bg-violet-500/20 text-violet-300 border border-violet-500/30";
+          subtitle.textContent = "Panorama Completo de Cuotas por Socio (Abril - Noviembre)";
+          this.renderMembersMatrix(area, footer, calc);
+          return;
+        }
+
+        const monthName = this.activeTab;
+        const mData = this.state.monthsData[monthName] || { contributions: {}, movements: [] };
+        const mCalc = calc.byMonth[monthName];
+
+        // Filter only members who were active in this specific month
+        const activeMembersInMonth = this.state.members.filter(m => this.isMemberActiveInMonth(m, monthName));
+        const hiddenRetiredMembers = this.state.members.filter(m => !this.isMemberActiveInMonth(m, monthName));
+
+        badge.textContent = `${monthName} 2026 (${activeMembersInMonth.length} Socios Activos)`;
+        badge.className = "px-2.5 py-0.5 rounded-md text-xs font-extrabold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+        subtitle.textContent = this.isAdmin
+          ? "Modo Admin: Clic en cuotas para editar o usa 'Retirar Socio / Bajas' para bajas"
+          : "Socios activos en este mes (Los socios retirados ya no se listan)";
+
+        const q = this.searchQuery.trim().toLowerCase();
+
+        // 1. First Row: SALDO FINAL POSITIVO DEL MES ANTERIOR
+        const carryRowHTML = `
+          <div class="px-4 py-2.5 bg-gradient-to-r from-emerald-950/40 via-slate-900/80 to-slate-900 flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2.5">
+              <div class="w-7 h-7 rounded-lg bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+                <i data-lucide="corner-down-right" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <div class="text-xs font-extrabold uppercase tracking-wide text-emerald-300">
+                  SALDO FINAL POSITIVO DEL MES ANTERIOR
+                </div>
+                <div class="text-[10px] text-slate-400">Arrastre automático acumulado al inicio de ${monthName}</div>
+              </div>
+            </div>
+            <div class="text-right">
+              <span class="text-xs sm:text-sm font-mono font-extrabold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-emerald-500/25">
+                ${formatGs(mCalc.prevBalance)}
+              </span>
+            </div>
+          </div>
+        `;
+
+        // 2. Active Member Contributions Rows for this Month
+        const filteredMembers = activeMembersInMonth.filter(m =>
+          !q || m.name.toLowerCase().includes(q) || (m.nickname && m.nickname.toLowerCase().includes(q))
+        );
+
+        const memberRowsHTML = filteredMembers.map((member, idx) => {
+          const c = mData.contributions?.[member.id] || { date: "", amount: 0, status: "EN_ESPERA" };
+          const isCurrentUser = member.id === this.currentUserId;
+          const isInspected = member.id === this.inspectedMemberId;
+
+          let statusBadge = "";
+          if (c.status === "PAGADO") {
+            statusBadge = `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">AL DÍA</span>`;
+          } else if (c.status === "PAGADO_MORA") {
+            statusBadge = `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">PAGADO C/ MORA</span>`;
+          } else if (c.status === "PENDIENTE") {
+            statusBadge = `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 animate-pulse-subtle">PENDIENTE</span>`;
+          } else {
+            statusBadge = `<span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-slate-800 text-slate-400">EN ESPERA</span>`;
+          }
+
+          const adminQuickControls = this.isAdmin ? `
+            <div class="flex items-center gap-1 ml-2" onclick="event.stopPropagation()">
+              <button onclick="window.app.quickSetContribution('${member.id}', 'PAGADO', 50000)" title="Marcar 50.000 Al Día" class="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold ${c.amount === 50000 ? 'bg-emerald-500 text-slate-950' : 'bg-slate-800 hover:bg-emerald-500/30 text-slate-300'}">50k</button>
+              <button onclick="window.app.quickSetContribution('${member.id}', 'PAGADO_MORA', 55000)" title="Marcar 55.000 con Mora" class="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold ${c.amount === 55000 ? 'bg-cyan-400 text-slate-950' : 'bg-slate-800 hover:bg-cyan-500/30 text-slate-300'}">55k</button>
+              <button onclick="window.app.quickSetContribution('${member.id}', 'PENDIENTE', 0)" title="Marcar PENDIENTE" class="px-1.5 py-0.5 rounded text-[10px] font-bold ${c.status === 'PENDIENTE' ? 'bg-amber-500 text-slate-950' : 'bg-slate-800 hover:bg-amber-500/30 text-slate-300'}">Pend</button>
+              <button onclick="window.app.openContribModal('${member.id}')" title="Editar fecha o monto personalizado" class="p-1 rounded bg-slate-800 hover:bg-violet-500/30 text-violet-300">
+                <i data-lucide="pencil" class="w-3 h-3"></i>
+              </button>
+              <button onclick="window.app.openRetireModal('${member.id}')" title="Avisar retiro / dar de baja desde este mes" class="p-1 rounded bg-slate-800 hover:bg-amber-500/30 text-amber-300">
+                <i data-lucide="user-minus" class="w-3 h-3"></i>
+              </button>
+            </div>
+          ` : '';
+
+          const joinedLaterBadge = member.desdeMes && member.desdeMes !== 'ABRIL'
+            ? `<span class="px-1.5 py-0.2 rounded text-[9px] font-semibold bg-cyan-500/15 text-cyan-300">Ingresó: ${member.desdeMes}</span>`
+            : '';
+
+          return `
+            <div
+              onclick="window.app.inspectMember('${member.id}')"
+              class="px-4 py-2 flex flex-wrap sm:flex-nowrap items-center justify-between gap-2 transition-colors cursor-pointer ${
+                isInspected ? 'bg-slate-800/75' : 'hover:bg-slate-900/60'
+              } ${isCurrentUser ? 'border-l-2 border-l-emerald-400' : ''}"
+            >
+              <div class="flex items-center gap-2.5 min-w-0 flex-1">
+                <span class="text-[10px] font-mono text-slate-500 w-4 text-right">${idx + 1}.</span>
+                ${this.getAvatarHTML(member, "w-8 h-8", "text-xs")}
+                <div class="min-w-0 flex-1">
+                  <div class="flex items-center gap-1.5 flex-wrap">
+                    <span class="text-xs font-bold text-slate-100 truncate">${member.name}</span>
+                    ${isCurrentUser ? `<span class="px-1.5 py-0.2 rounded text-[9px] font-extrabold bg-emerald-500/20 text-emerald-300">TÚ</span>` : ''}
+                    ${member.role === 'ADMIN' ? `<span class="px-1.5 py-0.2 rounded text-[9px] font-bold bg-violet-500/20 text-violet-300">ADMIN</span>` : ''}
+                    ${joinedLaterBadge}
+                  </div>
+                  <div class="flex items-center gap-2 text-[11px] text-slate-400">
+                    <span>Fecha pago: <strong class="font-mono text-slate-300">${c.date || '—'}</strong></span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2.5 shrink-0 ml-auto">
+                ${statusBadge}
+                <div class="w-24 text-right font-mono text-xs sm:text-sm font-bold ${
+                  c.amount > 0 ? 'text-emerald-400' : c.status === 'PENDIENTE' ? 'text-amber-400' : 'text-slate-500'
+                }">
+                  ${c.amount > 0 ? formatGs(c.amount) : c.status === 'PENDIENTE' ? 'Gs. 0' : '—'}
+                </div>
+                ${adminQuickControls}
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        // Subtle banner showing how many retired/inactive members were automatically hidden in this month
+        const retiredNoticeHTML = hiddenRetiredMembers.length > 0 ? `
+          <div class="px-4 py-1.5 bg-slate-950/60 flex items-center justify-between gap-2 text-[11px] text-slate-400">
+            <div class="flex items-center gap-1.5 truncate">
+              <i data-lucide="eye-off" class="w-3.5 h-3.5 text-slate-500 shrink-0"></i>
+              <span class="truncate">
+                Ocultos en <strong>${monthName}</strong> por retiro o fecha de ingreso (${hiddenRetiredMembers.length}):
+                ${hiddenRetiredMembers.map(m => `${m.nickname || m.name.split(' ')[0]} (${m.retiradoDesdeMes ? 'Baja desde ' + m.retiradoDesdeMes : 'Ingresa en ' + m.desdeMes})`).join(', ')}
+              </span>
+            </div>
+            ${this.isAdmin ? `
+              <button onclick="window.app.openRetireModal()" class="text-[10px] font-bold text-amber-400 hover:text-amber-300 shrink-0 underline">
+                Gestionar Bajas
+              </button>
+            ` : ''}
+          </div>
+        ` : '';
+
+        // 3. Extra Movements / Loans / Raffles / Galeto Section
+        const movements = (mData.movements || []).filter(mv =>
+          !q || mv.concept.toLowerCase().includes(q)
+        );
+
+        let movementsSectionHTML = `
+          <div class="px-4 py-2 bg-slate-950/80 flex items-center justify-between">
+            <span class="text-[11px] font-extrabold uppercase tracking-wider text-violet-300 flex items-center gap-1.5">
+              <i data-lucide="Sparkles" class="w-3.5 h-3.5"></i>
+              Movimientos Extraordinarios, Préstamos y Eventos de ${monthName}
+            </span>
+            <span class="text-[10px] font-mono text-slate-400">${movements.length} registro(s)</span>
+          </div>
+        `;
+
+        if (movements.length === 0) {
+          movementsSectionHTML += `
+            <div class="px-4 py-4 text-center text-xs text-slate-500">
+              Sin préstamos ni movimientos extraordinarios registrados en ${monthName}.
+            </div>
+          `;
+        } else {
+          movementsSectionHTML += movements.map(mv => {
+            const isIngreso = mv.type === "INGRESO";
+            return `
+              <div class="px-4 py-2.5 bg-slate-900/35 hover:bg-slate-900/70 flex items-center justify-between gap-3">
+                <div class="flex items-start gap-2.5 min-w-0 flex-1">
+                  <div class="w-7 h-7 rounded-lg shrink-0 flex items-center justify-center mt-0.5 ${
+                    isIngreso ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30' : 'bg-rose-500/15 text-rose-400 border border-rose-500/30'
+                  }">
+                    <i data-lucide="${isIngreso ? 'trending-up' : 'trending-down'}" class="w-4 h-4"></i>
+                  </div>
+                  <div class="min-w-0 flex-1">
+                    <div class="text-xs font-bold text-slate-100 leading-snug">${mv.concept}</div>
+                    <div class="text-[10px] text-slate-400 font-mono mt-0.5">
+                      Fecha: ${mv.date || monthName} • Tipo: ${isIngreso ? 'INGRESO A CAJA' : 'EGRESO / PRÉSTAMO'}
+                    </div>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2 shrink-0">
+                  <span class="font-mono text-xs sm:text-sm font-extrabold ${isIngreso ? 'text-emerald-400' : 'text-rose-400'}">
+                    ${isIngreso ? '+' : '-'}${formatGs(mv.amount)}
+                  </span>
+                  ${this.isAdmin ? `
+                    <div class="flex items-center gap-1">
+                      <button onclick="window.app.openMovementModal('${mv.id}')" class="p-1 rounded bg-slate-800 hover:bg-violet-500/30 text-violet-300" title="Editar movimiento">
+                        <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
+                      </button>
+                      <button onclick="window.app.deleteMovement('${mv.id}')" class="p-1 rounded bg-slate-800 hover:bg-rose-500/30 text-rose-300" title="Eliminar movimiento">
+                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                      </button>
+                    </div>
+                  ` : ''}
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+
+        area.innerHTML = carryRowHTML + memberRowsHTML + retiredNoticeHTML + movementsSectionHTML;
+
+        // Render Sticky Footer matching the exact Excel bottom rows
+        footer.innerHTML = `
+          <div class="flex flex-wrap items-center gap-4 text-xs">
+            <div>
+              <span class="text-slate-400 uppercase text-[10px] font-bold block">Total Ingresos (c/ Saldo Ant.)</span>
+              <span class="font-mono font-bold text-emerald-400 text-sm">${formatGs(mCalc.totalIngresosSpreadsheet)}</span>
+            </div>
+            <div class="h-6 w-px bg-slate-800 hidden sm:block"></div>
+            <div>
+              <span class="text-slate-400 uppercase text-[10px] font-bold block">Total Egresos ${monthName}</span>
+              <span class="font-mono font-bold text-rose-400 text-sm">${formatGs(mCalc.totalEgresosSpreadsheet)}</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 bg-emerald-500/15 border border-emerald-500/40 rounded-xl px-3.5 py-1.5">
+            <span class="text-[11px] font-extrabold uppercase tracking-wider text-emerald-300">SALDO FINAL ${monthName}:</span>
+            <span class="font-mono text-sm sm:text-base font-extrabold text-white">${formatGs(mCalc.closingBalance)}</span>
+          </div>
+        `;
+      }
+
+      // Render Matrix View of All Members across All Months
+      renderMembersMatrix(area, footer, calc) {
+        const months = this.state.monthsOrder;
+
+        const headerCols = months.map(m => `
+          <th class="px-2 py-2 text-center text-[10px] font-extrabold uppercase tracking-wider text-slate-300 bg-slate-900/90 border-b border-slate-800">
+            ${m.slice(0, 3)}
+          </th>
+        `).join('');
+
+        // Sort so active members appear first, then retired members
+        const sortedMembers = [...this.state.members].sort((a, b) => {
+          const aRet = a.retiradoDesdeMes ? 1 : 0;
+          const bRet = b.retiradoDesdeMes ? 1 : 0;
+          return aRet - bRet;
+        });
+
+        const rows = sortedMembers.map((member, idx) => {
+          let memberTotal = 0;
+          const lifecycle = this.getMemberLifecycleLabel(member);
+
+          const cells = months.map(mName => {
+            const activeInMonth = this.isMemberActiveInMonth(member, mName);
+            const c = this.state.monthsData[mName]?.contributions?.[member.id] || { amount: 0, status: "EN_ESPERA" };
+            const amt = activeInMonth ? (Number(c.amount) || 0) : 0;
+            memberTotal += amt;
+
+            let cellBadge = `<span class="text-slate-600">—</span>`;
+            if (!activeInMonth) {
+              cellBadge = `<span class="px-1.5 py-0.5 rounded bg-slate-900 text-slate-600 font-semibold text-[9px]" title="No participaba en ${mName}">BAJA</span>`;
+            } else if (amt === 50000) {
+              cellBadge = `<span class="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono text-[10px] font-bold">50k</span>`;
+            } else if (amt > 50000) {
+              cellBadge = `<span class="px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-mono text-[10px] font-bold">${Math.round(amt/1000)}k</span>`;
+            } else if (amt > 0) {
+              cellBadge = `<span class="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono text-[10px] font-bold">${Math.round(amt/1000)}k</span>`;
+            } else if (c.status === "PENDIENTE") {
+              cellBadge = `<span class="px-1.5 py-0.5 rounded bg-amber-500/25 text-amber-300 font-bold text-[9px]">PEND</span>`;
+            }
+
+            return `<td class="px-1.5 py-2 text-center border-b border-slate-800/60">${cellBadge}</td>`;
+          }).join('');
+
+          return `
+            <tr onclick="window.app.inspectMember('${member.id}')" class="hover:bg-slate-800/60 cursor-pointer transition-colors ${lifecycle.isRetired ? 'opacity-70 bg-slate-950/40' : ''}">
+              <td class="px-3 py-2 border-b border-slate-800/60">
+                <div class="flex items-center gap-2">
+                  <span class="text-[10px] font-mono text-slate-500">${idx + 1}.</span>
+                  ${this.getAvatarHTML(member, "w-7 h-7", "text-[11px]")}
+                  <div class="truncate max-w-[140px] sm:max-w-[190px]">
+                    <div class="flex items-center gap-1.5">
+                      <span class="text-xs font-bold text-slate-100 truncate">${member.nickname || member.name}</span>
+                      <span class="px-1.5 py-0.2 rounded text-[8px] font-extrabold uppercase ${
+                        lifecycle.isRetired ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'bg-emerald-500/15 text-emerald-300'
+                      }">${lifecycle.isRetired ? `Baja ${member.retiradoDesdeMes.slice(0,3)}` : 'Activo'}</span>
+                    </div>
+                    <div class="text-[9px] text-slate-400 truncate">${member.name}</div>
+                  </div>
+                </div>
+              </td>
+              ${cells}
+              <td class="px-3 py-2 text-right font-mono text-xs font-extrabold text-emerald-400 border-b border-slate-800/60">
+                ${formatGs(memberTotal)}
+              </td>
+            </tr>
+          `;
+        }).join('');
+
+        area.innerHTML = `
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr>
+                  <th class="px-3 py-2 text-[10px] font-extrabold uppercase tracking-wider text-slate-300 bg-slate-900/90 border-b border-slate-800">Socio</th>
+                  ${headerCols}
+                  <th class="px-3 py-2 text-right text-[10px] font-extrabold uppercase tracking-wider text-emerald-300 bg-slate-900/90 border-b border-slate-800">Total Aportado</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${rows}
+              </tbody>
+            </table>
+          </div>
+        `;
+
+        footer.innerHTML = `
+          <div class="text-xs text-slate-400">
+            Haz clic en cualquier socio para inspeccionar su historial completo o actualizar su foto de perfil.
+          </div>
+          <div class="text-xs font-mono font-bold text-emerald-400">
+            Saldo Actual Acumulado en Caja: ${formatGs(calc.finalGlobalBalance)}
+          </div>
+        `;
+      }
+
+      // ==========================================
+      // RIGHT PANEL: PERSONAL SITUATION & INSPECTOR
+      // ==========================================
+      renderInspector(calc) {
+        const strip = document.getElementById('memberAvatarStrip');
+        const countLabel = document.getElementById('membersCountLabel');
+        const body = document.getElementById('memberInspectorBody');
+        const roleBadge = document.getElementById('inspectorRoleBadge');
+        const headerTitle = document.getElementById('inspectorHeaderTitle');
+
+        const activeCount = this.state.members.filter(m => !m.retiradoDesdeMes).length;
+        const retiredCount = this.state.members.length - activeCount;
+        if (countLabel) {
+          countLabel.textContent = retiredCount > 0
+            ? `${activeCount} Activos • ${retiredCount} Retirados`
+            : `${activeCount} Socios Activos`;
+        }
+
+        if (roleBadge) {
+          if (this.isAdmin) {
+            roleBadge.textContent = "Admin • Edición Total";
+            roleBadge.className = "px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-violet-500/20 text-violet-300 border border-violet-500/40";
+          } else {
+            roleBadge.textContent = "Socio • Solo Lectura";
+            roleBadge.className = "px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-slate-800 text-slate-300 border border-slate-700";
+          }
+        }
+
+        // Render Avatar Strip (Active members first, retired members dimmed at the end)
+        if (strip) {
+          const orderedForStrip = [...this.state.members].sort((a, b) => (a.retiradoDesdeMes ? 1 : 0) - (b.retiradoDesdeMes ? 1 : 0));
+          strip.innerHTML = orderedForStrip.map(m => {
+            const isSelected = m.id === this.inspectedMemberId;
+            const isRet = !!m.retiradoDesdeMes;
+            return `
+              <button
+                onclick="window.app.inspectMember('${m.id}')"
+                class="flex items-center gap-1.5 px-2 py-1 rounded-xl border text-left transition-all shrink-0 ${
+                  isSelected
+                    ? 'bg-emerald-500/20 border-emerald-400 text-white shadow'
+                    : isRet
+                      ? 'bg-slate-950/60 border-slate-800/70 text-slate-500 hover:text-slate-300'
+                      : 'bg-slate-900/90 border-slate-800 text-slate-400 hover:text-slate-200'
+                }"
+                title="${isRet ? `Retirado desde ${m.retiradoDesdeMes}` : 'Socio Activo'}"
+              >
+                ${this.getAvatarHTML(m, "w-5 h-5", "text-[10px]")}
+                <span class="text-[11px] font-bold max-w-[75px] truncate">${m.nickname || m.name.split(' ')[0]}</span>
+              </button>
+            `;
+          }).join('');
+        }
+
+        const member = this.state.members.find(m => m.id === this.inspectedMemberId) || this.state.members[0];
+        if (!member || !body) return;
+
+        const isViewingSelf = member.id === this.currentUserId;
+        headerTitle.textContent = isViewingSelf ? "Mi Situación en la Caja" : `Ficha: ${member.nickname || member.name.split(' ')[0]}`;
+
+        const lifecycle = this.getMemberLifecycleLabel(member);
+
+        // Calculate member stats across active months
+        let totalContributed = 0;
+        let paidMonthsCount = 0;
+        let moraMonthsCount = 0;
+        let pendingMonths = [];
+
+        const activeMonthsList = this.state.monthsOrder.filter(mName => this.isMemberActiveInMonth(member, mName));
+
+        const monthCardsHTML = activeMonthsList.map(mName => {
+          const c = this.state.monthsData[mName]?.contributions?.[member.id] || { date: "", amount: 0, status: "EN_ESPERA" };
+          const amt = Number(c.amount) || 0;
+          totalContributed += amt;
+          if (amt > 0) paidMonthsCount++;
+          if (amt > 50000 || c.status === "PAGADO_MORA") moraMonthsCount++;
+          if (c.status === "PENDIENTE") pendingMonths.push(mName);
+
+          let pillClass = "bg-slate-900 border-slate-800 text-slate-400";
+          let statusLabel = "En espera";
+          if (c.status === "PAGADO") {
+            pillClass = "bg-emerald-950/40 border-emerald-500/30 text-emerald-300";
+            statusLabel = formatGs(amt);
+          } else if (c.status === "PAGADO_MORA") {
+            pillClass = "bg-cyan-950/40 border-cyan-500/30 text-cyan-300";
+            statusLabel = `${formatGs(amt)} (Mora)`;
+          } else if (c.status === "PENDIENTE") {
+            pillClass = "bg-amber-950/50 border-amber-500/40 text-amber-300";
+            statusLabel = "PENDIENTE";
+          }
+
+          return `
+            <div onclick="window.app.setActiveTab('${mName}')" class="p-2 rounded-xl border ${pillClass} flex items-center justify-between cursor-pointer hover:brightness-110 transition-all">
+              <div>
+                <div class="text-[10px] font-extrabold uppercase tracking-wider">${mName}</div>
+                <div class="text-[9px] opacity-75 font-mono">${c.date || 'Sin fecha'}</div>
+              </div>
+              <div class="text-right font-mono text-[11px] font-bold">
+                ${statusLabel}
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        // Can change photo if viewing own profile OR if Admin is active
+        const canEditProfile = isViewingSelf || this.isAdmin;
+
+        body.innerHTML = `
+          <!-- Member Profile Card -->
+          <div class="p-3.5 rounded-2xl bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 border border-slate-800 flex items-center gap-3.5 relative">
+            <div class="relative group cursor-pointer" onclick="${canEditProfile ? `window.app.openMemberModal('${member.id}')` : ''}">
+              ${this.getAvatarHTML(member, "w-16 h-16", "text-2xl")}
+              ${canEditProfile ? `
+                <div class="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center shadow-lg border-2 border-slate-950" title="Cambiar foto de perfil">
+                  <i data-lucide="camera" class="w-3.5 h-3.5"></i>
+                </div>
+              ` : ''}
+            </div>
+            <div class="min-w-0 flex-1">
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <span class="px-2 py-0.5 rounded text-[9px] font-extrabold uppercase ${
+                  lifecycle.isRetired
+                    ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                    : member.role === 'ADMIN'
+                      ? 'bg-violet-500/20 text-violet-300 border border-violet-500/30'
+                      : 'bg-emerald-500/15 text-emerald-300'
+                }">${lifecycle.shortBadge}</span>
+                ${!lifecycle.isRetired && pendingMonths.length === 0 && paidMonthsCount > 0 ? `
+                  <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-emerald-500/20 text-emerald-300">Al Día ✓</span>
+                ` : ''}
+              </div>
+              <h4 class="text-sm font-extrabold text-white truncate mt-1" title="${member.name}">${member.name}</h4>
+              <p class="text-[11px] text-slate-400 truncate">${lifecycle.detailText}</p>
+              <div class="flex items-center flex-wrap gap-2 mt-1.5">
+                ${canEditProfile ? `
+                  <button onclick="window.app.openMemberModal('${member.id}')" class="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-400 hover:text-emerald-300">
+                    <i data-lucide="image-plus" class="w-3 h-3"></i>
+                    <span>${this.isAdmin ? 'Editar Socio / Foto' : 'Cambiar mi Foto'}</span>
+                  </button>
+                ` : ''}
+                ${this.isAdmin ? `
+                  <button onclick="window.app.openRetireModal('${member.id}')" class="inline-flex items-center gap-1 text-[11px] font-bold text-amber-400 hover:text-amber-300">
+                    <i data-lucide="user-minus" class="w-3 h-3"></i>
+                    <span>${lifecycle.isRetired ? 'Cambiar Baja / Reactivar' : 'Avisar Retiro'}</span>
+                  </button>
+                ` : ''}
+              </div>
+            </div>
+          </div>
+
+          <!-- Personal KPIs Grid -->
+          <div class="grid grid-cols-2 gap-2">
+            <div class="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800">
+              <span class="text-[10px] font-bold uppercase text-slate-400 block">Total Aportado 2026</span>
+              <span class="text-sm sm:text-base font-extrabold font-mono text-emerald-400">${formatGs(totalContributed)}</span>
+            </div>
+            <div class="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800">
+              <span class="text-[10px] font-bold uppercase text-slate-400 block">Meses Participados</span>
+              <span class="text-sm sm:text-base font-extrabold font-mono text-white">${paidMonthsCount} <span class="text-xs font-normal text-slate-400">pagados</span></span>
+            </div>
+          </div>
+
+          <!-- Retirement or Pending Status Banner -->
+          ${lifecycle.isRetired ? `
+            <div class="p-3 rounded-xl bg-slate-900/90 border border-amber-500/30 flex items-start gap-2.5">
+              <i data-lucide="user-check" class="w-4 h-4 text-amber-400 shrink-0 mt-0.5"></i>
+              <div class="text-xs text-slate-300">
+                <span class="font-bold text-amber-300 block">Socio retirado desde ${member.retiradoDesdeMes}</span>
+                <span>Ya no se muestra en las planillas mensuales desde ${member.retiradoDesdeMes} en adelante.</span>
+              </div>
+            </div>
+          ` : pendingMonths.length > 0 ? `
+            <div class="p-3 rounded-xl bg-amber-500/15 border border-amber-500/40 flex items-start gap-2.5">
+              <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-400 shrink-0 mt-0.5"></i>
+              <div class="text-xs">
+                <span class="font-bold text-amber-300 block">Tienes ${pendingMonths.length} cuota(s) pendiente(s):</span>
+                <span class="text-amber-200/90 font-mono text-[11px]">${pendingMonths.join(', ')}</span>
+              </div>
+            </div>
+          ` : `
+            <div class="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/25 flex items-center gap-2 text-xs text-emerald-300">
+              <i data-lucide="check-circle" class="w-4 h-4 shrink-0"></i>
+              <span>Sin deudas pendientes registradas en los meses vencidos.</span>
+            </div>
+          `}
+
+          <!-- Monthly Breakdown Grid for Member (Only months in which they participated) -->
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Meses Activos del Socio (${activeMonthsList.length})</span>
+              ${moraMonthsCount > 0 ? `<span class="text-[10px] text-cyan-400 font-mono">${moraMonthsCount} c/ mora (55k)</span>` : ''}
+            </div>
+            <div class="grid grid-cols-2 gap-1.5">
+              ${monthCardsHTML}
+            </div>
+          </div>
+        `;
+      }
+
+      // ==========================================
+      // INTERACTION HANDLERS
+      // ==========================================
+      setActiveTab(tabName) {
+        this.activeTab = tabName;
+        this.renderAll();
+      }
+
+      handleUserSwitch(memberId) {
+        this.currentUserId = memberId;
+        this.inspectedMemberId = memberId;
+        const member = this.state.members.find(m => m.id === memberId);
+        this.showToast(`Viendo como: ${member ? (member.nickname || member.name) : 'Socio'}`, "emerald");
+        this.renderAll();
+      }
+
+      inspectMember(memberId) {
+        this.inspectedMemberId = memberId;
+        this.renderAll();
+      }
+
+      handleSearch(val) {
+        this.searchQuery = val || "";
+        const calc = this.calculateAllMonthsCascade();
+        this.renderLedgerArea(calc);
+        if (window.lucide) window.lucide.createIcons();
+      }
+
+      // ==========================================
+      // ADMIN MODE & PIN SECURITY
+      // ==========================================
+      toggleAdminMode() {
+        if (this.isAdmin) {
+          this.isAdmin = false;
+          this.showToast("Modo Administrador cerrado (Vista Socio activa)", "slate");
+          this.renderAll();
+        } else {
+          document.getElementById('adminPinInput').value = "";
+          document.getElementById('adminPinError').classList.add('hidden');
+          this.openModal('adminPinModal');
+          setTimeout(() => document.getElementById('adminPinInput').focus(), 100);
+        }
+      }
+
+      submitAdminPin(e) {
+        e.preventDefault();
+        const input = document.getElementById('adminPinInput').value.trim();
+        const validPin = this.state.adminPin || "1234";
+        if (input === validPin) {
+          this.isAdmin = true;
+          this.closeModal('adminPinModal');
+          this.showToast("Modo Administrador activado (Edición habilitada)", "violet");
+          this.renderAll();
+        } else {
+          document.getElementById('adminPinError').classList.remove('hidden');
+        }
+      }
+
+      updateAdminPin() {
+        if (!this.isAdmin) return;
+        const newPin = document.getElementById('newAdminPinInput').value.trim();
+        if (!newPin || newPin.length < 3) {
+          this.showToast("Ingresa un PIN de al menos 3 caracteres", "amber");
+          return;
+        }
+        this.state.adminPin = newPin;
+        document.getElementById('newAdminPinInput').value = "";
+        this.saveToCloud(`Nuevo PIN de Administrador guardado`);
+      }
+
+      // ==========================================
+      // ACCOUNTING EDITS (ADMIN ONLY)
+      // ==========================================
+      quickSetContribution(memberId, status, amount) {
+        if (!this.isAdmin || this.activeTab === 'MATRIZ_SOCIOS') return;
+        const month = this.activeTab;
+        if (!this.state.monthsData[month]) {
+          this.state.monthsData[month] = { contributions: {}, movements: [] };
+        }
+        const existing = this.state.monthsData[month].contributions[memberId] || {};
+        const todayStr = new Date().toISOString().slice(0, 10);
+
+        this.state.monthsData[month].contributions[memberId] = {
+          amount: Number(amount),
+          status,
+          date: amount > 0 ? (existing.date || todayStr) : ""
+        };
+
+        this.inspectedMemberId = memberId;
+        this.saveToCloud(`Aporte actualizado en ${month}`);
+      }
+
+      openContribModal(memberId) {
+        if (!this.isAdmin || this.activeTab === 'MATRIZ_SOCIOS') return;
+        const member = this.state.members.find(m => m.id === memberId);
+        const c = this.state.monthsData[this.activeTab]?.contributions?.[memberId] || { date: "", amount: 0, status: "EN_ESPERA" };
+
+        document.getElementById('contribMemberId').value = memberId;
+        document.getElementById('contribModalMemberName').textContent = `${member?.name} • ${this.activeTab}`;
+        document.getElementById('contribAmountInput').value = c.amount || 0;
+        document.getElementById('contribDateInput').value = c.date || new Date().toISOString().slice(0, 10);
+        document.getElementById('contribStatusInput').value = c.status || "PAGADO";
+
+        this.openModal('contribModal');
+      }
+
+      setContribPreset(status, amount) {
+        document.getElementById('contribStatusInput').value = status;
+        document.getElementById('contribAmountInput').value = amount;
+        if (amount === 0) {
+          document.getElementById('contribDateInput').value = "";
+        } else if (!document.getElementById('contribDateInput').value) {
+          document.getElementById('contribDateInput').value = new Date().toISOString().slice(0, 10);
+        }
+      }
+
+      saveContribForm(e) {
+        e.preventDefault();
+        if (!this.isAdmin) return;
+        const memberId = document.getElementById('contribMemberId').value;
+        const amount = Number(document.getElementById('contribAmountInput').value) || 0;
+        const date = document.getElementById('contribDateInput').value.trim();
+        const status = document.getElementById('contribStatusInput').value;
+
+        const month = this.activeTab;
+        if (!this.state.monthsData[month]) {
+          this.state.monthsData[month] = { contributions: {}, movements: [] };
+        }
+        this.state.monthsData[month].contributions[memberId] = { amount, date, status };
+        this.closeModal('contribModal');
+        this.saveToCloud(`Aporte guardado en ${month}`);
+      }
+
+      // ==========================================
+      // EXTRA MOVEMENTS / LOANS (ADMIN ONLY)
+      // ==========================================
+      openMovementModal(movId = null) {
+        if (!this.isAdmin || this.activeTab === 'MATRIZ_SOCIOS') return;
+        const month = this.activeTab;
+        const mData = this.state.monthsData[month] || { movements: [] };
+
+        if (movId) {
+          const mv = mData.movements.find(x => x.id === movId);
+          if (!mv) return;
+          document.getElementById('movementModalTitle').textContent = `Editar Movimiento (${month})`;
+          document.getElementById('movFormId').value = mv.id;
+          document.getElementById('movFormConcept').value = mv.concept;
+          document.getElementById('movFormType').value = mv.type;
+          document.getElementById('movFormDate').value = mv.date || "";
+          document.getElementById('movFormAmount').value = mv.amount;
+        } else {
+          document.getElementById('movementModalTitle').textContent = `Nuevo Movimiento en ${month}`;
+          document.getElementById('movFormId').value = "";
+          document.getElementById('movFormConcept').value = "";
+          document.getElementById('movFormType').value = "INGRESO";
+          document.getElementById('movFormDate').value = new Date().toISOString().slice(0, 10);
+          document.getElementById('movFormAmount').value = "";
+        }
+        this.openModal('movementModal');
+      }
+
+      saveMovementForm(e) {
+        e.preventDefault();
+        if (!this.isAdmin) return;
+        const month = this.activeTab;
+        const id = document.getElementById('movFormId').value;
+        const concept = document.getElementById('movFormConcept').value.trim();
+        const type = document.getElementById('movFormType').value;
+        const date = document.getElementById('movFormDate').value.trim() || month;
+        const amount = Number(document.getElementById('movFormAmount').value) || 0;
+
+        if (!this.state.monthsData[month]) {
+          this.state.monthsData[month] = { contributions: {}, movements: [] };
+        }
+        const list = this.state.monthsData[month].movements || [];
+
+        if (id) {
+          const idx = list.findIndex(x => x.id === id);
+          if (idx >= 0) list[idx] = { id, concept, type, date, amount };
+        } else {
+          list.push({
+            id: 'mov_' + Date.now(),
+            concept,
+            type,
+            date,
+            amount
+          });
+        }
+        this.state.monthsData[month].movements = list;
+        this.closeModal('movementModal');
+        this.saveToCloud(`Movimiento registrado en ${month}`);
+      }
+
+      deleteMovement(movId) {
+        if (!this.isAdmin) return;
+        const month = this.activeTab;
+        const mData = this.state.monthsData[month];
+        if (!mData || !mData.movements) return;
+        mData.movements = mData.movements.filter(x => x.id !== movId);
+        this.saveToCloud(`Movimiento eliminado de ${month}`);
+      }
+
+      // ==========================================
+      // MEMBER PROFILE & PHOTO UPLOAD (SOCIO & ADMIN)
+      // ==========================================
+      renderPresetAvatars() {
+        const row = document.getElementById('presetAvatarsRow');
+        if (!row) return;
+        row.innerHTML = PRESET_AVATARS.map(emoji => `
+          <button type="button" onclick="window.app.selectPresetAvatar('${emoji}')" class="w-8 h-8 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 flex items-center justify-center text-base transition-transform hover:scale-110">
+            ${emoji}
+          </button>
+        `).join('');
+      }
+
+      openMemberModal(memberId = null) {
+        const adminFields = document.getElementById('memberFormAdminFields');
+        const desdeSelect = document.getElementById('memberFormDesdeMes');
+        const retiradoSelect = document.getElementById('memberFormRetiradoMes');
+
+        // Populate month selectors dynamically
+        if (desdeSelect) {
+          desdeSelect.innerHTML = this.state.monthsOrder.map(mName =>
+            `<option value="${mName}">${mName}</option>`
+          ).join('');
+        }
+        if (retiradoSelect) {
+          retiradoSelect.innerHTML = `<option value="">Activo actualmente (No ocultar)</option>` +
+            this.state.monthsOrder.map(mName =>
+              `<option value="${mName}">Retirado desde ${mName} (Ocultar desde ${mName})</option>`
+            ).join('');
+        }
+
+        if (memberId) {
+          const m = this.state.members.find(x => x.id === memberId);
+          if (!m) return;
+          // Verify permission: either Admin or editing own photo
+          if (!this.isAdmin && memberId !== this.currentUserId) {
+            this.showToast("Solo puedes editar tu propia foto de perfil", "amber");
+            return;
+          }
+          document.getElementById('memberModalTitle').textContent = this.isAdmin ? `Editar Socio: ${m.nickname || m.name}` : `Mi Foto de Perfil (${m.nickname || m.name})`;
+          document.getElementById('memberFormId').value = m.id;
+          document.getElementById('memberFormName').value = m.name;
+          document.getElementById('memberFormNickname').value = m.nickname || "";
+          document.getElementById('memberFormRole').value = m.role === "ADMIN" ? "ADMIN" : "SOCIO";
+          const pinInput = document.getElementById('memberFormPin');
+          if (pinInput) pinInput.value = m.personalPin || "";
+          if (desdeSelect) desdeSelect.value = m.desdeMes || "ABRIL";
+          if (retiradoSelect) retiradoSelect.value = m.retiradoDesdeMes || "";
+          this.tempPhotoDataUrl = m.photoUrl || "";
+          this.tempAvatarEmoji = m.avatar || "🎮";
+
+          if (this.isAdmin) {
+            adminFields.classList.remove('opacity-60', 'pointer-events-none');
+          } else {
+            adminFields.classList.add('opacity-60', 'pointer-events-none');
+          }
+        } else {
+          if (!this.isAdmin) return;
+          const defaultStartMonth = this.activeTab === 'MATRIZ_SOCIOS' ? 'OCTUBRE' : this.activeTab;
+          document.getElementById('memberModalTitle').textContent = "Agregar Nuevo Socio al Fondo";
+          document.getElementById('memberFormId').value = "";
+          document.getElementById('memberFormName').value = "";
+          document.getElementById('memberFormNickname').value = "";
+          document.getElementById('memberFormRole').value = "SOCIO";
+          const pinInput = document.getElementById('memberFormPin');
+          if (pinInput) pinInput.value = "";
+          if (desdeSelect) desdeSelect.value = defaultStartMonth;
+          if (retiradoSelect) retiradoSelect.value = "";
+          this.tempPhotoDataUrl = "";
+          this.tempAvatarEmoji = "🎮";
+          adminFields.classList.remove('opacity-60', 'pointer-events-none');
+        }
+
+        this.updateMemberModalPreview();
+        this.openModal('memberModal');
+      }
+
+      updateMemberModalPreview() {
+        const preview = document.getElementById('memberFormAvatarPreview');
+        if (!preview) return;
+        if (this.tempPhotoDataUrl) {
+          preview.innerHTML = `<img src="${this.tempPhotoDataUrl}" class="w-full h-full object-cover" />`;
+        } else {
+          preview.innerHTML = `<span>${this.tempAvatarEmoji || '🎮'}</span>`;
+        }
+      }
+
+      selectPresetAvatar(emoji) {
+        this.tempAvatarEmoji = emoji;
+        this.tempPhotoDataUrl = "";
+        this.updateMemberModalPreview();
+      }
+
+      clearMemberPhoto() {
+        this.tempPhotoDataUrl = "";
+        this.updateMemberModalPreview();
+      }
+
+      // Compress uploaded photo on client canvas (160x160 JPEG) so it fits smoothly in Firestore
+      handlePhotoUpload(event) {
+        const file = event.target.files?.[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            const maxSize = 160;
+            let w = img.width;
+            let h = img.height;
+            const minDim = Math.min(w, h);
+            const sx = (w - minDim) / 2;
+            const sy = (h - minDim) / 2;
+
+            canvas.width = maxSize;
+            canvas.height = maxSize;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, sx, sy, minDim, minDim, 0, 0, maxSize, maxSize);
+            this.tempPhotoDataUrl = canvas.toDataURL('image/jpeg', 0.82);
+            this.updateMemberModalPreview();
+          };
+          img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+
+      saveMemberForm(e) {
+        e.preventDefault();
+        const id = document.getElementById('memberFormId').value;
+        const name = document.getElementById('memberFormName').value.trim().toUpperCase();
+        const nickname = document.getElementById('memberFormNickname').value.trim() || name.split(' ')[0];
+        const role = document.getElementById('memberFormRole').value;
+        const personalPin = document.getElementById('memberFormPin')?.value.trim() || "";
+        const desdeMes = document.getElementById('memberFormDesdeMes')?.value || "ABRIL";
+        const retiradoDesdeMes = document.getElementById('memberFormRetiradoMes')?.value || null;
+
+        if (id) {
+          const m = this.state.members.find(x => x.id === id);
+          if (m) {
+            if (this.isAdmin) {
+              m.name = name;
+              m.nickname = nickname;
+              m.role = role;
+              m.personalPin = personalPin;
+              m.desdeMes = desdeMes;
+              m.retiradoDesdeMes = retiradoDesdeMes;
+            }
+            m.photoUrl = this.tempPhotoDataUrl;
+            m.avatar = this.tempAvatarEmoji;
+          }
+          this.closeModal('memberModal');
+          this.saveToCloud("Perfil de socio actualizado");
+        } else {
+          if (!this.isAdmin) return;
+          const newId = 'm_' + Date.now();
+          const colors = [
+            "from-emerald-500 to-teal-700",
+            "from-violet-500 to-purple-800",
+            "from-cyan-500 to-blue-700",
+            "from-amber-500 to-orange-700",
+            "from-rose-500 to-pink-700"
+          ];
+          const color = colors[this.state.members.length % colors.length];
+          const newMember = {
+            id: newId,
+            name,
+            nickname,
+            role,
+            personalPin,
+            desdeMes,
+            retiradoDesdeMes,
+            avatar: this.tempAvatarEmoji || "🎮",
+            photoUrl: this.tempPhotoDataUrl || "",
+            color
+          };
+          this.state.members.push(newMember);
+
+          // Initialize contribution slots in each active month
+          for (const mName of this.state.monthsOrder) {
+            if (this.state.monthsData[mName]) {
+              const isAct = this.isMemberActiveInMonth(newMember, mName);
+              this.state.monthsData[mName].contributions[newId] = {
+                date: "",
+                amount: 0,
+                status: isAct ? "EN_ESPERA" : "NO_APLICA"
+              };
+            }
+          }
+
+          this.inspectedMemberId = newId;
+          this.closeModal('memberModal');
+          this.saveToCloud(`Nuevo socio ${nickname} agregado desde ${desdeMes}`);
+        }
+      }
+
+      // ==========================================
+      // RETIRE MEMBER / BAJAS MODAL (ADMIN ONLY)
+      // ==========================================
+      openRetireModal(preselectedMemberId = null) {
+        if (!this.isAdmin) {
+          this.showToast("Activa el Modo Admin para gestionar bajas de socios", "amber");
+          return;
+        }
+        const memberSelect = document.getElementById('retireMemberSelect');
+        const targetId = preselectedMemberId || this.inspectedMemberId || this.state.members[0]?.id;
+
+        if (memberSelect) {
+          memberSelect.innerHTML = this.state.members.map(m => {
+            const statusText = m.retiradoDesdeMes ? `(Retirado desde ${m.retiradoDesdeMes})` : `(Activo desde ${m.desdeMes || 'ABRIL'})`;
+            return `<option value="${m.id}" ${m.id === targetId ? 'selected' : ''}>${m.name} ${statusText}</option>`;
+          }).join('');
+        }
+
+        this.handleRetireMemberSelectChange(targetId);
+        this.renderRetiredQuickList();
+        this.openModal('retireMemberModal');
+        if (window.lucide) window.lucide.createIcons();
+      }
+
+      handleRetireMemberSelectChange(memberId) {
+        const m = this.state.members.find(x => x.id === memberId);
+        const monthSelect = document.getElementById('retireFromMonthSelect');
+        if (!m || !monthSelect) return;
+
+        const defaultMonth = m.retiradoDesdeMes || (this.activeTab === 'MATRIZ_SOCIOS' ? 'OCTUBRE' : this.activeTab);
+        monthSelect.innerHTML =
+          `<option value="" ${!m.retiradoDesdeMes ? 'selected' : ''}>✅ Socio Activo (Mostrar en todos los meses)</option>` +
+          this.state.monthsOrder.map(mName => `
+            <option value="${mName}" ${defaultMonth === mName && m.retiradoDesdeMes === mName ? 'selected' : ''}>
+              🚫 Ocultar / Retirar a partir de ${mName}
+            </option>
+          `).join('');
+
+        // If member is currently active, pre-select the current active month tab for convenience
+        if (!m.retiradoDesdeMes) {
+          const suggested = this.activeTab === 'MATRIZ_SOCIOS' ? 'OCTUBRE' : this.activeTab;
+          monthSelect.value = suggested;
+        } else {
+          monthSelect.value = m.retiradoDesdeMes;
+        }
+      }
+
+      renderRetiredQuickList() {
+        const container = document.getElementById('retiredMembersQuickList');
+        if (!container) return;
+        const retired = this.state.members.filter(m => !!m.retiradoDesdeMes);
+        if (retired.length === 0) {
+          container.innerHTML = `<div class="text-xs text-slate-500">No hay socios dados de baja actualmente.</div>`;
+          return;
+        }
+        container.innerHTML = retired.map(m => `
+          <div class="flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs">
+            <div class="truncate">
+              <span class="font-bold text-slate-200">${m.nickname || m.name}</span>
+              <span class="text-[10px] text-amber-400 ml-1 font-mono">• Oculto desde ${m.retiradoDesdeMes}</span>
+            </div>
+            <button type="button" onclick="window.app.reactivateMember('${m.id}')" class="px-2 py-0.5 rounded bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 text-[10px] font-bold shrink-0">
+              Reactivar
+            </button>
+          </div>
+        `).join('');
+      }
+
+      reactivateMember(memberId) {
+        if (!this.isAdmin) return;
+        const m = this.state.members.find(x => x.id === memberId);
+        if (!m) return;
+        m.retiradoDesdeMes = null;
+        if (m.role === "INACTIVO") m.role = "SOCIO";
+        this.renderRetiredQuickList();
+        this.handleRetireMemberSelectChange(memberId);
+        this.saveToCloud(`${m.nickname || m.name} reactivado en la planilla`);
+      }
+
+      saveRetireForm(e) {
+        e.preventDefault();
+        if (!this.isAdmin) return;
+        const memberId = document.getElementById('retireMemberSelect').value;
+        const retireFrom = document.getElementById('retireFromMonthSelect').value || null;
+        const m = this.state.members.find(x => x.id === memberId);
+        if (!m) return;
+
+        m.retiradoDesdeMes = retireFrom;
+        this.closeModal('retireMemberModal');
+        if (retireFrom) {
+          this.saveToCloud(`${m.nickname || m.name} ya no se mostrará desde ${retireFrom}`);
+        } else {
+          this.saveToCloud(`${m.nickname || m.name} marcado como Socio Activo`);
+        }
+      }
+
+      // ==========================================
+      // ADD NEW MONTH & RESET SPREADSHEET
+      // ==========================================
+      openAddMonthModal() {
+        if (!this.isAdmin) return;
+        document.getElementById('newMonthNameInput').value = "DICIEMBRE";
+        this.openModal('addMonthModal');
+      }
+
+      createNewMonth(e) {
+        e.preventDefault();
+        if (!this.isAdmin) return;
+        const mName = document.getElementById('newMonthNameInput').value.trim().toUpperCase();
+        if (!mName) return;
+
+        if (this.state.monthsOrder.includes(mName)) {
+          this.showToast(`El mes ${mName} ya existe`, "amber");
+          return;
+        }
+
+        this.state.monthsOrder.push(mName);
+
+        const contributions = {};
+        for (const m of this.state.members) {
+          const activeInNewMonth = this.isMemberActiveInMonth(m, mName);
+          contributions[m.id] = {
+            date: "",
+            amount: 0,
+            status: activeInNewMonth ? "EN_ESPERA" : "NO_APLICA"
+          };
+        }
+
+        this.state.monthsData[mName] = {
+          contributions,
+          movements: []
+        };
+        this.activeTab = mName;
+        this.closeModal('addMonthModal');
+        this.saveToCloud(`Mes ${mName} creado con los socios activos actuales`);
+      }
+
+      confirmResetSpreadsheetData() {
+        if (!this.isAdmin) return;
+        this.openModal('confirmResetModal');
+      }
+
+      executeResetSpreadsheetData() {
+        if (!this.isAdmin) return;
+        this.state = getInitialSpreadsheetData();
+        this.activeTab = "OCTUBRE";
+        this.closeModal('confirmResetModal');
+        this.saveToCloud("Planilla original restaurada al 100%");
+      }
+
+      // ==========================================
+      // WHATSAPP SUMMARY, BACKUP & MODALS
+      // ==========================================
+      copyWhatsAppSummary() {
+        const calc = this.calculateAllMonthsCascade();
+        const activeMonth = this.activeTab === 'MATRIZ_SOCIOS' ? 'OCTUBRE' : this.activeTab;
+        const mCalc = calc.byMonth[activeMonth];
+        const mData = this.state.monthsData[activeMonth];
+
+        const paidList = [];
+        const pendingList = [];
+        for (const m of this.state.members) {
+          if (!this.isMemberActiveInMonth(m, activeMonth)) continue;
+          const c = mData?.contributions?.[m.id];
+          if (c?.amount > 0) paidList.push(`✅ ${m.nickname || m.name} (${formatGs(c.amount)})`);
+          else if (c?.status === 'PENDIENTE') pendingList.push(`⏳ ${m.nickname || m.name}`);
+        }
+
+        const text = [
+          `🎮 *FONDO CONJUNTO SOLIDARIO - POMBERO GAMER TEAM 2026*`,
+          `📅 *Resumen Mes:* ${activeMonth}`,
+          `💰 *Saldo Actual Acumulado en Caja:* ${formatGs(calc.finalGlobalBalance)}`,
+          `📊 *Cierre ${activeMonth}:* ${formatGs(mCalc.closingBalance)} (Saldo Ant: ${formatGs(mCalc.prevBalance)})`,
+          ``,
+          `*Aportes ${activeMonth}:*`,
+          ...(paidList.length ? paidList : ['Sin pagos registrados aún']),
+          ...(pendingList.length ? [``, `*Pendientes ${activeMonth}:*`, ...pendingList] : [])
+        ].join('\n');
+
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+
+        this.showToast("Resumen copiado para pegar en WhatsApp", "emerald");
+      }
+
+      exportBackupJson() {
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.state, null, 2));
+        const a = document.createElement('a');
+        a.setAttribute("href", dataStr);
+        a.setAttribute("download", `pombero_caja_2026_backup.json`);
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        this.showToast("Respaldo descargado (.JSON)", "emerald");
+      }
+
+      importBackupJson(event) {
+        if (!this.isAdmin) {
+          this.showToast("Activa el Modo Admin para restaurar un respaldo", "amber");
+          return;
+        }
+        const file = event.target.files?.[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          try {
+            const parsed = JSON.parse(e.target.result);
+            if (parsed && parsed.members && parsed.monthsOrder && parsed.monthsData) {
+              this.state = parsed;
+              this.saveToCloud("Respaldo JSON importado con éxito");
+              this.closeModal('publishModal');
+            }
+          } catch (err) {
+            this.showToast("Archivo JSON inválido", "rose");
+          }
+        };
+        reader.readAsText(file);
+      }
+
+      openPublishModal() {
+        const pinDisp = document.getElementById('currentPinDisplay');
+        if (pinDisp) pinDisp.textContent = this.state.adminPin || "1234";
+        this.openModal('publishModal');
+        if (window.lucide) window.lucide.createIcons();
+      }
+
+      // ==========================================
+      // LOGIN PORTAL FOR MEMBERS & ADMIN
+      // ==========================================
+      openLoginModal() {
+        const calc = this.calculateAllMonthsCascade();
+        const potEl = document.getElementById('loginModalPotAmount');
+        if (potEl) potEl.textContent = formatGs(calc.finalGlobalBalance);
+
+        document.getElementById('loginMemberPinBox')?.classList.add('hidden');
+        document.getElementById('loginMemberPinError')?.classList.add('hidden');
+        const directPin = document.getElementById('directAdminPinInput');
+        if (directPin) directPin.value = "";
+
+        this.renderLoginMembersGrid();
+        this.openModal('loginPortalModal');
+        if (window.lucide) window.lucide.createIcons();
+      }
+
+      toggleShowRetiredInLogin() {
+        this.showRetiredInLogin = !this.showRetiredInLogin;
+        const btn = document.getElementById('toggleRetiredLoginBtn');
+        if (btn) {
+          btn.textContent = this.showRetiredInLogin ? "Ocultar ex-socios retirados" : "Ver ex-socios retirados";
+        }
+        this.renderLoginMembersGrid();
+      }
+
+      renderLoginMembersGrid() {
+        const grid = document.getElementById('loginMembersGrid');
+        if (!grid) return;
+
+        const list = this.state.members.filter(m => this.showRetiredInLogin || !m.retiradoDesdeMes);
+        grid.innerHTML = list.map(m => {
+          const isCurrent = m.id === this.currentUserId;
+          const isRet = !!m.retiradoDesdeMes;
+          const hasPin = !!(m.personalPin && m.personalPin.length > 0);
+          return `
+            <button
+              type="button"
+              onclick="window.app.selectMemberFromLogin('${m.id}')"
+              class="p-3 rounded-2xl border text-left transition-all flex flex-col items-center text-center gap-2 group ${
+                isCurrent
+                  ? 'bg-emerald-950/60 border-emerald-400 shadow-lg'
+                  : isRet
+                    ? 'bg-slate-950/50 border-slate-800 opacity-70 hover:opacity-100'
+                    : 'bg-slate-950/90 border-slate-800 hover:border-emerald-500/50 hover:bg-slate-900'
+              }"
+            >
+              <div class="relative">
+                ${this.getAvatarHTML(m, "w-12 h-12", "text-lg")}
+                ${hasPin ? `<span class="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-slate-900 border border-emerald-400 text-[9px] flex items-center justify-center">🔒</span>` : ''}
+              </div>
+              <div class="w-full">
+                <div class="text-xs font-extrabold text-white truncate group-hover:text-emerald-300">${m.nickname || m.name.split(' ')[0]}</div>
+                <div class="text-[9px] text-slate-400 truncate">${isRet ? `Baja (${m.retiradoDesdeMes})` : (m.role === 'ADMIN' ? 'Administrador' : 'Socio Activo')}</div>
+              </div>
+            </button>
+          `;
+        }).join('');
+      }
+
+      selectMemberFromLogin(memberId) {
+        const m = this.state.members.find(x => x.id === memberId);
+        if (!m) return;
+
+        if (m.personalPin && m.personalPin.trim().length > 0) {
+          this.pendingLoginMemberId = memberId;
+          const box = document.getElementById('loginMemberPinBox');
+          const nameEl = document.getElementById('loginPromptMemberName');
+          const inputEl = document.getElementById('loginMemberPinInput');
+          if (nameEl) nameEl.textContent = m.nickname || m.name;
+          if (inputEl) inputEl.value = "";
+          document.getElementById('loginMemberPinError')?.classList.add('hidden');
+          box?.classList.remove('hidden');
+          setTimeout(() => inputEl?.focus(), 60);
+          return;
+        }
+
+        // Login directly as Socio (read-only mode)
+        this.isAdmin = false;
+        this.currentUserId = memberId;
+        this.inspectedMemberId = memberId;
+        this.closeModal('loginPortalModal');
+        this.renderAll();
+        this.showToast(`¡Bienvenido, ${m.nickname || m.name}!`, "emerald");
+      }
+
+      confirmMemberPinLogin(e) {
+        e.preventDefault();
+        const m = this.state.members.find(x => x.id === this.pendingLoginMemberId);
+        if (!m) return;
+        const entered = document.getElementById('loginMemberPinInput')?.value.trim();
+        if (entered === m.personalPin) {
+          this.isAdmin = false;
+          this.currentUserId = m.id;
+          this.inspectedMemberId = m.id;
+          this.closeModal('loginPortalModal');
+          this.renderAll();
+          this.showToast(`¡Bienvenido, ${m.nickname || m.name}!`, "emerald");
+        } else {
+          document.getElementById('loginMemberPinError')?.classList.remove('hidden');
+        }
+      }
+
+      loginDirectAsAdmin(e) {
+        e.preventDefault();
+        const entered = document.getElementById('directAdminPinInput')?.value.trim();
+        const validPin = this.state.adminPin || "1234";
+        if (entered === validPin) {
+          const adminMember = this.state.members.find(m => m.role === 'ADMIN') || this.state.members[4] || this.state.members[0];
+          this.isAdmin = true;
+          if (adminMember) {
+            this.currentUserId = adminMember.id;
+            this.inspectedMemberId = adminMember.id;
+          }
+          this.closeModal('loginPortalModal');
+          this.renderAll();
+          this.showToast("Sesión iniciada como Administrador (Rodrigo Servián)", "violet");
+        } else {
+          this.showToast("PIN de Administrador incorrecto", "rose");
+        }
+      }
+
+      // Download a standalone index.html with all current state baked in AND the Login modal ready
+      downloadStandaloneHtml() {
+        // Close modals before cloning DOM so the downloaded file starts clean with the Login screen open
+        this.closeModal('publishModal');
+        this.openLoginModal();
+
+        const bakedStateScript = `<script id="bakedStateScript">window.__BAKED_INITIAL_STATE__ = ${JSON.stringify(this.state)};<\/script>`;
+        let fullHtml = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+
+        // Remove any previous baked script if re-exporting
+        fullHtml = fullHtml.replace(/<script id="bakedStateScript">[\s\S]*?<\/script>/g, "");
+        // Inject current state right before </head>
+        fullHtml = fullHtml.replace("</head>", `${bakedStateScript}\n</head>`);
+
+        const blob = new Blob([fullHtml], { type: "text/html;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "index.html";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+
+        this.showToast("Archivo index.html descargado y listo para subir a Internet", "emerald");
+      }
+
+      openModal(id) {
+        const el = document.getElementById(id);
+        if (el) {
+          el.classList.remove('hidden');
+          el.classList.add('flex');
+        }
+      }
+
+      closeModal(id) {
+        const el = document.getElementById(id);
+        if (el) {
+          el.classList.add('hidden');
+          el.classList.remove('flex');
+        }
+      }
+
+      showToast(message, color = "emerald") {
+        const container = document.getElementById('toastContainer');
+        if (!container) return;
+        const toast = document.createElement('div');
+        const colorMap = {
+          emerald: "bg-slate-900 border-emerald-500/50 text-emerald-300",
+          violet: "bg-slate-900 border-violet-500/50 text-violet-300",
+          amber: "bg-slate-900 border-amber-500/50 text-amber-300",
+          rose: "bg-slate-900 border-rose-500/50 text-rose-300",
+          slate: "bg-slate-900 border-slate-700 text-slate-300"
+        };
+        toast.className = `px-3.5 py-2 rounded-xl border shadow-xl text-xs font-bold flex items-center gap-2 transition-all duration-300 ${colorMap[color] || colorMap.emerald}`;
+        toast.innerHTML = `<span class="w-2 h-2 rounded-full bg-current"></span><span>${message}</span>`;
+        container.appendChild(toast);
+        setTimeout(() => {
+          toast.style.opacity = '0';
+          setTimeout(() => toast.remove(), 300);
+        }, 2800);
+      }
+    }
+
+    window.onload = function () {
+      window.app = new PomberoMutualApp();
+    };
+  </script>
+</body>
+</html>
