@@ -11,6 +11,15 @@
         .glass-card { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        @media print {
+            body { background: white !important; color: black !important; }
+            .glass-card { background: white !important; border: 1px solid #cbd5e1 !important; color: black !important; box-shadow: none !important; }
+            header, #loginScreen, #adminControls, #quickAdminSwitchBtn, button, select, input, .no-print { display: none !important; }
+            table { width: 100% !important; border-collapse: collapse !important; color: black !important; }
+            th, td { border: 1px solid #cbd5e1 !important; padding: 8px !important; color: black !important; }
+            th { background: #f1f5f9 !important; }
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col selection:bg-emerald-500 selection:text-white">
@@ -116,7 +125,13 @@
                         <button type="button" onclick="openNewMemberModal()" class="bg-blue-600 hover:bg-blue-500 text-white px-2.5 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer">+ Nuevo Socio</button>
                         <button type="button" onclick="openRetireModal()" class="bg-amber-600 hover:bg-amber-500 text-white px-2.5 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer">Bajas</button>
                         <button type="button" onclick="openNewMonthModal()" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer">+ Mes</button>
+                        <button type="button" onclick="copyWhatsAppReport()" class="bg-teal-600 hover:bg-teal-500 text-white px-2.5 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer" title="Copiar resumen para WhatsApp">💬 Reporte WA</button>
                     </div>
+
+                    <!-- Print / PDF Button -->
+                    <button type="button" onclick="window.print()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer" title="Imprimir o guardar como PDF">
+                        🖨️ Imprimir / PDF
+                    </button>
 
                     <!-- Toggle Admin Button if currently in Socio mode -->
                     <button type="button" id="quickAdminSwitchBtn" onclick="promptAdminPinQuick()" class="bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 border border-purple-500/30 px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer">
@@ -160,6 +175,19 @@
                     <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 block">Egresos / Préstamos del Mes</span>
                     <span id="kpiMonthExpense" class="text-xl sm:text-2xl font-black text-amber-400 mt-1 block">Gs. 0</span>
                     <span class="text-[10px] text-slate-500 block mt-0.5">Salidas y préstamos activos</span>
+                </div>
+            </div>
+
+            <!-- Annual Evolution Chart Widget -->
+            <div class="glass-card p-5 rounded-3xl mb-5 shadow-xl no-print">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-xs sm:text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                        📈 Evolución del Saldo en Caja (2026)
+                    </h3>
+                    <span class="text-[11px] text-slate-400">Cierre mes a mes</span>
+                </div>
+                <div id="annualChartContainer" class="grid grid-cols-4 sm:grid-cols-8 gap-2 pt-2 items-end h-32">
+                    <!-- Dynamic chart bars -->
                 </div>
             </div>
 
@@ -221,20 +249,15 @@
                             </div>
                         </div>
 
-                        <!-- Avatar Emoji Picker & PIN configuration -->
+                        <!-- Avatar Free Emoji Input & PIN configuration -->
                         <div class="mb-4 space-y-3 bg-slate-900/80 p-3.5 rounded-2xl border border-slate-800">
                             <div>
-                                <span class="text-[11px] text-slate-300 font-bold block mb-1.5">Elegir Emoji de Perfil:</span>
-                                <div class="flex items-center gap-1.5 flex-wrap">
-                                    <button type="button" onclick="setMemberEmoji('🎮')" class="w-8 h-8 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 flex items-center justify-center text-sm cursor-pointer">🎮</button>
-                                    <button type="button" onclick="setMemberEmoji('🔥')" class="w-8 h-8 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 flex items-center justify-center text-sm cursor-pointer">🔥</button>
-                                    <button type="button" onclick="setMemberEmoji('👑')" class="w-8 h-8 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 flex items-center justify-center text-sm cursor-pointer">👑</button>
-                                    <button type="button" onclick="setMemberEmoji('⚡')" class="w-8 h-8 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 flex items-center justify-center text-sm cursor-pointer">⚡</button>
-                                    <button type="button" onclick="setMemberEmoji('🛡️')" class="w-8 h-8 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 flex items-center justify-center text-sm cursor-pointer">🛡️</button>
-                                    <button type="button" onclick="setMemberEmoji('🐉')" class="w-8 h-8 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 flex items-center justify-center text-sm cursor-pointer">🐉</button>
-                                    <button type="button" onclick="setMemberEmoji('🎯')" class="w-8 h-8 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 flex items-center justify-center text-sm cursor-pointer">🎯</button>
-                                    <button type="button" onclick="setMemberEmoji('🚀')" class="w-8 h-8 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 flex items-center justify-center text-sm cursor-pointer">🚀</button>
+                                <span class="text-[11px] text-slate-300 font-bold block mb-1">Cambiar Icono / Emojis (Escribe cualquier emoji):</span>
+                                <div class="flex items-center gap-2">
+                                    <input type="text" id="memberEmojiInput" placeholder="🎮" maxlength="4" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-base text-center w-16 text-white focus:outline-none focus:border-emerald-500">
+                                    <button type="button" onclick="saveMemberEmojiFree()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold cursor-pointer flex-1">Guardar Emoji</button>
                                 </div>
+                                <span class="text-[10px] text-slate-400 block mt-1">Usa el teclado de emojis de tu celular o PC (ej. ⚡, 🚀, 🔥, 🏆).</span>
                             </div>
 
                             <div class="pt-2 border-t border-slate-800">
@@ -243,7 +266,6 @@
                                     <input type="text" id="memberPinEditInput" placeholder="Ej. 1234" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 flex-1">
                                     <button type="button" onclick="saveMemberPin()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold cursor-pointer">Guardar PIN</button>
                                 </div>
-                                <span class="text-[10px] text-slate-400 block mt-1">Con este PIN podrás ingresar directamente desde la pantalla de login.</span>
                             </div>
                         </div>
 
@@ -636,6 +658,55 @@
             });
         }
 
+        // WhatsApp Report Generator
+        function copyWhatsAppReport() {
+            const calc = computeAllMonthsSummary();
+            const activeMo = currentActiveTab === 'RESUMEN' ? monthsList[monthsList.length - 1] : currentActiveTab;
+            const mStat = calc.byMonth[activeMo] || { closingBalance: 0, pureIncome: 0, pureExpense: 0 };
+            
+            let report = `🎮 *POMBERO GAMER TEAM - CAJA 2026* 🎮\n`;
+            report += `📅 *Mes:* ${activeMo}\n`;
+            report += `💰 *Saldo Acumulado en Caja:* ${formatGs(calc.finalBalance)}\n`;
+            report += `📥 *Ingresos Puros (${activeMo}):* ${formatGs(mStat.pureIncome)}\n`;
+            report += `📤 *Egresos/Préstamos (${activeMo}):* ${formatGs(mStat.pureExpense)}\n`;
+            report += `📊 *Cierre del Mes:* ${formatGs(mStat.closingBalance)}\n\n`;
+            report += `_¡Al día con las finanzas del equipo!_ 🚀`;
+
+            navigator.clipboard.writeText(report).then(() => {
+                alert('¡Resumen copiado al portapapeles! Ya puedes pegarlo en el grupo de WhatsApp.');
+            }).catch(err => {
+                alert('No se pudo copiar automáticamente, pero puedes ver el reporte en consola.');
+            });
+        }
+
+        // Render Annual Evolution Chart
+        function renderAnnualChart() {
+            const container = document.getElementById('annualChartContainer');
+            if (!container) return;
+            container.innerHTML = '';
+
+            const calc = computeAllMonthsSummary();
+            let maxVal = 1000000;
+            monthsList.forEach(mo => {
+                const bal = calc.byMonth[mo]?.closingBalance || 0;
+                if (bal > maxVal) maxVal = bal;
+            });
+
+            monthsList.forEach(mo => {
+                const bal = calc.byMonth[mo]?.closingBalance || 0;
+                const heightPct = Math.max(12, Math.min(100, (bal / maxVal) * 100));
+                
+                const col = document.createElement('div');
+                col.className = 'flex flex-col items-center h-full justify-end group';
+                col.innerHTML = `
+                    <div class="text-[9px] text-emerald-400 font-bold mb-1 opacity-0 group-hover:opacity-100 transition whitespace-nowrap">${(bal/1000).toFixed(0)}k</div>
+                    <div class="w-full bg-emerald-500/20 group-hover:bg-emerald-500/40 border border-emerald-500/40 rounded-t-lg transition-all duration-300" style="height: ${heightPct}%"></div>
+                    <span class="text-[10px] text-slate-400 font-bold mt-1.5 uppercase">${mo.slice(0, 3)}</span>
+                `;
+                container.appendChild(col);
+            });
+        }
+
         // LOGIN LOGIC
         function renderLoginProfiles() {
             const grid = document.getElementById('loginProfilesGrid');
@@ -784,6 +855,7 @@
             populateDropdowns();
             renderMonthTabs();
             updateDashboard();
+            renderAnnualChart();
         }
 
         function populateDropdowns() {
@@ -1040,6 +1112,7 @@
             };
             saveState();
             updateDashboard();
+            renderAnnualChart();
         }
 
         function quickSetMemberPending(monthName, memberId) {
@@ -1051,6 +1124,7 @@
             };
             saveState();
             updateDashboard();
+            renderAnnualChart();
         }
 
         function customEditMemberPayment(monthName, memberId) {
@@ -1072,6 +1146,7 @@
             }
             saveState();
             updateDashboard();
+            renderAnnualChart();
         }
 
         function deleteExtraMovement(monthName, idx) {
@@ -1079,6 +1154,7 @@
                 extraMovementsData[monthName].splice(idx, 1);
                 saveState();
                 updateDashboard();
+                renderAnnualChart();
             }
         }
 
@@ -1139,9 +1215,12 @@
             const avatarContainer = document.getElementById('memberAvatarContainer');
             avatarContainer.innerHTML = `<span class="text-2xl">${member.emoji || '🎮'}</span>`;
 
-            // Set PIN input value
+            // Set inputs
             const pinInput = document.getElementById('memberPinEditInput');
             if (pinInput) pinInput.value = member.pin || '';
+
+            const emojiInput = document.getElementById('memberEmojiInput');
+            if (emojiInput) emojiInput.value = member.emoji || '🎮';
 
             const st = getMemberStats(member);
             document.getElementById('memberTotalContributed').textContent = formatGs(st.totalContributed);
@@ -1214,6 +1293,19 @@
                 updateMemberProfileCard();
                 renderLoginProfiles();
                 updateDashboard();
+            }
+        }
+
+        function saveMemberEmojiFree() {
+            const mem = membersData.find(m => m.id === currentSelectedMemberId);
+            const emojiVal = document.getElementById('memberEmojiInput').value.trim();
+            if (mem && emojiVal) {
+                mem.emoji = emojiVal;
+                saveState();
+                updateMemberProfileCard();
+                renderLoginProfiles();
+                updateDashboard();
+                alert(`¡Ícono actualizado con éxito para ${mem.name}!`);
             }
         }
 
@@ -1290,6 +1382,7 @@
             currentActiveTab = mo;
             renderMonthTabs();
             updateDashboard();
+            renderAnnualChart();
         }
 
         function handleSaveNewMember(event) {
