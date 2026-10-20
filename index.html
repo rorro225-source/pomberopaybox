@@ -7,22 +7,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg-main: #060913;
-            --text-main: #f1f5f9;
-            --card-bg: rgba(15, 23, 42, 0.85);
-            --card-border: rgba(255, 255, 255, 0.08);
-        }
-        @media (prefers-color-scheme: light) {
-            :root {
-                --bg-main: #f1f5f9;
-                --text-main: #0f172a;
-                --card-bg: rgba(255, 255, 255, 0.95);
-                --card-border: rgba(0, 0, 0, 0.08);
-            }
-        }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg-main); color: var(--text-main); transition: background-color 0.3s, color 0.3s; }
-        .glass-card { background: var(--card-bg); backdrop-filter: blur(16px); border: 1px solid var(--card-border); }
+        body { font-family: 'Inter', sans-serif; background-color: #060913; color: #f1f5f9; }
+        .glass-card { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
@@ -49,7 +35,7 @@
 
     <!-- LOGIN OVERLAY -->
     <div id="loginScreen" class="fixed inset-0 z-50 bg-[#060913]/95 backdrop-blur-xl flex flex-col items-center justify-center p-4 overflow-y-auto" style="display: none;">
-        <div class="max-w-3xl w-full glass-card rounded-3xl p-6 md:p-8 shadow-2xl border border-slate-800/90 my-auto">
+        <div class="max-w-4xl w-full glass-card rounded-3xl p-6 md:p-8 shadow-2xl border border-slate-800/90 my-auto">
             
             <!-- Header Login -->
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-800/80">
@@ -252,8 +238,8 @@
                             </table>
                         </div>
 
-                        <!-- Monthly Treasury Notes (Feature 3) -->
-                        <div class="p-4 bg-slate-950/50 border-t border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                        <!-- Monthly Treasury Notes (Admin Only) -->
+                        <div id="treasuryNotesSection" class="p-4 bg-slate-950/50 border-t border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 hidden">
                             <span class="text-xs font-bold text-slate-300">📝 Notas de Tesorería del Mes:</span>
                             <div class="flex items-center gap-2 w-full sm:w-2/3">
                                 <input type="text" id="monthNoteInput" placeholder="Ej. Quedó pendiente vuelto del sorteo..." class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 flex-1">
@@ -285,6 +271,15 @@
                             </div>
                         </div>
 
+                        <!-- Current Game Field (New Request) -->
+                        <div class="mb-4 bg-slate-900/80 p-3.5 rounded-2xl border border-slate-800">
+                            <span class="text-[11px] text-slate-300 font-bold block mb-1">🎮 Juego que estoy jugando actualmente:</span>
+                            <div class="flex items-center gap-2">
+                                <input type="text" id="memberCurrentGameInput" placeholder="Ej. eFootball 2026, FC 26..." class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 flex-1">
+                                <button type="button" onclick="saveMemberCurrentGame()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold cursor-pointer">Guardar</button>
+                            </div>
+                        </div>
+
                         <!-- Avatar Free Emoji Input & PIN configuration -->
                         <div class="mb-4 space-y-3 bg-slate-900/80 p-3.5 rounded-2xl border border-slate-800">
                             <div>
@@ -293,7 +288,6 @@
                                     <input type="text" id="memberEmojiInput" placeholder="🎮" maxlength="4" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-base text-center w-16 text-white focus:outline-none focus:border-emerald-500">
                                     <button type="button" onclick="saveMemberEmojiFree()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold cursor-pointer flex-1">Guardar Emoji</button>
                                 </div>
-                                <span class="text-[10px] text-slate-400 block mt-1">Usa el teclado de emojis de tu celular o PC (ej. ⚡, 🚀, 🔥, 🏆).</span>
                             </div>
 
                             <div class="pt-2 border-t border-slate-800">
@@ -332,7 +326,7 @@
             </div>
 
             <!-- View 2: Full Members Summary Table (When RESUMEN SOCIOS tab is clicked) -->
-            <div id="summaryViewContainer" class="hidden">
+            <div id="summaryViewContainer" class="hidden space-y-5">
                 <div class="glass-card rounded-3xl overflow-hidden shadow-xl mb-5">
                     <div class="p-5 border-b border-slate-800 flex flex-wrap items-center justify-between gap-2 bg-slate-900/60">
                         <div>
@@ -356,6 +350,32 @@
                         </table>
                     </div>
                 </div>
+
+                <!-- Loan / Credit History Tab Section (New Feature requested) -->
+                <div class="glass-card rounded-3xl p-6 shadow-xl">
+                    <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-800">
+                        <div>
+                            <h2 class="font-extrabold text-base sm:text-lg text-white">📜 Historial de Préstamos, Créditos y Garantías</h2>
+                            <p class="text-xs text-slate-400">Registro detallado de salidas de fondos, garantías dejadas y devoluciones</p>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-xs sm:text-sm">
+                            <thead>
+                                <tr class="bg-slate-950/70 text-[11px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-800">
+                                    <th class="py-3 px-4">Mes</th>
+                                    <th class="py-3 px-4">Concepto / Préstamo</th>
+                                    <th class="py-3 px-3">Fecha Entrega</th>
+                                    <th class="py-3 px-4 text-right">Monto Prestado</th>
+                                    <th class="py-3 px-4 text-right">Devolución / Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody id="loanHistoryTableBody" class="divide-y divide-slate-800/60">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </main>
     </div>
@@ -370,14 +390,14 @@
                     <select id="movMonth" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white"></select>
                 </div>
                 <div>
-                    <label class="text-xs text-slate-300 font-semibold block mb-1">Concepto / Descripción</label>
-                    <input type="text" id="movDesc" required placeholder="Ej. Préstamo a socio o Devolución con intereses" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white">
+                    <label class="text-xs text-slate-300 font-semibold block mb-1">Concepto / Descripción (Incluir garantía si es préstamo)</label>
+                    <input type="text" id="movDesc" required placeholder="Ej. Préstamo a socio, con garantía de control..." class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white">
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="text-xs text-slate-300 font-semibold block mb-1">Tipo de Movimiento</label>
                         <select id="movType" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white">
-                            <option value="ingreso">Ingreso Extra (+)</option>
+                            <option value="ingreso">Ingreso Extra / Devolución (+)</option>
                             <option value="egreso">Egreso / Préstamo (-)</option>
                         </select>
                     </div>
@@ -456,16 +476,16 @@
         const defaultMonths = ['ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO', 'SETIEMBRE', 'OCTUBRE', 'NOVIEMBRE'];
 
         const defaultMembers = [
-            { id: 'm1', name: 'JUAN ANDRÉS KALABURA MACIEL', shortName: 'Kalabura', emoji: '🎮', color: 'from-emerald-500 to-teal-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '1111' },
-            { id: 'm2', name: 'JUAN MARCELO VERA ARÉVALOS', shortName: 'Marcelo Vera', emoji: '🕹️', color: 'from-slate-600 to-slate-700', startMonth: 'ABRIL', retiradoDesde: 'JUNIO', pin: '2222' },
-            { id: 'm3', name: 'MARCOS NEHEMÍAS CARDOZO INSFRAN', shortName: 'Marcos Cardozo', emoji: '⚔️', color: 'from-slate-600 to-slate-700', startMonth: 'ABRIL', retiradoDesde: 'JULIO', pin: '3333' },
-            { id: 'm4', name: 'FABIO HERNÁN FIGUEREDO NUÑEZ', shortName: 'Hernán Figueredo', emoji: '🔥', color: 'from-orange-500 to-red-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '4444' },
-            { id: 'm5', name: 'RODRIGO SERVIÁN RIVAS', shortName: 'Rodrigo Servián', emoji: '👑', color: 'from-purple-500 to-indigo-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '5555', isAdminMember: true },
-            { id: 'm6', name: 'PABLO FERRAZZA', shortName: 'Pablo Ferrazza', emoji: '⚡', color: 'from-amber-500 to-orange-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '6666' },
-            { id: 'm7', name: 'ADAM EUGENIO ALDERETE', shortName: 'Adam Alderete', emoji: '🛡️', color: 'from-blue-500 to-cyan-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '7777' },
-            { id: 'm8', name: 'HENRY ARIEL CHÁVEZ WOTTRICH', shortName: 'Henry Chávez', emoji: '🐉', color: 'from-rose-500 to-pink-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '8888' },
-            { id: 'm9', name: 'JUANMA FLORES', shortName: 'Juanma Flores', emoji: '🎯', color: 'from-lime-500 to-emerald-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '9999' },
-            { id: 'm10', name: 'HUGO MARTÍN BENÍTEZ HAUPT', shortName: 'Hugo Benítez', emoji: '🚀', color: 'from-indigo-500 to-blue-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '1010' }
+            { id: 'm1', name: 'JUAN ANDRÉS KALABURA MACIEL', shortName: 'Kalabura', emoji: '🎮', currentGame: 'eFootball 2026', color: 'from-emerald-500 to-teal-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '1111' },
+            { id: 'm2', name: 'JUAN MARCELO VERA ARÉVALOS', shortName: 'Marcelo Vera', emoji: '🕹️', currentGame: 'EA FC 26', color: 'from-slate-600 to-slate-700', startMonth: 'ABRIL', retiradoDesde: 'JUNIO', pin: '2222' },
+            { id: 'm3', name: 'MARCOS NEHEMÍAS CARDOZO INSFRAN', shortName: 'Marcos Cardozo', emoji: '⚔️', currentGame: 'Valorant', color: 'from-slate-600 to-slate-700', startMonth: 'ABRIL', retiradoDesde: 'JULIO', pin: '3333' },
+            { id: 'm4', name: 'FABIO HERNÁN FIGUEREDO NUÑEZ', shortName: 'Hernán Figueredo', emoji: '🔥', currentGame: 'Assetto Corsa', color: 'from-orange-500 to-red-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '4444' },
+            { id: 'm5', name: 'RODRIGO SERVIÁN RIVAS', shortName: 'Rodrigo Servián', emoji: '👑', currentGame: 'Retro & Sims', color: 'from-purple-500 to-indigo-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '5555', isAdminMember: true },
+            { id: 'm6', name: 'PABLO FERRAZZA', shortName: 'Pablo Ferrazza', emoji: '⚡', currentGame: 'GTA V', color: 'from-amber-500 to-orange-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '6666' },
+            { id: 'm7', name: 'ADAM EUGENIO ALDERETE', shortName: 'Adam Alderete', emoji: '🛡️', currentGame: 'Call of Duty', color: 'from-blue-500 to-cyan-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '7777' },
+            { id: 'm8', name: 'HENRY ARIEL CHÁVEZ WOTTRICH', shortName: 'Henry Chávez', emoji: '🐉', currentGame: 'Mortal Kombat 1', color: 'from-rose-500 to-pink-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '8888' },
+            { id: 'm9', name: 'JUANMA FLORES', shortName: 'Juanma Flores', emoji: '🎯', currentGame: 'Fortnite', color: 'from-lime-500 to-emerald-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '9999' },
+            { id: 'm10', name: 'HUGO MARTÍN BENÍTEZ HAUPT', shortName: 'Hugo Benítez', emoji: '🚀', currentGame: 'Euro Truck Simulator 2', color: 'from-indigo-500 to-blue-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '1010' }
         ];
 
         const defaultContributions = {
@@ -576,7 +596,7 @@
         let membersData = JSON.parse(JSON.stringify(defaultMembers));
         let contributionsData = JSON.parse(JSON.stringify(defaultContributions));
         let extraMovementsData = JSON.parse(JSON.stringify(defaultExtraMovements));
-        let monthNotesData = {}; // Feature 3: Treasury notes per month
+        let monthNotesData = {};
 
         let currentActiveTab = 'OCTUBRE';
         let currentUserRole = 'socio';
@@ -747,7 +767,7 @@
             });
         }
 
-        // Feature 4: Render Debtors Alert Widget for current/active month
+        // Feature 4: Render Debtors Alert Widget for current/active month (Admin only)
         function renderDebtorsAlert() {
             const activeMo = currentActiveTab === 'RESUMEN' ? monthsList[monthsList.length - 1] : currentActiveTab;
             const activeMembers = getActiveMembersForMonth(activeMo);
@@ -811,11 +831,14 @@
                 card.className = `p-4 rounded-2xl border ${borderClass} flex flex-col items-center text-center transition group cursor-pointer ${isRetired ? 'opacity-60' : ''}`;
                 card.onclick = () => loginAsMember(m.id);
 
+                const currentGameText = m.currentGame ? `🎮 ${m.currentGame}` : '🎮 Sin juego asignado';
+
                 card.innerHTML = `
                     <div class="w-14 h-14 rounded-2xl bg-gradient-to-br ${m.color || 'from-emerald-500 to-teal-600'} flex items-center justify-center mb-2.5 shadow-lg group-hover:scale-105 transition overflow-hidden text-2xl">
                         ${m.emoji || '🎮'}
                     </div>
                     <span class="text-xs sm:text-sm font-extrabold text-white truncate w-full">${m.shortName || m.name}</span>
+                    <span class="text-[10px] text-emerald-400 font-semibold truncate w-full mt-0.5">${currentGameText}</span>
                     <span class="text-[11px] text-slate-400 mt-0.5">${isRetired ? 'Retirado (' + m.retiradoDesde + ')' : (m.isAdminMember ? 'Administrador' : 'Socio Activo')}</span>
                 `;
                 grid.appendChild(card);
@@ -1062,16 +1085,23 @@
             document.getElementById('kpiMonthIncome').textContent = formatGs(mStat.pureIncome);
             document.getElementById('kpiMonthExpense').textContent = formatGs(mStat.pureExpense);
 
-            // Populate monthly note input
+            // Populate monthly note input and toggle visibility for admin only
+            const treasurySection = document.getElementById('treasuryNotesSection');
             const noteInput = document.getElementById('monthNoteInput');
-            if (noteInput) {
-                noteInput.value = monthNotesData[activeMonth] || '';
+            if (treasurySection) {
+                if (currentUserRole === 'admin') {
+                    treasurySection.classList.remove('hidden');
+                    if (noteInput) noteInput.value = monthNotesData[activeMonth] || '';
+                } else {
+                    treasurySection.classList.add('hidden');
+                }
             }
 
             if (currentActiveTab === 'RESUMEN') {
                 document.getElementById('monthlyViewContainer').classList.add('hidden');
                 document.getElementById('summaryViewContainer').classList.remove('hidden');
                 renderSummaryTable();
+                renderLoanHistoryTable();
             } else {
                 document.getElementById('monthlyViewContainer').classList.remove('hidden');
                 document.getElementById('summaryViewContainer').classList.add('hidden');
@@ -1311,6 +1341,9 @@
             const emojiInput = document.getElementById('memberEmojiInput');
             if (emojiInput) emojiInput.value = member.emoji || '🎮';
 
+            const gameInput = document.getElementById('memberCurrentGameInput');
+            if (gameInput) gameInput.value = member.currentGame || '';
+
             const st = getMemberStats(member);
             document.getElementById('memberTotalContributed').textContent = formatGs(st.totalContributed);
             document.getElementById('memberPaidMonthsCount').textContent = `${st.paidCount} cuotas`;
@@ -1325,7 +1358,7 @@
                 alertText.textContent = 'Al día con todos los meses cerrados.';
             }
 
-            // Feature 2: Detailed Payment History with exact dates
+            // Detailed Payment History with exact dates
             const pillsContainer = document.getElementById('memberMonthlyPills');
             pillsContainer.innerHTML = '';
             st.perMonthStatus.forEach(p => {
@@ -1345,12 +1378,53 @@
             });
         }
 
+        // Feature: Render Loan History Table in Summary view
+        function renderLoanHistoryTable() {
+            const tbody = document.getElementById('loanHistoryTableBody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            let loanRows = [];
+            monthsList.forEach(mo => {
+                const extras = extraMovementsData[mo] || [];
+                extras.forEach(ex => {
+                    const descUpper = ex.desc.toUpperCase();
+                    if (descUpper.includes('PRÉSTAMO') || descUpper.includes('GARANTÍA') || Number(ex.expense) > 0) {
+                        loanRows.push({
+                            month: mo,
+                            desc: ex.desc,
+                            date: ex.date || mo,
+                            amount: ex.expense ? formatGs(ex.expense) : '-',
+                            status: ex.income ? `Devuelto/Ingreso (${formatGs(ex.income)})` : 'Activo en curso ⏳'
+                        });
+                    }
+                });
+            });
+
+            if (loanRows.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-slate-500">No hay préstamos registrados en el periodo.</td></tr>`;
+                return;
+            }
+
+            loanRows.forEach(l => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-slate-900/50 transition';
+                tr.innerHTML = `
+                    <td class="py-3 px-4 font-bold text-slate-300">${l.month}</td>
+                    <td class="py-3 px-4 text-white font-semibold">${l.desc}</td>
+                    <td class="py-3 px-3 text-xs text-slate-400">${l.date}</td>
+                    <td class="py-3 px-4 text-right font-bold text-amber-400">${l.amount}</td>
+                    <td class="py-3 px-4 text-right font-semibold text-emerald-400">${l.status}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
         // Feature 1: Loyalty Ranking in Summary Table
         function renderSummaryTable() {
             const tbody = document.getElementById('summaryMembersTableBody');
             tbody.innerHTML = '';
 
-            // Compute stats & sort by paidCount descending
             const ranked = membersData.map(m => {
                 return { m, st: getMemberStats(m) };
             }).sort((a, b) => b.st.paidCount - a.st.paidCount);
@@ -1410,6 +1484,18 @@
                 renderLoginProfiles();
                 updateDashboard();
                 alert(`¡Ícono actualizado con éxito para ${mem.name}!`);
+            }
+        }
+
+        function saveMemberCurrentGame() {
+            const mem = membersData.find(m => m.id === currentSelectedMemberId);
+            const gameVal = document.getElementById('memberCurrentGameInput').value.trim();
+            if (mem) {
+                mem.currentGame = gameVal;
+                saveState();
+                updateMemberProfileCard();
+                renderLoginProfiles();
+                alert(`¡Juego actual actualizado para ${mem.name}!`);
             }
         }
 
@@ -1503,6 +1589,7 @@
                 name: fullName,
                 shortName: shortName,
                 emoji: '🎮',
+                currentGame: '',
                 color: 'from-emerald-500 to-teal-600',
                 startMonth: startMo,
                 retiradoDesde: null,
