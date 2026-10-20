@@ -15,8 +15,17 @@
 </head>
 <body class="min-h-screen flex flex-col selection:bg-emerald-500 selection:text-white">
 
+    <!-- LOADING OVERLAY -->
+    <div id="cloudLoadingOverlay" class="fixed inset-0 z-50 bg-[#060913]/90 backdrop-blur-md flex flex-col items-center justify-center p-4">
+        <div class="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 animate-spin mb-3">
+            ⟳
+        </div>
+        <p class="text-sm font-bold text-white tracking-wide">Sincronizando con la nube de Google...</p>
+        <p class="text-xs text-slate-400 mt-1">Conectando con la base de datos de la Caja Mutual</p>
+    </div>
+
     <!-- LOGIN OVERLAY -->
-    <div id="loginScreen" class="fixed inset-0 z-50 bg-[#060913]/95 backdrop-blur-xl flex flex-col items-center justify-center p-4 overflow-y-auto">
+    <div id="loginScreen" class="fixed inset-0 z-50 bg-[#060913]/95 backdrop-blur-xl flex flex-col items-center justify-center p-4 overflow-y-auto" style="display: none;">
         <div class="max-w-3xl w-full glass-card rounded-3xl p-6 md:p-8 shadow-2xl border border-slate-800/90 my-auto">
             
             <!-- Header Login -->
@@ -74,7 +83,7 @@
                 </div>
                 <form onsubmit="handleAdminLoginForm(event)" class="flex items-center gap-2 w-full sm:w-auto">
                     <input type="password" id="adminPinInput" placeholder="PIN Admin" autocomplete="off" class="bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 w-full sm:w-36">
-                    <button type="submit" id="btnEntrarAdmin" class="bg-purple-600 hover:bg-purple-500 text-white px-4 py-2 rounded-xl font-bold text-xs transition cursor-pointer whitespace-nowrap">Entrar Admin</button>
+                    <button type="submit" id="btnEntrarAdmin" class="bg-purple-600 hover:bg-purple-500 text-white px-4 py-2 rounded-xl font-bold text-sm transition cursor-pointer whitespace-nowrap">Entrar Admin</button>
                 </form>
             </div>
             <p id="loginErrorMsg" class="text-xs text-rose-400 font-semibold text-right mt-2 hidden"></p>
@@ -383,7 +392,7 @@
     </div>
 
     <script>
-        const STORAGE_KEY = 'pombero_caja_2026_v4';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmAfaOGCQPUgaZAUi4dos2Hsyb5vT8G7NHfpAz3IhAdp2-MWedS4EBxNYa_u37aYPI/exec';
         const ADMIN_PIN = '82465888';
 
         const defaultMonths = ['ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO', 'SETIEMBRE', 'OCTUBRE', 'NOVIEMBRE'];
@@ -467,3 +476,6 @@
                 'm9': { amount: 0, date: '', status: 'pending' },
                 'm10': { amount: 50000, date: '2026-08-17', status: 'paid' }
             },
+            'OCTUBRE': {
+                'm1': { amount: 0, date: '', status: 'pending' },
+                'm4':
