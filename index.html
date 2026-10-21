@@ -1,0 +1,1980 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FONDO CONJUNTO SOLIDARIO - POMBERO GAMER TEAM 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #070b16;
+            --text-main: #f8fafc;
+            --card-bg: rgba(17, 25, 45, 0.96);
+            --card-border: rgba(148, 163, 184, 0.22);
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-main); color: var(--text-main); transition: background-color 0.3s, color 0.3s; }
+        .glass-card { background: var(--card-bg); backdrop-filter: blur(16px); border: 1px solid var(--card-border); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        @media print {
+            body { background: white !important; color: black !important; }
+            .glass-card { background: white !important; border: 1px solid #cbd5e1 !important; color: black !important; box-shadow: none !important; }
+            header, #loginScreen, #adminControls, #quickAdminSwitchBtn, button, select, input, .no-print { display: none !important; }
+            table { width: 100% !important; border-collapse: collapse !important; color: black !important; }
+            th, td { border: 1px solid #cbd5e1 !important; padding: 8px !important; color: black !important; }
+            th { background: #f1f5f9 !important; }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-emerald-500 selection:text-white">
+
+    <!-- LOADING OVERLAY -->
+    <div id="cloudLoadingOverlay" class="fixed inset-0 z-50 bg-[#060913]/90 backdrop-blur-md flex flex-col items-center justify-center p-4">
+        <div class="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 animate-spin mb-3">
+            ⟳
+        </div>
+        <p class="text-sm font-bold text-white tracking-wide">Sincronizando con la nube de Google...</p>
+        <p class="text-xs text-slate-400 mt-1">Conectando con la base de datos del Fondo Conjunto Solidario</p>
+    </div>
+
+    <!-- LOGIN OVERLAY -->
+    <div id="loginScreen" class="fixed inset-0 z-50 bg-[#060913]/95 backdrop-blur-xl flex flex-col items-center justify-center p-4 overflow-y-auto" style="display: none;">
+        <div class="max-w-3xl w-full glass-card rounded-3xl p-6 md:p-8 shadow-2xl border border-slate-800/90 my-auto">
+            
+            <!-- Header Login -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-800/80">
+                <div class="flex items-center gap-4">
+                    <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shadow-lg shadow-emerald-500/10 shrink-0">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    </div>
+                    <div>
+                        <span class="inline-block text-[10px] font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 mb-1">
+                            PORTAL DE ACCESO • FONDO CONJUNTO SOLIDARIO 2026
+                        </span>
+                        <h1 class="text-2xl md:text-3xl font-black text-white tracking-tight">POMBERO GAMER TEAM</h1>
+                    </div>
+                </div>
+                <div class="sm:text-right bg-slate-900/70 sm:bg-transparent p-3 sm:p-0 rounded-xl border border-slate-800 sm:border-0">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">SALDO ACTUAL EN CAJA</span>
+                    <span id="loginTotalBalance" class="text-xl md:text-2xl font-black text-emerald-400">Gs. 3.380.000</span>
+                </div>
+            </div>
+
+            <!-- Profiles Grid -->
+            <div class="py-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-sm font-bold text-slate-200 flex items-center gap-2">
+                        <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        Selecciona tu perfil de Socio (o ingresa tu PIN personal):
+                    </h2>
+                    <button type="button" onclick="toggleRetiredLogin()" id="retiredToggleBtn" class="text-xs text-slate-400 hover:text-emerald-400 transition underline cursor-pointer">
+                        Ver ex-socios retirados
+                    </button>
+                </div>
+
+                <!-- Quick PIN login for partners -->
+                <div class="mb-4 bg-slate-900/60 p-3 rounded-2xl border border-slate-800 flex items-center gap-2">
+                    <input type="password" id="partnerQuickPinInput" placeholder="Ingresa tu PIN personal de socio..." class="bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 flex-1">
+                    <button type="button" onclick="loginByPartnerPin()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-xl font-bold text-xs transition cursor-pointer whitespace-nowrap">Ingresar con PIN</button>
+                </div>
+
+                <div id="birthdayGreeting" class="hidden mb-4 rounded-2xl border border-pink-400/30 bg-pink-500/10 p-4 text-center"></div>
+                <div id="loginProfilesGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <!-- Dynamic Member Cards -->
+                </div>
+            </div>
+
+            <!-- Admin Direct Access -->
+            <div class="pt-5 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-3 w-full sm:w-auto">
+                    <div class="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400 shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-xs sm:text-sm font-bold text-white">¿Eres Rodrigo Servián (Administrador)?</h3>
+                        <p class="text-[11px] text-slate-400">Ingresa con tu PIN confidencial</p>
+                    </div>
+                </div>
+                <form onsubmit="handleAdminLoginForm(event)" class="flex items-center gap-2 w-full sm:w-auto">
+                    <input type="password" id="adminPinInput" placeholder="PIN Admin" autocomplete="off" class="bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 w-full sm:w-36">
+                    <button type="submit" id="btnEntrarAdmin" class="bg-purple-600 hover:bg-purple-500 text-white px-4 py-2 rounded-xl font-bold text-sm transition cursor-pointer whitespace-nowrap">Entrar Admin</button>
+                </form>
+            </div>
+            <p id="loginErrorMsg" class="text-xs text-rose-400 font-semibold text-right mt-2 hidden"></p>
+        </div>
+    </div>
+
+    <!-- MAIN APPLICATION -->
+    <div id="mainApp" class="flex-1 flex flex-col" style="display: none;">
+        <!-- Top Navbar -->
+        <header class="bg-slate-900/90 border-b border-slate-800 sticky top-0 z-40 backdrop-blur-md">
+            <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-black text-lg">
+                        🎮
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h1 class="font-extrabold text-sm sm:text-base text-white tracking-tight">POMBERO GAMER TEAM • FONDO SOLIDARIO</h1>
+                            <span id="roleBadgeHeader" class="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">Modo Socio</span>
+                        </div>
+                        <p id="sessionRoleText" class="text-xs text-slate-400">Viendo como socio</p>
+                    </div>
+                </div>
+
+                <!-- Right Controls -->
+                <div class="flex flex-wrap items-center gap-2">
+                    <!-- Admin Toolbar -->
+                    <div id="adminControls" class="hidden flex flex-wrap items-center gap-1.5 bg-purple-950/40 border border-purple-700/40 p-1.5 rounded-xl">
+                        <button type="button" onclick="openMovementModal()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-2.5 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer">+ Movimiento</button>
+                        <button type="button" onclick="openNewMemberModal()" class="bg-blue-600 hover:bg-blue-500 text-white px-2.5 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer">+ Nuevo Socio</button>
+                        <button type="button" onclick="openRetireModal()" class="bg-amber-600 hover:bg-amber-500 text-white px-2.5 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer">Bajas</button>
+                        <button type="button" onclick="toggleAdminLoans()" class="bg-fuchsia-700 hover:bg-fuchsia-600 text-white px-2.5 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer">Préstamos</button>
+                        <button type="button" onclick="openNewMonthModal()" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer">+ Mes</button>
+                        <button type="button" onclick="deleteCurrentMonth()" class="bg-rose-700 hover:bg-rose-600 text-white px-2.5 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer" title="Eliminar el mes de flujo de caja seleccionado">🗑 Eliminar mes</button>
+                        <button type="button" onclick="copyWhatsAppReport()" class="bg-teal-600 hover:bg-teal-500 text-white px-2.5 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer" title="Copiar resumen para WhatsApp">💬 Reporte WA</button>
+                    </div>
+
+                    <!-- Print / PDF Button -->
+                    <button type="button" onclick="window.print()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer" title="Imprimir o guardar como PDF">
+                        🖨️ Imprimir / PDF
+                    </button>
+
+                    <!-- Toggle Admin Button if currently in Socio mode -->
+                    <button type="button" id="quickAdminSwitchBtn" onclick="promptAdminPinQuick()" class="bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 border border-purple-500/30 px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer">
+                        🔑 Modo Admin
+                    </button>
+
+                    <button type="button" onclick="logoutToLogin()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-xl text-xs font-bold transition border border-slate-700 cursor-pointer">
+                        Cerrar Sesión
+                    </button>
+                </div>
+            </div>
+
+            <!-- Meses del flujo de caja: solamente períodos contables -->
+            <div class="bg-slate-950/80 border-t border-slate-800/70 px-4 py-2">
+                <div class="max-w-7xl mx-auto flex items-center gap-1.5 overflow-x-auto no-scrollbar" id="monthTabsContainer">
+                    <!-- Dynamic cashflow month tabs -->
+                </div>
+            </div>
+            <!-- Navegación independiente: resúmenes fuera de los meses contables -->
+            <div class="bg-slate-900/80 border-t border-slate-800/60 px-4 py-2">
+                <div class="max-w-7xl mx-auto flex flex-wrap items-center gap-2">
+                    <span class="text-[10px] font-extrabold uppercase tracking-widest text-slate-500 mr-1">Vistas</span>
+                    <button type="button" id="navSummaryMembersBtn" onclick="setAppView('RESUMEN')" class="px-3.5 py-2 rounded-xl text-xs font-extrabold transition whitespace-nowrap cursor-pointer">📊 Resumen de socios</button>
+                    <button type="button" id="navMeetingsBtn" onclick="setAppView('REUNIONES')" class="px-3.5 py-2 rounded-xl text-xs font-extrabold transition whitespace-nowrap cursor-pointer">🎮 Resumen de reuniones</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="max-w-7xl mx-auto px-4 py-5 flex-1 w-full">
+            <!-- Top KPI Cards -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
+                <div class="glass-card p-4 rounded-2xl border border-emerald-500/20">
+                    <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 block">Saldo Actual Acumulado</span>
+                    <span id="kpiTotalBalance" class="text-xl sm:text-2xl font-black text-emerald-400 mt-1 block">Gs. 3.380.000</span>
+                    <span class="text-[10px] text-slate-500 block mt-0.5">Total disponible en fondo</span>
+                </div>
+                <div class="glass-card p-4 rounded-2xl">
+                    <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 block">Cierre del Mes Seleccionado</span>
+                    <span id="kpiMonthBalance" class="text-xl sm:text-2xl font-black text-white mt-1 block">Gs. 0</span>
+                    <span id="kpiPrevCarryText" class="text-[10px] text-slate-400 block mt-0.5">Arrastre mes anterior: Gs. 0</span>
+                </div>
+                <div class="glass-card p-4 rounded-2xl">
+                    <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 block">Ingresos Puros del Mes</span>
+                    <span id="kpiMonthIncome" class="text-xl sm:text-2xl font-black text-blue-400 mt-1 block">Gs. 0</span>
+                    <span class="text-[10px] text-slate-500 block mt-0.5">Sin contar saldo arrastrado</span>
+                </div>
+                <div class="glass-card p-4 rounded-2xl">
+                    <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 block">Egresos / Préstamos del Mes</span>
+                    <span id="kpiMonthExpense" class="text-xl sm:text-2xl font-black text-amber-400 mt-1 block">Gs. 0</span>
+                    <span class="text-[10px] text-slate-500 block mt-0.5">Salidas y préstamos activos</span>
+                </div>
+            </div>
+
+            <!-- Debtors Alert Widget (Feature 4) -->
+            <div id="debtorsAlertCard" class="glass-card p-4 rounded-2xl mb-5 border border-amber-500/30 bg-amber-500/5 hidden no-print">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xs font-bold text-amber-300 uppercase tracking-wider flex items-center gap-2">
+                        ⚠️ Alerta Temprana: Socios con cuotas pendientes este mes
+                    </h3>
+                    <span id="debtorsCountBadge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300">0 pendientes</span>
+                </div>
+                <div id="debtorsListContainer" class="flex flex-wrap gap-2 mt-2">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <!-- Annual Evolution Chart Widget -->
+            <div class="glass-card p-5 rounded-3xl mb-5 shadow-xl no-print">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-xs sm:text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                        📈 Evolución del Fondo
+                    </h3>
+                    <span class="text-[11px] text-slate-400">Cierre mes a mes</span>
+                </div>
+                <div id="annualChartContainer" class="grid grid-cols-4 sm:grid-cols-8 gap-2 pt-2 items-end h-32">
+                    <!-- Dynamic chart bars -->
+                </div>
+            </div>
+
+            <!-- View 1: Monthly Ledger + Member Sidebar -->
+            <div id="monthlyViewContainer" class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+                
+                <!-- Left 2 Cols: Monthly Table -->
+                <div class="lg:col-span-2 space-y-5">
+                    <div class="glass-card rounded-3xl overflow-hidden shadow-xl">
+                        <div class="p-4 sm:px-6 border-b border-slate-800 flex flex-wrap items-center justify-between gap-2 bg-slate-900/60">
+                            <div>
+                                <h2 id="currentMonthTitle" class="font-extrabold text-base sm:text-lg text-white">FONDO DE NOVIEMBRE 2026</h2>
+                                <p class="text-xs text-slate-400">Aportes de socios activos y movimientos extraordinarios</p>
+                            </div>
+                            <span id="activeMembersCountBadge" class="text-xs font-bold px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                                8 socios activos
+                            </span>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="bg-slate-950/70 text-[11px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-800">
+                                        <th class="py-3 px-4">Socio / Concepto</th>
+                                        <th class="py-3 px-3">Fecha</th>
+                                        <th class="py-3 px-4 text-right">Ingresos</th>
+                                        <th class="py-3 px-4 text-right">Egresos</th>
+                                        <th id="adminColHeader" class="py-3 px-4 text-center hidden">Edición Rápida (Admin)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="monthTableBody" class="divide-y divide-slate-800/60 text-xs sm:text-sm">
+                                </tbody>
+                                <tfoot id="monthTableFoot" class="bg-slate-950/90 border-t-2 border-slate-800 font-bold text-xs sm:text-sm">
+                                </tfoot>
+                            </table>
+                        </div>
+
+                        <!-- Notas privadas de tesorería: solo administrador -->
+                        <div id="treasuryNotesSection" class="p-4 bg-slate-950/50 border-t border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                            <span class="text-xs font-bold text-slate-300">📝 Notas de Tesorería del Mes:</span>
+                            <div class="flex items-center gap-2 w-full sm:w-2/3">
+                                <input type="text" id="monthNoteInput" placeholder="Ej. Quedó pendiente vuelto del sorteo..." class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 flex-1">
+                                <button type="button" onclick="saveCurrentMonthNote()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-xl text-xs font-bold cursor-pointer">Guardar Nota</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Col: Selected Member Profile Card -->
+                <div class="space-y-4">
+                    <div class="glass-card rounded-3xl p-5 shadow-xl relative overflow-hidden">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Ficha Personal del Socio</span>
+                            <select id="memberSelectorDropdown" onchange="switchViewMember(this.value)" class="bg-slate-900 border border-slate-700 rounded-xl px-2.5 py-1 text-xs text-white focus:outline-none focus:border-emerald-500">
+                            </select>
+                        </div>
+
+                        <div class="flex items-center gap-4 mb-5 p-3 rounded-2xl bg-slate-900/60 border border-slate-800/80">
+                            <div class="relative group shrink-0">
+                                <div id="memberAvatarContainer" class="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center text-2xl shadow-lg overflow-hidden border border-white/10">
+                                    🎮
+                                </div>
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <span id="memberRoleBadge" class="inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-400 mb-1">Socio Activo</span>
+                                <h3 id="selectedMemberName" class="text-base font-extrabold text-white truncate">RODRIGO SERVIÁN RIVAS</h3>
+                                <p id="memberSinceText" class="text-xs text-slate-400">Activo desde ABRIL 2026</p>
+                            </div>
+                        </div>
+
+                        <!-- Avatar Free Emoji Input & PIN configuration -->
+                        <div class="mb-4 space-y-3 bg-slate-900/80 p-3.5 rounded-2xl border border-slate-800">
+                            <div>
+                                <span class="text-[11px] text-slate-300 font-bold block mb-1">Cambiar Icono / Emojis (Escribe cualquier emoji):</span>
+                                <div class="flex items-center gap-2">
+                                    <input type="text" id="memberEmojiInput" placeholder="🎮" maxlength="16" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-base text-center w-16 text-white focus:outline-none focus:border-emerald-500">
+                                    <button type="button" onclick="saveMemberEmojiFree()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold cursor-pointer flex-1">Guardar Emoji</button>
+                                </div>
+                                <span class="text-[10px] text-slate-400 block mt-1">Usa el teclado de emojis de tu celular o PC (ej. ⚡, 🚀, 🔥, 🏆).</span>
+                            </div>
+
+                            <div class="pt-2 border-t border-slate-800">
+                                <label for="memberCurrentGameInput" class="text-[11px] text-slate-300 font-bold block mb-1">Juego que estoy jugando actualmente</label>
+                                <div class="flex items-center gap-2">
+                                    <input type="text" id="memberCurrentGameInput" maxlength="100" placeholder="Ej. Helldivers 2, Elden Ring, Fortnite..." class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 flex-1">
+                                    <button type="button" onclick="saveMemberCurrentGame()" class="bg-cyan-600 hover:bg-cyan-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold cursor-pointer">Guardar</button>
+                                </div>
+                                <span class="text-[10px] text-slate-400 block mt-1">El juego aparecerá debajo de tu nombre en la pantalla de acceso y será visible para los demás socios.</span>
+                            </div>
+                            <div class="pt-3 border-t border-slate-800 space-y-3">
+                                <label class="text-[11px] text-slate-300 font-bold block">Perfil personalizado</label>
+                                <div><label class="text-[10px] text-slate-400 block mb-1">Correo electrónico</label><input type="email" id="memberEmailInput" maxlength="160" placeholder="socio@correo.com" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white"></div>
+                                <div><label class="text-[10px] text-slate-400 block mb-1">Fecha de cumpleaños</label><input type="date" id="memberBirthdayInput" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white"></div>
+                                <div><label class="text-[10px] text-slate-400 block mb-1">Estado / bio (máx. 120 caracteres)</label><input type="text" id="memberBioInput" maxlength="120" placeholder="Viciando a full el fin de semana..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white"></div>
+                                <div><label class="text-[10px] text-slate-400 block mb-1">Tema de tarjeta</label><select id="memberThemeInput" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white"><option value="from-emerald-500 to-teal-600">Esmeralda</option><option value="from-fuchsia-600 to-purple-900">Neón púrpura</option><option value="from-cyan-500 to-blue-800">Azul cian</option><option value="from-orange-500 to-red-700">Fuego naranja</option><option value="from-slate-700 to-slate-950">Oscuro clásico</option></select></div>
+                                <div><label class="text-[10px] text-slate-400 block mb-1">Top 10 juegos favoritos (uno por línea)</label><textarea id="memberFavoritesInput" rows="4" maxlength="1200" placeholder="1. Juego favorito&#10;2. Otro juego..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white"></textarea></div>
+                                <button type="button" onclick="saveMemberProfileExtras()" class="w-full bg-purple-600 hover:bg-purple-500 text-white px-3 py-2 rounded-xl text-xs font-bold">Guardar perfil personalizado</button>
+                            </div>
+                            <div id="memberPinChangeSection" class="pt-3 border-t border-slate-800 space-y-2">
+                                <label class="text-[11px] text-slate-300 font-bold block">🔐 Cambiar contraseña / PIN de acceso</label>
+                                <input type="password" id="memberNewPinInput" minlength="4" maxlength="32" autocomplete="new-password" placeholder="Nueva contraseña o PIN (mín. 4 caracteres)" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500">
+                                <input type="password" id="memberConfirmPinInput" minlength="4" maxlength="32" autocomplete="new-password" placeholder="Confirmar nueva contraseña o PIN" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500">
+                                <button type="button" onclick="saveMemberPin()" class="w-full bg-amber-600 hover:bg-amber-500 text-white px-3 py-2 rounded-xl text-xs font-bold">Actualizar contraseña de acceso</button>
+                                <p id="memberPinChangeHelp" class="text-[10px] text-slate-500">Solo vos y el administrador pueden cambiar este acceso.</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3 mb-4">
+                            <div class="bg-slate-900/90 p-3 rounded-2xl border border-slate-800">
+                                <span class="text-[11px] text-slate-400 block">Total Aportado</span>
+                                <span id="memberTotalContributed" class="text-base sm:text-lg font-black text-emerald-400 mt-0.5 block">Gs. 0</span>
+                            </div>
+                            <div class="bg-slate-900/90 p-3 rounded-2xl border border-slate-800">
+                                <span class="text-[11px] text-slate-400 block">Meses Pagados</span>
+                                <span id="memberPaidMonthsCount" class="text-base sm:text-lg font-black text-white mt-0.5 block">0 cuotas</span>
+                            </div>
+                        </div>
+
+                        <div id="memberAlertBox" class="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs mb-4">
+                            <span class="font-bold block mb-0.5">Estado de Cuenta:</span>
+                            <span id="memberAlertText">Al día con las cuotas.</span>
+                        </div>
+
+                        <div id="memberFavoritesDisplay" class="mb-4 hidden rounded-2xl border border-slate-700 bg-slate-900/60 p-3">
+                            <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-2">🎮 Top 10 juegos favoritos</span>
+                            <ol id="memberFavoritesList" class="list-decimal list-inside space-y-1 text-xs text-slate-200"></ol>
+                        </div>
+                        <div>
+                            <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-2">Historial mes a mes del socio (con fecha exacta)</span>
+                            <div id="memberMonthlyPills" class="space-y-1.5 max-h-48 overflow-y-auto no-scrollbar">
+                                <!-- Populated by JS with exact payment dates -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Historial de préstamos y garantías, exclusivo del administrador -->
+            <section id="adminLoansSection" class="hidden glass-card rounded-3xl overflow-hidden shadow-xl mb-5">
+                <div class="p-5 border-b border-slate-800 bg-purple-950/30">
+                    <h2 class="font-extrabold text-lg text-white">Historial de Préstamos y Garantías</h2>
+                    <p class="text-xs text-slate-400 mt-1">Registro de salidas de fondos, garantías entregadas y estado de devolución de cada crédito.</p>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs sm:text-sm">
+                        <thead><tr class="bg-slate-950/70 text-slate-400 uppercase"><th class="p-3">Fecha / Mes</th><th class="p-3">Socio</th><th class="p-3">Concepto</th><th class="p-3">Garantía</th><th class="p-3 text-right">Monto</th><th class="p-3">Estado de devolución</th></tr></thead>
+                        <tbody id="adminLoansTableBody" class="divide-y divide-slate-800/60"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- View 2: Full Members Summary Table (When RESUMEN SOCIOS tab is clicked) -->
+            <div id="summaryViewContainer" class="hidden">
+                <div class="glass-card rounded-3xl overflow-hidden shadow-xl mb-5">
+                    <div class="p-5 border-b border-slate-800 flex flex-wrap items-center justify-between gap-2 bg-slate-900/60">
+                        <div>
+                            <h2 class="font-extrabold text-lg text-white">RESUMEN GENERAL DE SOCIOS</h2>
+                            <p class="text-xs text-slate-400">Consolidado de aportes acumulados, meses pagados, pendientes y estado de actividad</p>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-950/70 text-[11px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-800">
+                                    <th class="py-3.5 px-4">🏆 Ranking / Socio</th>
+                                    <th class="py-3.5 px-4">Estado / Vigencia</th>
+                                    <th class="py-3.5 px-4 text-center">Cuotas Pagadas</th>
+                                    <th class="py-3.5 px-4">Meses Pendientes</th>
+                                    <th class="py-3.5 px-4 text-right">Total Aportado</th>
+                                </tr>
+                            </thead>
+                            <tbody id="summaryMembersTableBody" class="divide-y divide-slate-800/60 text-xs sm:text-sm">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- View 3: Reuniones, asistencia y anécdotas -->
+            <section id="meetingsViewContainer" class="hidden space-y-5">
+                <div class="glass-card rounded-3xl overflow-hidden shadow-xl">
+                    <div class="p-5 border-b border-slate-800 bg-slate-900/60 flex flex-wrap items-center justify-between gap-3">
+                        <div>
+                            <h2 class="font-extrabold text-lg text-white">🎮 ENCUENTROS DE AMIGOS GAMER</h2>
+                            <p class="text-xs text-slate-400 mt-1">Asistencia anual, historial de reuniones y anécdotas del equipo.</p>
+                        </div>
+                        <button id="newMeetingBtn" type="button" onclick="openMeetingModal()" class="hidden bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-xl text-xs font-bold">＋ Crear reunión</button>
+                    </div>
+                    <div class="p-5 border-b border-slate-800">
+                        <div class="flex flex-wrap items-center gap-3 justify-between">
+                            <div>
+                                <div class="text-xs text-slate-400 uppercase font-bold">🏆 Ranking de asistencia</div>
+                                <p id="meetingRankingYear" class="text-sm font-bold text-white mt-1">Temporada 2026</p>
+                            </div>
+                            <div class="flex gap-2 text-xs"><span class="rounded-lg px-3 py-2 bg-amber-500/15 text-amber-300">🥇 Oro</span><span class="rounded-lg px-3 py-2 bg-slate-400/15 text-slate-200">🥈 Plata</span><span class="rounded-lg px-3 py-2 bg-orange-700/20 text-orange-300">🥉 Bronce</span></div>
+                        </div>
+                        <div id="meetingRankingContainer" class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-4"></div>
+                    </div>
+                    <div id="meetingsListContainer" class="p-5 space-y-4"></div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- MODAL: CREAR REUNIÓN -->
+    <div id="meetingModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="max-w-lg w-full glass-card rounded-3xl p-6 border border-slate-700 shadow-2xl my-auto">
+            <h3 class="text-lg font-extrabold text-white mb-4">Crear encuentro gamer</h3>
+            <form onsubmit="handleSaveMeeting(event)" class="space-y-3">
+                <div><label class="text-xs text-slate-300 font-semibold block mb-1">Nombre del encuentro</label><input id="meetingTitleInput" required maxlength="140" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white" placeholder="Ej. Noche de juegos y picadas"></div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div><label class="text-xs text-slate-300 font-semibold block mb-1">Fecha</label><input id="meetingDateInput" type="date" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white"></div>
+                    <div><label class="text-xs text-slate-300 font-semibold block mb-1">Ciudad</label><input id="meetingCityInput" required value="Encarnación" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white"></div>
+                </div>
+                <div><label class="text-xs text-slate-300 font-semibold block mb-1">Lugar</label><input id="meetingPlaceInput" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white" placeholder="Ej. Casa de Pablo"></div>
+                <div><label class="text-xs text-slate-300 font-semibold block mb-1">Detalle (opcional)</label><textarea id="meetingDescriptionInput" rows="2" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white" placeholder="Información adicional"></textarea></div>
+                <div class="flex justify-end gap-2 pt-2"><button type="button" onclick="closeMeetingModal()" class="bg-slate-800 text-slate-300 px-4 py-2 rounded-xl text-xs font-bold">Cancelar</button><button type="submit" class="bg-emerald-600 text-white px-5 py-2 rounded-xl text-xs font-bold">Crear evento</button></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: ADD MOVEMENT / LOAN -->
+    <div id="movementModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="max-w-md w-full glass-card rounded-3xl p-6 border border-slate-700 shadow-2xl">
+            <h3 class="text-lg font-extrabold text-white mb-4">Registrar Movimiento / Préstamo</h3>
+            <form onsubmit="handleSaveMovement(event)" class="space-y-4">
+                <div>
+                    <label class="text-xs text-slate-300 font-semibold block mb-1">Mes</label>
+                    <select id="movMonth" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white"></select>
+                </div>
+                <div>
+                    <label class="text-xs text-slate-300 font-semibold block mb-1">Concepto / Descripción</label>
+                    <input type="text" id="movDesc" required placeholder="Ej. Préstamo a socio o Devolución con intereses" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-xs text-slate-300 font-semibold block mb-1">Tipo de Movimiento</label>
+                        <select id="movType" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white">
+                            <option value="ingreso">Ingreso Extra (+)</option>
+                            <option value="egreso">Egreso / Préstamo (-)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-xs text-slate-300 font-semibold block mb-1">Monto (Gs.)</label>
+                        <input type="number" id="movAmount" required placeholder="300000" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white">
+                    </div>
+                </div>
+                <div>
+                    <label class="text-xs text-slate-300 font-semibold block mb-1">Fecha</label>
+                    <input type="date" id="movDate" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white">
+                </div>
+                <div>
+                    <label class="text-xs text-slate-300 font-semibold block mb-1">Socio relacionado con el préstamo (si corresponde)</label>
+                    <select id="loanMemberSelect" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white"><option value="">No corresponde</option></select>
+                </div>
+                <div>
+                    <label class="text-xs text-slate-300 font-semibold block mb-1">Fecha de vencimiento del préstamo</label>
+                    <input type="date" id="loanDueDateInput" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white">
+                    <p class="text-[10px] text-slate-400 mt-1">El recordatorio 3 días antes requiere configurar un activador diario en Google Apps Script.</p>
+                </div>
+                <div>
+                    <label class="text-xs text-slate-300 font-semibold block mb-1">Garantía entregada</label>
+                    <input type="text" id="loanGuaranteeInput" placeholder="Ej. Moto, controles, sin garantía" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white">
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeModals()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-xl text-xs font-bold cursor-pointer">Cancelar</button>
+                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2 rounded-xl text-xs font-bold cursor-pointer">Guardar Movimiento</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: NEW MEMBER -->
+    <div id="newMemberModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="max-w-md w-full glass-card rounded-3xl p-6 border border-slate-700 shadow-2xl">
+            <h3 class="text-lg font-extrabold text-white mb-4">Agregar Nuevo Socio</h3>
+            <form onsubmit="handleSaveNewMember(event)" class="space-y-4">
+                <div>
+                    <label class="text-xs text-slate-300 font-semibold block mb-1">Nombre Completo del Socio</label>
+                    <input type="text" id="newMemberNameInput" required placeholder="Ej. CARLOS GIMÉNEZ" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white">
+                </div>
+                <div>
+                    <label class="text-xs text-slate-300 font-semibold block mb-1">Alias Corto (para tarjeta de Login)</label>
+                    <input type="text" id="newMemberShortInput" placeholder="Ej. Carlos Giménez" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white">
+                </div>
+                <div>
+                    <label class="text-xs text-slate-300 font-semibold block mb-1">PIN Personal (opcional)</label>
+                    <input type="text" id="newMemberPinInput" placeholder="Ej. 5678" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white">
+                </div>
+                <div>
+                    <label class="text-xs text-slate-300 font-semibold block mb-1">Mostrar en la planilla desde el mes de:</label>
+                    <select id="newMemberStartMonth" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white"></select>
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeModals()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-xl text-xs font-bold cursor-pointer">Cancelar</button>
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white px-5 py-2 rounded-xl text-xs font-bold cursor-pointer">Agregar Socio</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: RETIRE MEMBER -->
+    <div id="retireModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="max-w-md w-full glass-card rounded-3xl p-6 border border-slate-700 shadow-2xl">
+            <h3 class="text-lg font-extrabold text-white mb-2">Retirar Socio / Gestionar Bajas</h3>
+            <p class="text-xs text-slate-400 mb-4">El socio retirado conservará su historial en los meses anteriores, pero ya no aparecerá en las listas desde el mes que elijas.</p>
+            <form onsubmit="handleSaveRetirement(event)" class="space-y-4">
+                <div>
+                    <label class="text-xs text-slate-300 font-semibold block mb-1">Seleccionar Socio</label>
+                    <select id="retireMemberSelect" onchange="syncRetireMonthSelect()" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white"></select>
+                </div>
+                <div>
+                    <label class="text-xs text-slate-300 font-semibold block mb-1">Ya no mostrar a partir del mes de:</label>
+                    <select id="retireMonthSelect" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white"></select>
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeModals()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-xl text-xs font-bold cursor-pointer">Cancelar</button>
+                    <button type="submit" class="bg-amber-600 hover:bg-amber-500 text-white px-5 py-2 rounded-xl text-xs font-bold cursor-pointer">Guardar Configuración</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyK7hq5GfSFhjq_H4G6cntcevDavcQ9Ub6S7TbI2rvp4KLxKgYhiE0d8iNBZMyvZOLP/exec';
+        const ADMIN_PIN = '82465888';
+
+        const defaultMonths = ['ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO', 'SETIEMBRE', 'OCTUBRE', 'NOVIEMBRE'];
+
+        const defaultMembers = [
+            { id: 'm1', name: 'JUAN ANDRÉS KALABURA MACIEL', shortName: 'Kalabura', emoji: '🎮', color: 'from-emerald-500 to-teal-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '1111' },
+            { id: 'm2', name: 'JUAN MARCELO VERA ARÉVALOS', shortName: 'Marcelo Vera', emoji: '🕹️', color: 'from-slate-600 to-slate-700', startMonth: 'ABRIL', retiradoDesde: 'JUNIO', pin: '2222' },
+            { id: 'm3', name: 'MARCOS NEHEMÍAS CARDOZO INSFRAN', shortName: 'Marcos Cardozo', emoji: '⚔️', color: 'from-slate-600 to-slate-700', startMonth: 'ABRIL', retiradoDesde: 'JULIO', pin: '3333' },
+            { id: 'm4', name: 'FABIO HERNÁN FIGUEREDO NUÑEZ', shortName: 'Hernán Figueredo', emoji: '🔥', color: 'from-orange-500 to-red-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '4444' },
+            { id: 'm5', name: 'RODRIGO SERVIÁN RIVAS', shortName: 'Rodrigo Servián', emoji: '👑', color: 'from-purple-500 to-indigo-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '5555', isAdminMember: true },
+            { id: 'm6', name: 'PABLO FERRAZZA', shortName: 'Pablo Ferrazza', emoji: '⚡', color: 'from-amber-500 to-orange-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '6666' },
+            { id: 'm7', name: 'ADAM EUGENIO ALDERETE', shortName: 'Adam Alderete', emoji: '🛡️', color: 'from-blue-500 to-cyan-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '7777' },
+            { id: 'm8', name: 'HENRY ARIEL CHÁVEZ WOTTRICH', shortName: 'Henry Chávez', emoji: '🐉', color: 'from-rose-500 to-pink-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '8888' },
+            { id: 'm9', name: 'JUANMA FLORES', shortName: 'Juanma Flores', emoji: '🎯', color: 'from-lime-500 to-emerald-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '9999' },
+            { id: 'm10', name: 'HUGO MARTÍN BENÍTEZ HAUPT', shortName: 'Hugo Benítez', emoji: '🚀', color: 'from-indigo-500 to-blue-600', startMonth: 'ABRIL', retiradoDesde: null, pin: '1010' }
+        ];
+
+        const defaultContributions = {
+            'ABRIL': {
+                'm1': { amount: 50000, date: '2026-05-05', status: 'paid' },
+                'm2': { amount: 50000, date: 'ABRIL', status: 'paid' },
+                'm3': { amount: 50000, date: 'ABRIL', status: 'paid' },
+                'm4': { amount: 50000, date: 'ABRIL', status: 'paid' },
+                'm5': { amount: 50000, date: 'ABRIL', status: 'paid' },
+                'm6': { amount: 50000, date: 'ABRIL', status: 'paid' },
+                'm7': { amount: 50000, date: 'ABRIL', status: 'paid' },
+                'm8': { amount: 50000, date: 'ABRIL', status: 'paid' },
+                'm9': { amount: 50000, date: 'ABRIL', status: 'paid' },
+                'm10': { amount: 50000, date: 'ABRIL', status: 'paid' }
+            },
+            'MAYO': {
+                'm1': { amount: 55000, date: '2026-06-09', status: 'paid' },
+                'm2': { amount: 50000, date: 'ABRIL', status: 'paid' },
+                'm3': { amount: 50000, date: '2026-05-01', status: 'paid' },
+                'm4': { amount: 55000, date: '2026-05-27', status: 'paid' },
+                'm5': { amount: 50000, date: '2026-05-01', status: 'paid' },
+                'm6': { amount: 50000, date: '2026-05-09', status: 'paid' },
+                'm7': { amount: 50000, date: '2026-05-03', status: 'paid' },
+                'm8': { amount: 50000, date: '2026-05-03', status: 'paid' },
+                'm9': { amount: 55000, date: '2026-05-27', status: 'paid' },
+                'm10': { amount: 55000, date: '2026-05-25', status: 'paid' }
+            },
+            'JUNIO': {
+                'm1': { amount: 55000, date: '2026-07-10', status: 'paid' },
+                'm3': { amount: 50000, date: '2026-06-03', status: 'paid' },
+                'm4': { amount: 50000, date: '2026-06-02', status: 'paid' },
+                'm5': { amount: 50000, date: '2026-06-02', status: 'paid' },
+                'm6': { amount: 55000, date: '2026-06-12', status: 'paid' },
+                'm7': { amount: 50000, date: '2026-06-01', status: 'paid' },
+                'm8': { amount: 55000, date: '2026-08-08', status: 'paid' },
+                'm9': { amount: 50000, date: '2026-06-06', status: 'paid' },
+                'm10': { amount: 50000, date: '2026-06-02', status: 'paid' }
+            },
+            'JULIO': {
+                'm1': { amount: 50000, date: '2026-07-10', status: 'paid' },
+                'm4': { amount: 50000, date: '2026-07-10', status: 'paid' },
+                'm5': { amount: 50000, date: '2026-07-05', status: 'paid' },
+                'm6': { amount: 55000, date: '2026-08-19', status: 'paid' },
+                'm7': { amount: 50000, date: '2026-07-06', status: 'paid' },
+                'm8': { amount: 55000, date: '2026-08-08', status: 'paid' },
+                'm9': { amount: 55000, date: '2026-07-19', status: 'paid' },
+                'm10': { amount: 50000, date: '2026-06-15', status: 'paid' }
+            },
+            'AGOSTO': {
+                'm1': { amount: 55000, date: '2026-09-10', status: 'paid' },
+                'm4': { amount: 50000, date: '2026-08-08', status: 'paid' },
+                'm5': { amount: 55000, date: '2026-08-19', status: 'paid' },
+                'm6': { amount: 55000, date: '2026-08-19', status: 'paid' },
+                'm7': { amount: 50000, date: '2026-08-10', status: 'paid' },
+                'm8': { amount: 50000, date: '2026-08-08', status: 'paid' },
+                'm9': { amount: 0, date: '', status: 'pending' },
+                'm10': { amount: 50000, date: '2026-07-18', status: 'paid' }
+            },
+            'SETIEMBRE': {
+                'm1': { amount: 55000, date: '2026-09-15', status: 'paid' },
+                'm4': { amount: 50000, date: '2026-09-06', status: 'paid' },
+                'm5': { amount: 50000, date: '2026-09-01', status: 'paid' },
+                'm6': { amount: 50000, date: '2026-09-10', status: 'paid' },
+                'm7': { amount: 50000, date: '2026-09-03', status: 'paid' },
+                'm8': { amount: 0, date: '', status: 'pending' },
+                'm9': { amount: 0, date: '', status: 'pending' },
+                'm10': { amount: 50000, date: '2026-08-17', status: 'paid' }
+            },
+            'OCTUBRE': {
+                'm1': { amount: 0, date: '', status: 'pending' },
+                'm4': { amount: 0, date: '', status: 'pending' },
+                'm5': { amount: 50000, date: '2026-10-08', status: 'paid' },
+                'm6': { amount: 50000, date: '2026-10-06', status: 'paid' },
+                'm7': { amount: 50000, date: '2026-10-10', status: 'paid' },
+                'm8': { amount: 0, date: '', status: 'pending' },
+                'm9': { amount: 0, date: '', status: 'pending' },
+                'm10': { amount: 50000, date: '2026-09-25', status: 'paid' }
+            },
+            'NOVIEMBRE': {
+                'm10': { amount: 50000, date: '2026-10-16', status: 'paid' }
+            }
+        };
+
+        const defaultExtraMovements = {
+            'ABRIL': [
+                { desc: 'INTERESES CAJA FALLIDA', date: 'ABRIL', income: 186000, expense: 0 },
+                { desc: 'PARA GALETO TRANSFERIDO A GABRIEL FERRAZZA', date: '2026-04-14', income: 0, expense: 186000 },
+                { desc: 'INGRESO DE SORTEO DE ABRIL, 9 NÚMEROS A 25MIL', date: 'ABRIL', income: 225000, expense: 0 },
+                { desc: 'PREMIO A PABLO FERRAZZA', date: 'ABRIL', income: 0, expense: 150000 },
+                { desc: 'APORTE EXTRA DE ADAM', date: 'ABRIL', income: 10000, expense: 0 }
+            ],
+            'MAYO': [],
+            'JUNIO': [],
+            'JULIO': [],
+            'AGOSTO': [
+                { desc: 'PRÉSTAMO A HERNÁN, DOS CONTROLES (RAZER WOLVERINE Y ROG RAIKIRI) DE GARANTÍA', date: '2026-08-24', income: 0, expense: 300000 },
+                { desc: 'Hernán devuelve capital más intereses', date: '2026-08-31', income: 375000, expense: 0 },
+                { desc: 'PRÉSTAMO A PABLO, MOTO KENTON DAKAR DE GARANTÍA', date: '2026-08-25', income: 0, expense: 2000000 }
+            ],
+            'SETIEMBRE': [
+                { desc: 'Pablo devuelve capital más intereses', date: '2026-09-05', income: 2400000, expense: 0 }
+            ],
+            'OCTUBRE': [],
+            'NOVIEMBRE': []
+        };
+
+        // Historial inicial de encuentros 2026. La asistencia se vincula a los IDs del index.
+        const defaultMeetingsData = [
+            {id:'meet-2026-01-09',date:'2026-01-09',title:'Encuentro de amigos gamer',city:'Encarnación',place:'Casa de Marcos',description:'',attendance:['m9','m10','m7','m6','m4','m5'],anecdotes:[]},
+            {id:'meet-2026-01-12',date:'2026-01-12',title:'Almuerzo en el restaurante Tío Miguel',city:'Encarnación',place:'Restaurante Tío Miguel',description:'',attendance:['m9','m6','m5'],anecdotes:[]},
+            {id:'meet-2026-01-13',date:'2026-01-13',title:'Reunión de juegos de mesa',city:'Encarnación',place:'Casa de Marcos',description:'',attendance:['m6','m5'],anecdotes:[]},
+            {id:'meet-2026-03-26',date:'2026-03-26',title:'Cumpleaños de Walter',city:'Encarnación',place:'Casa de Walter',description:'',attendance:['m6','m10','m5','m4','m8'],anecdotes:[]},
+            {id:'meet-2026-03-31',date:'2026-03-31',title:'Escritura del reglamento del Pombero Team',city:'Encarnación',place:'Casa de Pablo',description:'',attendance:['m9','m7','m6','m10','m5'],anecdotes:[]},
+            {id:'meet-2026-04-20',date:'2026-04-20',title:'Reunión de galeto',city:'Encarnación',place:'Casa de Pablo',description:'',attendance:['m10','m5','m4','m6','m7','m8'],anecdotes:[]},
+            {id:'meet-2026-06-22',date:'2026-06-22',title:'Reunión de chinchulín',city:'Encarnación',place:'Casa de Pablo',description:'',attendance:['m6','m4','m10','m5'],anecdotes:[]},
+            {id:'meet-2026-07-13',date:'2026-07-13',title:'Noche de juegos y picadas',city:'Encarnación',place:'Casa de Marcos',description:'',attendance:['m9','m7','m4','m10','m5'],anecdotes:[]},
+            {id:'meet-2026-08-03',date:'2026-08-03',title:'Noche de hamburguesas',city:'Encarnación',place:'Casa de Pablo',description:'',attendance:['m5','m10','m1','m6','m8','m9','m7'],anecdotes:[]},
+            {id:'meet-2026-09-21',date:'2026-09-21',title:'Noche de asado',city:'Encarnación',place:'Casa de Pablo',description:'',attendance:['m5','m6','m10','m1','m8','m9'],anecdotes:[]}
+        ];
+
+
+        const birthdayGamerMessages = [
+          '¡Subí de nivel en la vida! Que tu loot de hoy sea legendario.','Hoy el boss final eres tú: ¡feliz cumpleaños, gamer!','Que nunca te falten vidas, amigos y buenas partidas.','Nueva temporada desbloqueada: ¡a disfrutar tu día!','Que tus deseos tengan crítico x999. ¡Feliz cumple!','Hoy tienes respawn ilimitado y permiso para farmear torta.','¡Feliz cumpleaños! Que tu ping sea bajo y tu suerte alta.','Un año más de experiencia y puntos de habilidad.','Que el drop de hoy sea épico y la party esté completa.','Achievement desbloqueado: cumpleaños legendario.','Que la fuerza del joystick te acompañe en este nuevo nivel.','Hoy se celebra al MVP del día. ¡Felicidades!','Que la vida te dé misiones épicas y recompensas enormes.','¡Cumpleaños en modo cooperativo: que no falte la buena gente!','Tu expansión anual ya está disponible. ¡A disfrutarla!','Que todos tus críticos sean x2 y tus problemas nivel fácil.','Hoy toca pausa de campaña y celebración con la party.','¡Que tu inventario se llene de regalos y buenos recuerdos!','Un año más desbloqueado: sigue jugando a tu manera.','Que tus sueños pasen de misión secundaria a principal.','¡Feliz cumple! Que tengas más victorias que pantallas de carga.','Que el RNG de la vida hoy juegue a tu favor.','Hoy eres el personaje principal. ¡Disfruta la aventura!','Que nunca te falten salud, alegría y una buena conexión.','¡Que este nuevo nivel venga con expansión de felicidad!','Hoy no hay game over: solo celebración.','Que tus logros reales superen todos tus trofeos virtuales.','¡Felicidades! Más XP, más historias y más victorias.','Que la torta sea grande y las derrotas pequeñas.','Hoy la misión es disfrutar. Objetivo: pasarla increíble.','Que se te desbloqueen nuevas aventuras y grandes amistades.','¡Feliz cumpleaños, leyenda del lobby!','Que tu año venga con gráficos al máximo y cero bugs.','Que cada día nuevo sea una partida que valga la pena.','Hoy el equipo celebra a uno de sus grandes jugadores.','Que tengas un año de speedruns exitosos y metas cumplidas.','¡Más vida, más energía y más momentos GG!','Que los regalos sean épicos y el lag desaparezca.','Nuevo nivel alcanzado. ¡A repartir alegría!','Que este año tenga final feliz y contenido extra.','¡Feliz cumple! Hoy se farmea felicidad sin límite.','Que tus amigos siempre respondan al llamado de la party.','Que la suerte te acompañe dentro y fuera del juego.','Hoy el calendario te da una recompensa mítica.','¡Que tu próxima aventura sea la mejor hasta ahora!','Que tengas salud de tanque y energía de speedrunner.','Tu personaje sigue evolucionando: ¡feliz cumpleaños!','Que el año nuevo personal venga cargado de buenas noticias.','Hoy el chat solo acepta GG y felicitaciones.','¡Felicidades! Que nunca falte motivo para celebrar.'
+        ];
+        function isBirthdayMonth(member, now = new Date()) {
+            if (!member || !member.birthday) return false;
+            const parts = member.birthday.split('-').map(Number);
+            return parts.length === 3 && parts[1] === now.getMonth()+1;
+        }
+        function getMemberAvatar(member, now = new Date()) {
+            return isBirthdayMonth(member, now) ? '🎂' : (member.emoji || '🎮');
+        }
+        function getMonthYearLabel(key) {
+            const raw = String(key || '').trim();
+            // Tolera claves antiguas o etiquetas a las que una versión previa les haya añadido dos años.
+            const m = raw.match(/^(.*?)(?:\s+(20\d{2}))(?:\s+(20\d{2}))?$/);
+            if (m) return `${m[1].trim()} ${m[2]}`;
+            // Los meses históricos sin año pertenecen al período inicial del grupo: 2026.
+            return raw ? `${raw} 2026` : '';
+        }
+
+        const MONTH_ORDER_ES = {
+            'ENERO': 0, 'FEBRERO': 1, 'MARZO': 2, 'ABRIL': 3, 'MAYO': 4, 'JUNIO': 5,
+            'JULIO': 6, 'AGOSTO': 7, 'SETIEMBRE': 8, 'SEPTIEMBRE': 8, 'OCTUBRE': 9,
+            'NOVIEMBRE': 10, 'DICIEMBRE': 11
+        };
+
+        function inferYearForNewMonth(monthName) {
+            const lastKey = monthsList.length ? String(monthsList[monthsList.length - 1]) : 'ABRIL';
+            const lastMatch = lastKey.match(/^(.*?)\s+(20\d{2})$/);
+            const lastName = (lastMatch ? lastMatch[1] : lastKey).trim().toLocaleUpperCase('es-PY');
+            const lastYear = lastMatch ? Number(lastMatch[2]) : 2026;
+            const lastMonthNumber = MONTH_ORDER_ES[lastName];
+            const newMonthNumber = MONTH_ORDER_ES[monthName];
+            if (lastMonthNumber !== undefined && newMonthNumber !== undefined && newMonthNumber <= lastMonthNumber) return lastYear + 1;
+            return lastYear;
+        }
+
+        let monthsList = JSON.parse(JSON.stringify(defaultMonths));
+        let membersData = JSON.parse(JSON.stringify(defaultMembers));
+        let contributionsData = JSON.parse(JSON.stringify(defaultContributions));
+        let extraMovementsData = JSON.parse(JSON.stringify(defaultExtraMovements));
+        let monthNotesData = {}; // Notas privadas del administrador
+        let loanRecordsData = [];
+        let meetingsData = JSON.parse(JSON.stringify(defaultMeetingsData));
+
+        let currentActiveTab = 'OCTUBRE';
+        let currentUserRole = 'socio';
+        let currentSelectedMemberId = 'm5';
+        let currentLoggedInMemberId = null; // El socio autenticado; no necesariamente el perfil que se está consultando.
+        let showRetiredInLogin = false;
+
+        // Cloud Google Sheets Sync
+        async function loadCloudState() {
+            try {
+                const res = await fetch(SCRIPT_URL);
+                const data = await res.json();
+                if (data && data.monthsList) {
+                    monthsList = data.monthsList;
+                    membersData = data.membersData;
+                    contributionsData = data.contributionsData;
+                    extraMovementsData = data.extraMovementsData;
+                    if (data.monthNotesData) monthNotesData = data.monthNotesData;
+                    if (data.loanRecordsData) loanRecordsData = data.loanRecordsData;
+                    if (data.meetingsData) meetingsData = data.meetingsData;
+                    else {
+                        try { const local = JSON.parse(localStorage.getItem('pombero_caja_local_backup') || '{}'); if (local.meetingsData) meetingsData = local.meetingsData; } catch(e) {}
+                    }
+                }
+            } catch (e) {
+                console.warn('Usando respaldo local o error al conectar con Google Sheets:', e);
+                loadLocalFallback();
+            } finally {
+                const overlay = document.getElementById('cloudLoadingOverlay');
+                if (overlay) overlay.style.display = 'none';
+                document.getElementById('loginScreen').style.display = 'flex';
+                renderLoginProfiles();
+                populateDropdowns();
+            }
+        }
+
+        function loadLocalFallback() {
+            try {
+                const saved = localStorage.getItem('pombero_caja_local_backup');
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    if (parsed.monthsList) monthsList = parsed.monthsList;
+                    if (parsed.membersData) membersData = parsed.membersData;
+                    if (parsed.contributionsData) contributionsData = parsed.contributionsData;
+                    if (parsed.extraMovementsData) extraMovementsData = parsed.extraMovementsData;
+                    if (parsed.monthNotesData) monthNotesData = parsed.monthNotesData;
+                    if (parsed.loanRecordsData) loanRecordsData = parsed.loanRecordsData;
+                    if (parsed.meetingsData) meetingsData = parsed.meetingsData;
+                }
+            } catch (err) {
+                console.warn('Fallback local falló:', err);
+            }
+        }
+
+        async function saveState() {
+            const payload = {
+                monthsList,
+                membersData,
+                contributionsData,
+                extraMovementsData,
+                monthNotesData,
+                loanRecordsData,
+                meetingsData
+            };
+
+            try {
+                localStorage.setItem('pombero_caja_local_backup', JSON.stringify(payload));
+            } catch(e) {}
+
+            try {
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(payload)
+                });
+            } catch (e) {
+                console.error('Error al sincronizar con Google Sheets:', e);
+            }
+        }
+
+        function formatGs(num) {
+            const val = Number(num) || 0;
+            return 'Gs. ' + val.toLocaleString('es-PY');
+        }
+
+        function computeAllMonthsSummary() {
+            let carryOver = 0;
+            const summary = {};
+            monthsList.forEach(mo => {
+                const prevCarry = carryOver;
+                let pureIncome = 0;
+                let pureExpense = 0;
+
+                const activeMembers = getActiveMembersForMonth(mo);
+                const moContribs = contributionsData[mo] || {};
+                activeMembers.forEach(m => {
+                    const c = moContribs[m.id];
+                    if (c && c.status === 'paid' && c.amount > 0) {
+                        pureIncome += Number(c.amount);
+                    }
+                });
+
+                const extras = extraMovementsData[mo] || [];
+                extras.forEach(ex => {
+                    pureIncome += Number(ex.income || 0);
+                    pureExpense += Number(ex.expense || 0);
+                });
+
+                const totalAvailable = prevCarry + pureIncome;
+                const closingBalance = totalAvailable - pureExpense;
+                summary[mo] = {
+                    prevCarry,
+                    pureIncome,
+                    totalIncomeWithCarry: totalAvailable,
+                    pureExpense,
+                    closingBalance
+                };
+                carryOver = closingBalance;
+            });
+            return { byMonth: summary, finalBalance: carryOver };
+        }
+
+        function getActiveMembersForMonth(monthName) {
+            const mIndex = monthsList.indexOf(monthName);
+            return membersData.filter(m => {
+                const startIdx = monthsList.indexOf(m.startMonth);
+                const retireIdx = m.retiradoDesde ? monthsList.indexOf(m.retiradoDesde) : 9999;
+                return mIndex >= (startIdx === -1 ? 0 : startIdx) && mIndex < (retireIdx === -1 ? 9999 : retireIdx);
+            });
+        }
+
+        // WhatsApp Report Generator
+        function copyWhatsAppReport() {
+            const calc = computeAllMonthsSummary();
+            const activeMo = ['RESUMEN', 'REUNIONES'].includes(currentActiveTab) ? monthsList[monthsList.length - 1] : currentActiveTab;
+            const mStat = calc.byMonth[activeMo] || { closingBalance: 0, pureIncome: 0, pureExpense: 0 };
+            
+            let report = `🎮 *POMBERO GAMER TEAM - FONDO SOLIDARIO* 🎮\n`;
+            report += `📅 *Mes:* ${getMonthYearLabel(activeMo)}\n`;
+            report += `💰 *Saldo Acumulado en Fondo:* ${formatGs(calc.finalBalance)}
+`;
+            report += `📥 *Ingresos Puros (${getMonthYearLabel(activeMo)}):* ${formatGs(mStat.pureIncome)}\n`;
+            report += `📤 *Egresos/Préstamos (${getMonthYearLabel(activeMo)}):* ${formatGs(mStat.pureExpense)}\n`;
+            report += `📊 *Cierre del Mes:* ${formatGs(mStat.closingBalance)}
+
+`;
+            report += `_¡Al día con las finanzas del equipo!_ 🚀`;
+
+            navigator.clipboard.writeText(report).then(() => {
+                alert('¡Resumen copiado al portapapeles! Ya puedes pegarlo en el grupo de WhatsApp.');
+            }).catch(err => {
+                alert('No se pudo copiar automáticamente, pero puedes ver el reporte en consola.');
+            });
+        }
+
+        // Render Annual Evolution Chart
+        function renderAnnualChart() {
+            const container = document.getElementById('annualChartContainer');
+            if (!container) return;
+            container.innerHTML = '';
+
+            const calc = computeAllMonthsSummary();
+            let maxVal = 1000000;
+            monthsList.forEach(mo => {
+                const bal = calc.byMonth[mo]?.closingBalance || 0;
+                if (bal > maxVal) maxVal = bal;
+            });
+
+            monthsList.forEach(mo => {
+                const bal = calc.byMonth[mo]?.closingBalance || 0;
+                const heightPct = Math.max(12, Math.min(100, (bal / maxVal) * 100));
+                
+                const col = document.createElement('div');
+                col.className = 'flex flex-col items-center h-full justify-end group';
+                col.innerHTML = `
+                    <div class="text-[9px] text-emerald-400 font-bold mb-1 opacity-0 group-hover:opacity-100 transition whitespace-nowrap">${(bal/1000).toFixed(0)}k</div>
+                    <div class="w-full bg-emerald-500/20 group-hover:bg-emerald-500/40 border border-emerald-500/40 rounded-t-lg transition-all duration-300" style="height: ${heightPct}%"></div>
+                    <span class="text-[10px] text-slate-400 font-bold mt-1.5 uppercase text-center">${escapeHtml(getMonthYearLabel(mo))}</span>
+                `;
+                container.appendChild(col);
+            });
+        }
+
+        // Feature 4: Render Debtors Alert Widget for current/active month
+        function renderDebtorsAlert() {
+            const activeMo = ['RESUMEN', 'REUNIONES'].includes(currentActiveTab) ? monthsList[monthsList.length - 1] : currentActiveTab;
+            const activeMembers = getActiveMembersForMonth(activeMo);
+            const moContribs = contributionsData[activeMo] || {};
+            
+            const pendingMembers = activeMembers.filter(m => {
+                const c = moContribs[m.id];
+                return !c || c.status !== 'paid' || Number(c.amount) <= 0;
+            });
+
+            const card = document.getElementById('debtorsAlertCard');
+            const listContainer = document.getElementById('debtorsListContainer');
+            const badge = document.getElementById('debtorsCountBadge');
+
+            if (!card || !listContainer) return;
+
+            if (pendingMembers.length > 0 && currentUserRole === 'admin') {
+                card.classList.remove('hidden');
+                badge.textContent = `${pendingMembers.length} pendientes`;
+                listContainer.innerHTML = '';
+                pendingMembers.forEach(m => {
+                    const tag = document.createElement('span');
+                    tag.className = 'px-2.5 py-1 rounded-lg bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-bold';
+                    tag.textContent = `${m.emoji || '👤'} ${m.shortName || m.name}`;
+                    listContainer.appendChild(tag);
+                });
+            } else {
+                card.classList.add('hidden');
+            }
+        }
+
+        // Feature 3: Save Treasury Note
+        function saveCurrentMonthNote() {
+            if (currentUserRole !== 'admin') { alert('Las notas de tesorería son privadas del administrador.'); return; }
+            const activeMo = ['RESUMEN', 'REUNIONES'].includes(currentActiveTab) ? monthsList[monthsList.length - 1] : currentActiveTab;
+            const noteText = document.getElementById('monthNoteInput').value.trim();
+            monthNotesData[activeMo] = noteText;
+            saveState();
+            alert(`¡Nota guardada para el mes de ${getMonthYearLabel(activeMo)}!`);
+        }
+
+        // LOGIN LOGIC
+        function renderLoginProfiles() {
+            const grid = document.getElementById('loginProfilesGrid');
+            if (!grid) return;
+            grid.innerHTML = '';
+
+            const calc = computeAllMonthsSummary();
+            const loginTotalEl = document.getElementById('loginTotalBalance');
+            if (loginTotalEl) loginTotalEl.textContent = formatGs(calc.finalBalance);
+
+            const birthdayMembers = membersData.filter(m => isBirthdayMonth(m) && (!m.retiradoDesde || showRetiredInLogin));
+            const greeting = document.getElementById('birthdayGreeting');
+            if (greeting) {
+                if (birthdayMembers.length) {
+                    const person = birthdayMembers[Math.floor(Math.random() * birthdayMembers.length)];
+                    const msg = birthdayGamerMessages[Math.floor(Math.random() * birthdayGamerMessages.length)];
+                    greeting.classList.remove('hidden');
+                    greeting.innerHTML = `<div class="text-2xl mb-1">🎂🎮🎉</div><div class="font-black text-pink-200">¡Este mes cumple años ${escapeHtml(person.shortName || person.name)}!</div><p class="text-sm text-pink-100 mt-1">${escapeHtml(msg)}</p>`;
+                } else { greeting.classList.add('hidden'); greeting.innerHTML = ''; }
+            }
+            membersData.forEach(m => {
+                const isRetired = m.retiradoDesde !== null;
+                if (isRetired && !showRetiredInLogin) return;
+
+                const card = document.createElement('button');
+                card.type = 'button';
+                const borderClass = m.isAdminMember
+                    ? 'border-emerald-500/70 bg-slate-900/90 hover:border-emerald-400'
+                    : 'border-slate-800 bg-slate-900/60 hover:border-slate-600';
+
+                card.className = `p-4 rounded-2xl border ${borderClass} flex flex-col items-center text-center transition group cursor-pointer ${isRetired ? 'opacity-60' : ''}`;
+                const themeBackgrounds = {
+                    'from-emerald-500 to-teal-600': 'linear-gradient(135deg, rgba(16,185,129,.16), rgba(13,148,136,.08))',
+                    'from-fuchsia-600 to-purple-900': 'linear-gradient(135deg, rgba(192,38,211,.22), rgba(88,28,135,.20))',
+                    'from-cyan-500 to-blue-800': 'linear-gradient(135deg, rgba(6,182,212,.20), rgba(30,64,175,.18))',
+                    'from-orange-500 to-red-700': 'linear-gradient(135deg, rgba(249,115,22,.22), rgba(185,28,28,.18))',
+                    'from-slate-700 to-slate-950': 'linear-gradient(135deg, rgba(51,65,85,.28), rgba(2,6,23,.40))'
+                };
+                card.style.background = themeBackgrounds[m.color] || themeBackgrounds['from-emerald-500 to-teal-600'];
+                card.onclick = () => loginAsMember(m.id);
+
+                card.innerHTML = `
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br ${m.color || 'from-emerald-500 to-teal-600'} flex items-center justify-center mb-2.5 shadow-lg group-hover:scale-105 transition overflow-hidden text-2xl">
+                        ${getMemberAvatar(m)}
+                    </div>
+                    <span class="text-xs sm:text-sm font-extrabold text-white truncate w-full">${escapeHtml(m.shortName || m.name)}</span>
+                    <span class="text-[10px] text-cyan-300 mt-1 leading-snug break-words w-full">${m.currentGame ? '🎮 ' + escapeHtml(m.currentGame) : '🎮 Juego actual no indicado'}</span>
+                    <span class="text-[10px] text-slate-300 mt-1 italic break-words w-full">${m.bio ? escapeHtml(m.bio) : ''}</span>
+                    <span class="text-[11px] text-slate-400 mt-0.5">${isRetired ? 'Retirado (' + m.retiradoDesde + ')' : (m.isAdminMember ? 'Administrador' : 'Socio Activo')}</span>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function toggleRetiredLogin() {
+            showRetiredInLogin = !showRetiredInLogin;
+            const btn = document.getElementById('retiredToggleBtn');
+            if (btn) btn.textContent = showRetiredInLogin ? 'Ocultar ex-socios retirados' : 'Ver ex-socios retirados';
+            renderLoginProfiles();
+        }
+
+        function loginByPartnerPin() {
+            const inputPin = document.getElementById('partnerQuickPinInput').value.trim();
+            if (!inputPin) {
+                alert('Por favor ingresa tu PIN personal.');
+                return;
+            }
+            const found = membersData.find(m => m.pin && m.pin === inputPin);
+            if (found) {
+                document.getElementById('partnerQuickPinInput').value = '';
+                loginAsMember(found.id);
+            } else {
+                alert('PIN de socio incorrecto. Verifica tu PIN personal.');
+            }
+        }
+
+        function loginAsMember(memberId) {
+            const mem = membersData.find(m => m.id === memberId);
+            if (!mem) return;
+
+            if (mem.pin && mem.pin.trim() !== '') {
+                const enteredPin = prompt(`Ingresa el PIN personal para acceder a ${mem.shortName || mem.name}:`);
+                if (enteredPin === null) return;
+                if (enteredPin.trim() !== mem.pin) {
+                    alert('PIN incorrecto. Acceso denegado a este perfil.');
+                    return;
+                }
+            }
+
+            currentUserRole = 'socio';
+            currentSelectedMemberId = memberId;
+            currentLoggedInMemberId = memberId;
+
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'flex';
+            document.getElementById('adminControls').classList.add('hidden');
+            document.getElementById('quickAdminSwitchBtn').classList.remove('hidden');
+            document.getElementById('adminColHeader').classList.add('hidden');
+
+            const badge = document.getElementById('roleBadgeHeader');
+            badge.textContent = 'Modo Lectura (Socio)';
+            badge.className = 'text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700';
+
+            document.getElementById('sessionRoleText').textContent = `Sesión iniciada como: ${mem.name}`;
+            initApp();
+        }
+
+        function handleAdminLoginForm(event) {
+            if (event) event.preventDefault();
+            loginAsAdmin();
+        }
+
+        function loginAsAdmin() {
+            const input = document.getElementById('adminPinInput');
+            const errEl = document.getElementById('loginErrorMsg');
+            const pin = input ? input.value.trim() : '';
+
+            if (pin === ADMIN_PIN || pin.toLowerCase() === 'admin') {
+                if (errEl) errEl.classList.add('hidden');
+                if (input) input.value = '';
+                activateAdminSession();
+            } else {
+                if (errEl) {
+                    errEl.textContent = 'PIN incorrecto. Acceso denegado.';
+                    errEl.classList.remove('hidden');
+                } else {
+                    alert('PIN incorrecto. Acceso denegado.');
+                }
+            }
+        }
+
+        function activateAdminSession() {
+            currentUserRole = 'admin';
+            currentLoggedInMemberId = null;
+            currentSelectedMemberId = 'm5';
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'flex';
+            document.getElementById('adminControls').classList.remove('hidden');
+            document.getElementById('quickAdminSwitchBtn').classList.add('hidden');
+            document.getElementById('adminColHeader').classList.remove('hidden');
+
+            const badge = document.getElementById('roleBadgeHeader');
+            badge.textContent = 'MODO ADMINISTRADOR ACTIVO';
+            badge.className = 'text-[10px] font-bold uppercase px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/40';
+
+            document.getElementById('sessionRoleText').textContent = 'Administrador Contable: RODRIGO SERVIÁN RIVAS (Edición Habilitada)';
+            initApp();
+        }
+
+        function promptAdminPinQuick() {
+            const pin = prompt('Ingresa el PIN de Administrador confidencial:');
+            if (pin !== null) {
+                if (pin.trim() === ADMIN_PIN || pin.trim().toLowerCase() === 'admin') {
+                    activateAdminSession();
+                } else {
+                    alert('PIN incorrecto.');
+                }
+            }
+        }
+
+        function logoutToLogin() {
+            currentLoggedInMemberId = null;
+            currentUserRole = 'socio';
+            document.getElementById('mainApp').style.display = 'none';
+            document.getElementById('loginScreen').style.display = 'flex';
+            renderLoginProfiles();
+        }
+
+        function initApp() {
+            populateDropdowns();
+            renderMonthTabs();
+            updateDashboard();
+            renderAnnualChart();
+            renderDebtorsAlert();
+        }
+
+        function populateDropdowns() {
+            const sel = document.getElementById('memberSelectorDropdown');
+            if (sel) {
+                sel.innerHTML = '';
+                membersData.forEach(m => {
+                    const opt = document.createElement('option');
+                    opt.value = m.id;
+                    opt.textContent = m.name + (m.retiradoDesde ? ` (Retirado en ${m.retiradoDesde})` : '');
+                    sel.appendChild(opt);
+                });
+                sel.value = currentSelectedMemberId;
+            }
+
+            const movMonth = document.getElementById('movMonth');
+            const newMemberStartMonth = document.getElementById('newMemberStartMonth');
+            const retireMonthSelect = document.getElementById('retireMonthSelect');
+
+            if (movMonth) {
+                movMonth.innerHTML = '';
+                monthsList.forEach(mo => {
+                    const opt = document.createElement('option');
+                    opt.value = mo;
+                    opt.textContent = getMonthYearLabel(mo);
+                    movMonth.appendChild(opt);
+                });
+            }
+
+            if (newMemberStartMonth) {
+                newMemberStartMonth.innerHTML = '';
+                monthsList.forEach(mo => {
+                    const opt = document.createElement('option');
+                    opt.value = mo;
+                    opt.textContent = getMonthYearLabel(mo);
+                    newMemberStartMonth.appendChild(opt);
+                });
+                newMemberStartMonth.value = ['RESUMEN', 'REUNIONES'].includes(currentActiveTab) ? monthsList[monthsList.length - 1] : currentActiveTab;
+            }
+
+            if (retireMonthSelect) {
+                retireMonthSelect.innerHTML = '<option value="">(Activo - Mostrar en todos los meses)</option>';
+                monthsList.forEach(mo => {
+                    const opt = document.createElement('option');
+                    opt.value = mo;
+                    opt.textContent = `Ocultar desde ${getMonthYearLabel(mo)} en adelante`;
+                    retireMonthSelect.appendChild(opt);
+                });
+            }
+
+            const retireMemberSelect = document.getElementById('retireMemberSelect');
+            if (retireMemberSelect) {
+                retireMemberSelect.innerHTML = '';
+                membersData.forEach(m => {
+                    const opt = document.createElement('option');
+                    opt.value = m.id;
+                    opt.textContent = m.name + (m.retiradoDesde ? ` [Retirado desde ${m.retiradoDesde}]` : ' [Activo]');
+                    retireMemberSelect.appendChild(opt);
+                });
+                syncRetireMonthSelect();
+            }
+        }
+
+        function syncRetireMonthSelect() {
+            const memberId = document.getElementById('retireMemberSelect').value;
+            const mem = membersData.find(m => m.id === memberId);
+            const retireMonthSelect = document.getElementById('retireMonthSelect');
+            if (mem && retireMonthSelect) {
+                retireMonthSelect.value = mem.retiradoDesde || '';
+            }
+        }
+
+        function renderMonthTabs() {
+            const container = document.getElementById('monthTabsContainer');
+            if (!container) return;
+            container.innerHTML = '';
+
+            monthsList.forEach(mo => {
+                const isActive = currentActiveTab === mo;
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = `px-3.5 py-2 rounded-xl text-xs font-extrabold transition whitespace-nowrap cursor-pointer ${
+                    isActive
+                        ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/30'
+                        : 'bg-slate-900 text-slate-400 hover:text-white hover:bg-slate-800 border border-slate-800'
+                }`;
+                btn.textContent = getMonthYearLabel(mo);
+                btn.onclick = () => {
+                    currentActiveTab = mo;
+                    renderMonthTabs();
+                    updateDashboard();
+                };
+                container.appendChild(btn);
+            });
+            renderAppNavigation();
+        }
+
+        function renderAppNavigation() {
+            const summaryBtn = document.getElementById('navSummaryMembersBtn');
+            const meetingsBtn = document.getElementById('navMeetingsBtn');
+            if (summaryBtn) summaryBtn.className = `px-3.5 py-2 rounded-xl text-xs font-extrabold transition whitespace-nowrap cursor-pointer ${
+                currentActiveTab === 'RESUMEN'
+                    ? 'bg-purple-600 text-white shadow-lg shadow-purple-600/20'
+                    : 'bg-purple-950/50 text-purple-300 hover:bg-purple-900/60 border border-purple-700/40'
+            }`;
+            if (meetingsBtn) meetingsBtn.className = `px-3.5 py-2 rounded-xl text-xs font-extrabold transition whitespace-nowrap cursor-pointer ${
+                currentActiveTab === 'REUNIONES'
+                    ? 'bg-cyan-600 text-white shadow-lg shadow-cyan-600/20'
+                    : 'bg-cyan-950/50 text-cyan-300 hover:bg-cyan-900/60 border border-cyan-700/40'
+            }`;
+        }
+
+        function setAppView(viewName) {
+            if (!['RESUMEN', 'REUNIONES'].includes(viewName)) return;
+            currentActiveTab = viewName;
+            renderMonthTabs();
+            updateDashboard();
+        }
+
+        function updateDashboard() {
+            const calc = computeAllMonthsSummary();
+            const activeMonth = ['RESUMEN','REUNIONES'].includes(currentActiveTab) ? monthsList[monthsList.length - 1] : currentActiveTab;
+            const mStat = calc.byMonth[activeMonth] || { prevCarry: 0, pureIncome: 0, totalIncomeWithCarry: 0, pureExpense: 0, closingBalance: 0 };
+
+            document.getElementById('kpiTotalBalance').textContent = formatGs(calc.finalBalance);
+            document.getElementById('kpiMonthBalance').textContent = formatGs(mStat.closingBalance);
+            document.getElementById('kpiPrevCarryText').textContent = `Arrastre mes anterior: ${formatGs(mStat.prevCarry)}`;
+            document.getElementById('kpiMonthIncome').textContent = formatGs(mStat.pureIncome);
+            document.getElementById('kpiMonthExpense').textContent = formatGs(mStat.pureExpense);
+
+            // Populate monthly note input
+            const noteSection = document.getElementById('treasuryNotesSection');
+            if (noteSection) noteSection.classList.toggle('hidden', currentUserRole !== 'admin');
+            const loansSection = document.getElementById('adminLoansSection');
+            if (loansSection && currentUserRole !== 'admin') loansSection.classList.add('hidden');
+            const noteInput = document.getElementById('monthNoteInput');
+            if (noteInput) {
+                noteInput.value = monthNotesData[activeMonth] || '';
+            }
+
+            const isMeetingsView = currentActiveTab === 'REUNIONES';
+            document.getElementById('monthlyViewContainer').classList.toggle('hidden', currentActiveTab === 'RESUMEN' || isMeetingsView);
+            document.getElementById('summaryViewContainer').classList.toggle('hidden', currentActiveTab !== 'RESUMEN');
+            document.getElementById('meetingsViewContainer').classList.toggle('hidden', !isMeetingsView);
+            if (currentActiveTab === 'RESUMEN') renderSummaryTable();
+            else if (isMeetingsView) renderMeetingsView();
+            else { renderMonthlyTable(activeMonth, mStat); updateMemberProfileCard(); }
+            renderDebtorsAlert();
+            if (currentUserRole === 'admin') renderAdminLoans();
+        }
+
+        function renderMonthlyTable(monthName, mStat) {
+            document.getElementById('currentMonthTitle').textContent = `FONDO DE ${getMonthYearLabel(monthName)}`;
+            const activeMembers = getActiveMembersForMonth(monthName);
+            document.getElementById('activeMembersCountBadge').textContent = `${activeMembers.length} socios activos en ${getMonthYearLabel(monthName)}`;
+
+            const tbody = document.getElementById('monthTableBody');
+            const tfoot = document.getElementById('monthTableFoot');
+            tbody.innerHTML = '';
+
+            const isAdmin = currentUserRole === 'admin';
+            document.getElementById('adminColHeader').classList.toggle('hidden', !isAdmin);
+
+            // 1. Carry-over row if not first month
+            const mIdx = monthsList.indexOf(monthName);
+            if (mIdx > 0) {
+                const trCarry = document.createElement('tr');
+                trCarry.className = 'bg-emerald-950/20 text-emerald-300 font-bold';
+                trCarry.innerHTML = `
+                    <td class="py-3 px-4">SALDO FINAL POSITIVO DEL MES ANTERIOR</td>
+                    <td class="py-3 px-3 text-xs text-slate-400">${getMonthYearLabel(monthsList[mIdx - 1])}</td>
+                    <td class="py-3 px-4 text-right">${formatGs(mStat.prevCarry)}</td>
+                    <td class="py-3 px-4 text-right">-</td>
+                    ${isAdmin ? '<td class="py-3 px-4 text-center text-[11px] text-slate-500">Automático</td>' : ''}
+                `;
+                tbody.appendChild(trCarry);
+            }
+
+            // 2. Active Member rows
+            const moContribs = contributionsData[monthName] || {};
+            activeMembers.forEach(m => {
+                const c = moContribs[m.id] || { amount: 0, date: '', status: 'empty' };
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-slate-900/60 transition';
+
+                let statusBadge = '';
+                let incomeText = '-';
+                if (c.status === 'paid' && c.amount > 0) {
+                    incomeText = formatGs(c.amount);
+                } else if (c.status === 'pending') {
+                    statusBadge = '<span class="ml-2 px-2 py-0.5 rounded-md text-[10px] font-extrabold bg-amber-500/20 text-amber-300 border border-amber-500/30">PENDIENTE</span>';
+                    incomeText = '<span class="text-amber-400 font-bold text-xs">PENDIENTE</span>';
+                } else {
+                    statusBadge = '<span class="ml-2 px-2 py-0.5 rounded-md text-[10px] font-semibold bg-slate-800 text-slate-400">SIN CARGAR</span>';
+                }
+
+                const avatarMini = `<span class="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-xs">${m.emoji || '🎮'}</span>`;
+
+                tr.innerHTML = `
+                    <td class="py-3 px-4 font-semibold text-white">
+                        <div class="flex items-center gap-2.5">
+                            ${avatarMini}
+                            <span>${m.name}</span>
+                            ${statusBadge}
+                        </div>
+                    </td>
+                    <td class="py-3 px-3 text-xs text-slate-400">${c.date || '-'}</td>
+                    <td class="py-3 px-4 text-right font-bold text-emerald-400">${incomeText}</td>
+                    <td class="py-3 px-4 text-right text-slate-500">-</td>
+                    ${isAdmin ? `
+                        <td class="py-3 px-4 text-center">
+                            <div class="inline-flex items-center gap-1">
+                                <button type="button" onclick="quickSetMemberPayment('${monthName}', '${m.id}', 50000)" class="px-2 py-1 rounded bg-emerald-600/20 hover:bg-emerald-600 text-emerald-300 hover:text-white text-[11px] font-bold transition cursor-pointer">50k</button>
+                                <button type="button" onclick="quickSetMemberPayment('${monthName}', '${m.id}', 55000)" class="px-2 py-1 rounded bg-teal-600/20 hover:bg-teal-600 text-teal-300 hover:text-white text-[11px] font-bold transition cursor-pointer">55k</button>
+                                <button type="button" onclick="quickSetMemberPending('${monthName}', '${m.id}')" class="px-2 py-1 rounded bg-amber-600/20 hover:bg-amber-600 text-amber-300 hover:text-white text-[11px] font-bold transition cursor-pointer">Pend</button>
+                                <button type="button" onclick="customEditMemberPayment('${monthName}', '${m.id}')" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-bold transition cursor-pointer" title="Editar monto y fecha">✏️</button>
+                            </div>
+                        </td>
+                    ` : ''}
+                `;
+                tbody.appendChild(tr);
+            });
+
+            // 3. Extra Movements / Loans
+            const extras = extraMovementsData[monthName] || [];
+            extras.forEach((ex, idx) => {
+                const tr = document.createElement('tr');
+                tr.className = 'bg-slate-900/30 hover:bg-slate-900/70 transition';
+                const isExpense = Number(ex.expense) > 0;
+                tr.innerHTML = `
+                    <td class="py-3 px-4 font-semibold ${isExpense ? 'text-amber-300' : 'text-blue-300'}">
+                        <div class="flex items-center gap-2">
+                            <span>${isExpense ? '📤' : '📥'}</span>
+                            <span>${ex.desc}</span>
+                        </div>
+                    </td>
+                    <td class="py-3 px-3 text-xs text-slate-400">${ex.date || '-'}</td>
+                    <td class="py-3 px-4 text-right font-bold text-blue-400">${ex.income ? formatGs(ex.income) : '-'}</td>
+                    <td class="py-3 px-4 text-right font-bold text-amber-400">${ex.expense ? formatGs(ex.expense) : '-'}</td>
+                    ${isAdmin ? `
+                        <td class="py-3 px-4 text-center">
+                            <button type="button" onclick="deleteExtraMovement('${monthName}', ${idx})" class="px-2 py-1 rounded bg-rose-500/20 hover:bg-rose-600 text-rose-300 hover:text-white text-[11px] font-bold transition cursor-pointer">Borrar</button>
+                        </td>
+                    ` : ''}
+                `;
+                tbody.appendChild(tr);
+            });
+
+            // Footer Totals matching Excel
+            tfoot.innerHTML = `
+                <tr>
+                    <td class="py-3.5 px-4 text-white">TOTAL ${getMonthYearLabel(monthName)}</td>
+                    <td class="py-3.5 px-3 text-xs text-slate-400">SALDO FINAL: <span class="text-emerald-400 font-black">${formatGs(mStat.closingBalance)}</span></td>
+                    <td class="py-3.5 px-4 text-right text-emerald-400">${formatGs(mStat.totalIncomeWithCarry)}</td>
+                    <td class="py-3.5 px-4 text-right text-amber-400">${formatGs(mStat.pureExpense)}</td>
+                    ${isAdmin ? '<td class="py-3.5 px-4"></td>' : ''}
+                </tr>
+            `;
+        }
+
+        function quickSetMemberPayment(monthName, memberId, amount) {
+            if (!contributionsData[monthName]) contributionsData[monthName] = {};
+            const today = new Date().toISOString().slice(0, 10);
+            const existingDate = contributionsData[monthName][memberId]?.date;
+            contributionsData[monthName][memberId] = {
+                amount: amount,
+                date: (existingDate && existingDate !== 'PENDIENTE') ? existingDate : today,
+                status: 'paid'
+            };
+            saveState();
+            updateDashboard();
+            renderAnnualChart();
+        }
+
+        function quickSetMemberPending(monthName, memberId) {
+            if (!contributionsData[monthName]) contributionsData[monthName] = {};
+            contributionsData[monthName][memberId] = {
+                amount: 0,
+                date: '',
+                status: 'pending'
+            };
+            saveState();
+            updateDashboard();
+            renderAnnualChart();
+        }
+
+        function customEditMemberPayment(monthName, memberId) {
+            const mem = membersData.find(m => m.id === memberId);
+            const current = (contributionsData[monthName] && contributionsData[monthName][memberId]) || { amount: 50000, date: new Date().toISOString().slice(0, 10) };
+            const amountStr = prompt(`Monto aportado por ${mem.name} en ${monthName} (pon 0 para limpiar):`, current.amount || 50000);
+            if (amountStr === null) return;
+            const amount = parseInt(amountStr, 10) || 0;
+            if (amount <= 0) {
+                delete contributionsData[monthName][memberId];
+            } else {
+                const dateStr = prompt(`Fecha de pago (AAAA-MM-DD):`, current.date || new Date().toISOString().slice(0, 10));
+                if (!contributionsData[monthName]) contributionsData[monthName] = {};
+                contributionsData[monthName][memberId] = {
+                    amount: amount,
+                    date: dateStr || monthName,
+                    status: 'paid'
+                };
+            }
+            saveState();
+            updateDashboard();
+            renderAnnualChart();
+        }
+
+        function deleteExtraMovement(monthName, idx) {
+            if (confirm('¿Eliminar este movimiento extraordinario?')) {
+                extraMovementsData[monthName].splice(idx, 1);
+                saveState();
+                updateDashboard();
+                renderAnnualChart();
+            }
+        }
+
+        function switchViewMember(memberId) {
+            currentSelectedMemberId = memberId;
+            updateMemberProfileCard();
+        }
+
+        function getMemberStats(member) {
+            let totalContributed = 0;
+            let paidCount = 0;
+            let pendingMonths = [];
+            let perMonthStatus = [];
+
+            monthsList.forEach(mo => {
+                const mIdx = monthsList.indexOf(mo);
+                const startIdx = monthsList.indexOf(member.startMonth);
+                const retireIdx = member.retiradoDesde ? monthsList.indexOf(member.retiradoDesde) : 9999;
+
+                if (mIdx >= startIdx && mIdx < retireIdx) {
+                    const c = (contributionsData[mo] && contributionsData[mo][member.id]) || null;
+                    if (c && c.status === 'paid' && c.amount > 0) {
+                        totalContributed += Number(c.amount);
+                        paidCount++;
+                        perMonthStatus.push({ month: mo, status: 'paid', amount: c.amount, date: c.date });
+                    } else if (c && c.status === 'pending') {
+                        pendingMonths.push(mo);
+                        perMonthStatus.push({ month: mo, status: 'pending', amount: 0, date: '' });
+                    } else {
+                        perMonthStatus.push({ month: mo, status: 'empty', amount: 0, date: '' });
+                    }
+                }
+            });
+
+            return { totalContributed, paidCount, pendingMonths, perMonthStatus };
+        }
+
+        function updateMemberProfileCard() {
+            const member = membersData.find(m => m.id === currentSelectedMemberId) || membersData[0];
+            if (!member) return;
+
+            document.getElementById('selectedMemberName').textContent = member.name;
+            const isRetired = member.retiradoDesde !== null;
+
+            const badge = document.getElementById('memberRoleBadge');
+            if (isRetired) {
+                badge.textContent = `Retirado desde ${member.retiradoDesde}`;
+                badge.className = 'inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-amber-500/15 text-amber-300 mb-1';
+            } else {
+                badge.textContent = member.isAdminMember ? 'Socio & Administrador' : 'Socio Activo';
+                badge.className = 'inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-400 mb-1';
+            }
+
+            document.getElementById('memberSinceText').textContent = isRetired
+                ? `Participó de ${getMonthYearLabel(member.startMonth)} a ${getMonthYearLabel(member.retiradoDesde)}`
+                : `Activo desde ${getMonthYearLabel(member.startMonth)}`;
+
+            const avatarContainer = document.getElementById('memberAvatarContainer');
+            avatarContainer.innerHTML = `<span class="text-2xl">${getMemberAvatar(member)}</span>`;
+            avatarContainer.className = `w-16 h-16 rounded-2xl bg-gradient-to-br ${member.color || 'from-emerald-500 to-teal-700'} flex items-center justify-center text-2xl shadow-lg overflow-hidden border border-white/10`;
+
+            // Set inputs
+            const emojiInput = document.getElementById('memberEmojiInput');
+            if (emojiInput) emojiInput.value = member.emoji || '🎮';
+            const gameInput = document.getElementById('memberCurrentGameInput');
+            if (gameInput) gameInput.value = member.currentGame || '';
+            const emailInput = document.getElementById('memberEmailInput'); if (emailInput) emailInput.value = member.email || '';
+            const birthdayInput = document.getElementById('memberBirthdayInput'); if (birthdayInput) birthdayInput.value = member.birthday || '';
+            const bioInput = document.getElementById('memberBioInput'); if (bioInput) bioInput.value = member.bio || '';
+            const themeInput = document.getElementById('memberThemeInput'); if (themeInput) themeInput.value = member.color || 'from-emerald-500 to-teal-600';
+            const favoritesInput = document.getElementById('memberFavoritesInput'); if (favoritesInput) favoritesInput.value = (member.favoriteGames || []).map((g,i) => `${i+1}. ${g}`).join('\\n');
+
+            const pinSection = document.getElementById('memberPinChangeSection');
+            const canChangeThisPin = currentUserRole === 'admin' || (currentUserRole === 'socio' && currentLoggedInMemberId === member.id);
+            if (pinSection) pinSection.classList.toggle('hidden', !canChangeThisPin);
+            const newPinInput = document.getElementById('memberNewPinInput'); if (newPinInput) newPinInput.value = '';
+            const confirmPinInput = document.getElementById('memberConfirmPinInput'); if (confirmPinInput) confirmPinInput.value = '';
+            const st = getMemberStats(member);
+            document.getElementById('memberTotalContributed').textContent = formatGs(st.totalContributed);
+            document.getElementById('memberPaidMonthsCount').textContent = `${st.paidCount} cuotas`;
+
+            const alertBox = document.getElementById('memberAlertBox');
+            const alertText = document.getElementById('memberAlertText');
+            if (st.pendingMonths.length > 0) {
+                alertBox.className = 'p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs mb-4';
+                alertText.textContent = `Registra cuotas pendientes en: ${st.pendingMonths.join(', ')}.`;
+            } else {
+                alertBox.className = 'p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs mb-4';
+                alertText.textContent = 'Al día con todos los meses cerrados.';
+            }
+
+            // Feature 2: Detailed Payment History with exact dates
+            const pillsContainer = document.getElementById('memberMonthlyPills');
+            pillsContainer.innerHTML = '';
+            st.perMonthStatus.forEach(p => {
+                const div = document.createElement('div');
+                let colorCls = 'bg-slate-900 border-slate-800 text-slate-400';
+                let statusLabel = 'Sin cargar';
+                if (p.status === 'paid') {
+                    colorCls = 'bg-emerald-950/50 border-emerald-500/30 text-emerald-300';
+                    statusLabel = `Pagado (${formatGs(p.amount)}) - ${p.date || 'Fecha reg.'}`;
+                } else if (p.status === 'pending') {
+                    colorCls = 'bg-amber-950/50 border-amber-500/30 text-amber-300';
+                    statusLabel = 'Pendiente de pago';
+                }
+                div.className = `p-2 rounded-xl border ${colorCls} text-[11px] flex items-center justify-between font-semibold`;
+                div.innerHTML = `<span>${escapeHtml(getMonthYearLabel(p.month))}</span> <span class="text-[10px] text-slate-400">${statusLabel}</span>`;
+                pillsContainer.appendChild(div);
+            });
+        }
+
+        // Feature 1: Loyalty Ranking in Summary Table
+        function renderSummaryTable() {
+            const tbody = document.getElementById('summaryMembersTableBody');
+            tbody.innerHTML = '';
+
+            // Compute stats & sort by paidCount descending
+            const ranked = membersData.map(m => {
+                return { m, st: getMemberStats(m) };
+            }).sort((a, b) => b.st.paidCount - a.st.paidCount);
+
+            ranked.forEach((item, index) => {
+                const { m, st } = item;
+                const isRetired = m.retiradoDesde !== null;
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-slate-900/50 transition';
+
+                let rankBadge = `<span class="text-slate-400 font-bold mr-2">#${index + 1}</span>`;
+                if (index === 0 && st.paidCount > 0) rankBadge = '🥇';
+                else if (index === 1 && st.paidCount > 0) rankBadge = '🥈';
+                else if (index === 2 && st.paidCount > 0) rankBadge = '🥉';
+
+                tr.innerHTML = `
+                    <td class="py-3.5 px-4 font-bold text-white flex items-center gap-2.5">
+                        <span class="text-base">${rankBadge}</span>
+                        <span class="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-sm">${m.emoji || '🎮'}</span>
+                        <span>${m.name}</span>
+                    </td>
+                    <td class="py-3.5 px-4 text-xs">
+                        ${isRetired
+                            ? `<span class="px-2 py-0.5 rounded bg-slate-800 text-slate-400 font-semibold">Retirado desde ${m.retiradoDesde}</span>`
+                            : `<span class="px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 font-bold">Activo (desde ${m.startMonth})</span>`}
+                    </td>
+                    <td class="py-3.5 px-4 text-center font-bold text-white">${st.paidCount} cuotas</td>
+                    <td class="py-3.5 px-4 text-xs">
+                        ${st.pendingMonths.length > 0
+                            ? `<span class="text-amber-400 font-bold">${st.pendingMonths.join(', ')}</span>`
+                            : `<span class="text-emerald-400">Al día</span>`}
+                    </td>
+                    <td class="py-3.5 px-4 text-right font-black text-emerald-400">${formatGs(st.totalContributed)}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function setMemberEmoji(emoji) {
+            const mem = membersData.find(m => m.id === currentSelectedMemberId);
+            if (mem) {
+                mem.emoji = emoji;
+                saveState();
+                updateMemberProfileCard();
+                renderLoginProfiles();
+                updateDashboard();
+            }
+        }
+
+        function saveMemberEmojiFree() {
+            const mem = membersData.find(m => m.id === currentSelectedMemberId);
+            const emojiVal = document.getElementById('memberEmojiInput').value.trim();
+            if (mem && emojiVal) {
+                mem.emoji = emojiVal;
+                saveState();
+                updateMemberProfileCard();
+                renderLoginProfiles();
+                updateDashboard();
+                alert(`¡Ícono actualizado con éxito para ${mem.name}!`);
+            }
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+        }
+
+        function saveMemberCurrentGame() {
+            const mem = membersData.find(m => m.id === currentSelectedMemberId);
+            const input = document.getElementById('memberCurrentGameInput');
+            if (!mem || !input) return;
+            mem.currentGame = input.value.trim().slice(0, 100);
+            saveState();
+            renderLoginProfiles();
+            alert('Juego actual actualizado. Los demás socios ya pueden verlo en la pantalla de acceso.');
+        }
+
+        function saveMemberProfileExtras() {
+            const mem = membersData.find(m => m.id === currentSelectedMemberId);
+            if (!mem) return;
+            const email = document.getElementById('memberEmailInput').value.trim();
+            if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert('Verifica el correo electrónico.'); return; }
+            mem.email = email;
+            mem.birthday = document.getElementById('memberBirthdayInput').value || '';
+            mem.bio = document.getElementById('memberBioInput').value.trim().slice(0,120);
+            mem.color = document.getElementById('memberThemeInput').value;
+            mem.favoriteGames = document.getElementById('memberFavoritesInput').value.split(/\n/).map(x => x.replace(/^\s*\d+[.)-]?\s*/, '').trim()).filter(Boolean).slice(0,10);
+            saveState(); updateMemberProfileCard(); renderLoginProfiles();
+            alert('Perfil personalizado guardado.');
+        }
+
+        function saveMemberPin() {
+            const member = membersData.find(m => m.id === currentSelectedMemberId);
+            if (!member) return;
+            const canChangeThisPin = currentUserRole === 'admin' || (currentUserRole === 'socio' && currentLoggedInMemberId === member.id);
+            if (!canChangeThisPin) {
+                alert('Por seguridad, solo puedes cambiar tu propio PIN.');
+                return;
+            }
+            const pinInput = document.getElementById('memberNewPinInput');
+            const confirmInput = document.getElementById('memberConfirmPinInput');
+            const newPin = pinInput ? pinInput.value.trim() : '';
+            const confirmPin = confirmInput ? confirmInput.value.trim() : '';
+            if (newPin.length < 4 || newPin.length > 32) {
+                alert('La nueva contraseña o PIN debe tener entre 4 y 32 caracteres.');
+                return;
+            }
+            if (newPin !== confirmPin) {
+                alert('La confirmación no coincide con la nueva contraseña o PIN.');
+                return;
+            }
+            if (newPin === member.pin) {
+                alert('La nueva contraseña debe ser diferente de la actual.');
+                return;
+            }
+            member.pin = newPin;
+            saveState();
+            if (pinInput) pinInput.value = '';
+            if (confirmInput) confirmInput.value = '';
+            renderLoginProfiles();
+            alert(`La contraseña de acceso de ${member.shortName || member.name} se actualizó correctamente.`);
+        }
+
+        function toggleAdminLoans() {
+            if (currentUserRole !== 'admin') return;
+            const section = document.getElementById('adminLoansSection');
+            section.classList.toggle('hidden');
+            renderAdminLoans();
+            section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function renderAdminLoans() {
+            const body = document.getElementById('adminLoansTableBody');
+            if (!body) return;
+            body.innerHTML = '';
+            if (!loanRecordsData.length) {
+                body.innerHTML = '<tr><td colspan="6" class="p-4 text-slate-400">Todavía no hay préstamos registrados mediante el formulario.</td></tr>';
+                return;
+            }
+            loanRecordsData.forEach((loan, index) => {
+                const tr = document.createElement('tr');
+                const member = membersData.find(m => m.id === loan.memberId);
+                const statusSelect = document.createElement('select');
+                statusSelect.className = 'bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-white';
+                [['pendiente','Pendiente'],['parcial','Devolución parcial'],['devuelto','Devuelto']].forEach(([value,label]) => {
+                    const opt = document.createElement('option'); opt.value = value; opt.textContent = label; statusSelect.appendChild(opt);
+                });
+                statusSelect.value = loan.status || 'pendiente';
+                statusSelect.onchange = () => { loanRecordsData[index].status = statusSelect.value; saveState(); renderAdminLoans(); };
+                const cells = [
+                    `${escapeHtml(loan.date || loan.month || '')}${loan.dueDate ? '<br><span class="text-amber-300">Vence: '+escapeHtml(loan.dueDate)+'</span>' : ''}`,
+                    escapeHtml(member ? (member.shortName || member.name) : (loan.memberName || 'No indicado')),
+                    escapeHtml(loan.desc || ''),
+                    escapeHtml(loan.guarantee || 'Sin garantía indicada'),
+                    formatGs(loan.amount)
+                ];
+                cells.forEach((value, i) => { const td = document.createElement('td'); td.className = 'p-3 text-slate-200'; td.innerHTML = i === 4 ? `<div class="text-right">${value}</div>` : value; tr.appendChild(td); });
+                const statusTd = document.createElement('td'); statusTd.className = 'p-3'; statusTd.appendChild(statusSelect); tr.appendChild(statusTd);
+                body.appendChild(tr);
+            });
+        }
+
+
+        function openMeetingModal() {
+            if (currentUserRole !== 'admin') { alert('Solo el administrador puede crear reuniones.'); return; }
+            document.getElementById('meetingDateInput').value = new Date().toLocaleDateString('en-CA');
+            document.getElementById('meetingModal').classList.remove('hidden');
+        }
+        function closeMeetingModal() { document.getElementById('meetingModal').classList.add('hidden'); }
+        function handleSaveMeeting(event) {
+            event.preventDefault();
+            if (currentUserRole !== 'admin') return alert('Solo el administrador puede crear reuniones.');
+            const date = document.getElementById('meetingDateInput').value;
+            meetingsData.push({id:'meet-'+Date.now(), date, title:document.getElementById('meetingTitleInput').value.trim(),
+                city:document.getElementById('meetingCityInput').value.trim(), place:document.getElementById('meetingPlaceInput').value.trim(),
+                description:document.getElementById('meetingDescriptionInput').value.trim(), attendance:[], anecdotes:[]});
+            saveState(); closeMeetingModal(); event.target.reset(); renderMeetingsView();
+        }
+        function meetingDateLabel(date) {
+            if (!date) return '';
+            const d = new Date(date+'T12:00:00');
+            return d.toLocaleDateString('es-PY',{day:'numeric',month:'long',year:'numeric'});
+        }
+        function renderMeetingsView() {
+            const list = document.getElementById('meetingsListContainer');
+            const createBtn = document.getElementById('newMeetingBtn');
+            if (!list) return;
+            if (createBtn) createBtn.classList.toggle('hidden', currentUserRole !== 'admin');
+            const year = new Date().getFullYear();
+            document.getElementById('meetingRankingYear').textContent = 'Temporada '+year+' · el ranking se reinicia cada 1 de enero';
+            const yearMeetings = meetingsData.filter(e => Number((e.date||'').slice(0,4)) === year);
+            const counts = membersData.map(m => ({m, count:yearMeetings.filter(e => (e.attendance||[]).includes(m.id)).length}))
+                .sort((a,b)=>b.count-a.count || (a.m.shortName||a.m.name).localeCompare(b.m.shortName||b.m.name));
+            const ranking = document.getElementById('meetingRankingContainer');
+            ranking.innerHTML = '';
+            const medals = ['🥇 ORO','🥈 PLATA','🥉 BRONCE'];
+            counts.slice(0,3).forEach((item,i) => {
+                const card=document.createElement('div'); card.className='rounded-2xl border border-slate-700 bg-slate-950/60 p-4';
+                card.innerHTML=`<div class="text-xs font-black text-slate-300">${medals[i]}</div><div class="text-sm font-extrabold text-white mt-2"></div><div class="text-xs text-cyan-300 mt-1">${item.count} asistencias en ${year}</div>`;
+                card.children[1].textContent=item.m.shortName||item.m.name; ranking.appendChild(card);
+            });
+            if (!meetingsData.length) {
+                list.innerHTML='<p class="text-sm text-slate-400">Todavía no hay encuentros registrados para este año. El historial de años anteriores se conserva.</p>';
+            } else {
+                list.innerHTML='';
+                [...meetingsData].sort((a,b)=>b.date.localeCompare(a.date)).forEach(meeting=>{
+                    const present=meeting.attendance||[];
+                    const card=document.createElement('article'); card.className='rounded-2xl border border-slate-800 bg-slate-950/50 p-4';
+                    const heading=document.createElement('div'); heading.className='flex flex-wrap justify-between gap-2';
+                    const info=document.createElement('div');
+                    info.innerHTML=`<div class="text-xs font-bold text-cyan-300">${meetingDateLabel(meeting.date)} · ${meeting.city||''}</div><h3 class="text-base font-extrabold text-white mt-1"></h3><p class="text-xs text-slate-400 mt-1"></p>`;
+                    info.children[1].textContent=meeting.title; info.children[2].textContent=meeting.place+(meeting.description?' · '+meeting.description:'');
+                    const badge=document.createElement('span'); badge.className='text-xs text-slate-300'; badge.textContent=present.length+' asistentes';
+                    heading.append(info,badge); card.appendChild(heading);
+                    const attendanceBox=document.createElement('div'); attendanceBox.className='grid grid-cols-1 sm:grid-cols-2 gap-2 mt-4';
+                    membersData.forEach(member=>{
+                        const label=document.createElement('label'); label.className='flex items-center gap-2 text-xs text-slate-200 bg-slate-900/70 rounded-lg p-2';
+                        const check=document.createElement('input'); check.type='checkbox'; check.checked=present.includes(member.id); check.disabled=currentUserRole!=='admin' && currentSelectedMemberId!==member.id;
+                        check.onchange=()=>{ if(check.checked && !present.includes(member.id)) present.push(member.id); else {const i=present.indexOf(member.id);if(i>=0)present.splice(i,1);} meeting.attendance=present; saveState(); renderMeetingsView(); };
+                        const name=document.createElement('span'); name.textContent=member.shortName||member.name; label.append(check,name); attendanceBox.appendChild(label);
+                    });
+                    const attendanceNote=document.createElement('p'); attendanceNote.className='text-[10px] text-slate-500 mt-2'; attendanceNote.textContent=currentUserRole==='admin'?'Administrador: puedes marcar o corregir la asistencia de cualquier socio.':'Marca únicamente tu propia asistencia; el administrador puede corregirla si hace falta.';
+                    card.append(attendanceBox,attendanceNote);
+                    const anecdotes=document.createElement('div'); anecdotes.className='mt-4 border-t border-slate-800 pt-3';
+                    const ah=document.createElement('h4'); ah.className='text-xs font-bold text-slate-300 mb-2'; ah.textContent='💬 Anécdotas del encuentro'; anecdotes.appendChild(ah);
+                    (meeting.anecdotes||[]).forEach(a=>{const p=document.createElement('p');p.className='text-sm text-slate-200 bg-slate-900/60 rounded-xl p-3 mb-2';p.textContent=a.author+' · '+a.date+': '+a.text;anecdotes.appendChild(p);});
+                    const form=document.createElement('form');form.className='flex flex-col sm:flex-row gap-2';
+                    const input=document.createElement('textarea');input.required=true;input.maxLength=1000;input.rows=2;input.placeholder='Compartí una anécdota de esta reunión…';input.className='flex-1 bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white';
+                    const submit=document.createElement('button');submit.type='submit';submit.className='bg-cyan-700 hover:bg-cyan-600 text-white px-4 py-2 rounded-xl text-xs font-bold';submit.textContent='Agregar anécdota';
+                    form.onsubmit=(ev)=>{ev.preventDefault();const textVal=input.value.trim();if(!textVal)return;meeting.anecdotes=meeting.anecdotes||[];const member=membersData.find(m=>m.id===currentSelectedMemberId);meeting.anecdotes.push({author:currentUserRole==='admin'?'Administrador':(member?.shortName||member?.name||'Socio'),date:new Date().toLocaleDateString('es-PY'),text:textVal});saveState();renderMeetingsView();};
+                    form.append(input,submit); anecdotes.appendChild(form); card.appendChild(anecdotes); list.appendChild(card);
+                });
+            }
+        }
+
+        // MODALS
+        function openMovementModal() {
+            const activeMo = ['RESUMEN', 'REUNIONES'].includes(currentActiveTab) ? monthsList[monthsList.length - 1] : currentActiveTab;
+            document.getElementById('movMonth').value = activeMo;
+            document.getElementById('movDate').value = new Date().toISOString().slice(0, 10);
+            const loanSel = document.getElementById('loanMemberSelect');
+            if (loanSel) { loanSel.innerHTML = '<option value="">No corresponde</option>'; membersData.forEach(m => { const o = document.createElement('option'); o.value = m.id; o.textContent = m.shortName || m.name; loanSel.appendChild(o); }); }
+            document.getElementById('movementModal').classList.remove('hidden');
+        }
+
+        function openNewMemberModal() {
+            populateDropdowns();
+            document.getElementById('newMemberModal').classList.remove('hidden');
+        }
+
+        function openRetireModal() {
+            populateDropdowns();
+            document.getElementById('retireModal').classList.remove('hidden');
+        }
+
+        function openNewMonthModal() {
+            if (currentUserRole !== 'admin') return alert('Solo el administrador puede agregar meses.');
+            const name = prompt('Nombre del mes que deseas agregar (ej. ENERO):');
+            if (!name) return;
+            const upper = name.trim().toLocaleUpperCase('es-PY').replace(/\s+/g, ' ');
+            if (!Object.prototype.hasOwnProperty.call(MONTH_ORDER_ES, upper)) {
+                alert('Ingresa el nombre de un mes válido, por ejemplo ENERO, FEBRERO o MARZO.'); return;
+            }
+            const suggestedYear = inferYearForNewMonth(upper);
+            const yearText = prompt(`¿De qué año es ${upper}?`, String(suggestedYear));
+            if (!yearText) return;
+            const year = Number(yearText.trim());
+            if (!Number.isInteger(year) || year < 2000 || year > 2100) {
+                alert('Ingresa un año válido entre 2000 y 2100.'); return;
+            }
+            const monthKey = upper + ' ' + year;
+            if (monthsList.includes(monthKey)) { alert(`El período ${getMonthYearLabel(monthKey)} ya existe.`); return; }
+            monthsList.push(monthKey);
+            contributionsData[monthKey] = {};
+            extraMovementsData[monthKey] = [];
+            currentActiveTab = monthKey;
+            saveState();
+            initApp();
+        }
+
+        function deleteCurrentMonth() {
+            if (currentUserRole !== 'admin') return alert('Solo el administrador puede eliminar meses.');
+            if (currentActiveTab === 'RESUMEN' || currentActiveTab === 'REUNIONES') {
+                alert('Primero selecciona un mes del flujo de caja y luego pulsa Eliminar mes.');
+                return;
+            }
+            const monthKey = currentActiveTab;
+            const monthIndex = monthsList.indexOf(monthKey);
+            if (monthIndex < 0) {
+                alert('No se encontró el mes seleccionado.');
+                return;
+            }
+            if (monthsList.length <= 1) {
+                alert('Debe quedar al menos un mes en el flujo de caja.');
+                return;
+            }
+            const nextMonth = monthsList[monthIndex + 1] || null;
+            const membersStartingHere = membersData.filter(m => m.startMonth === monthKey);
+            if (membersStartingHere.length && !nextMonth) {
+                alert('No se puede eliminar el último mes porque es el mes de inicio de uno o más socios. Primero ajusta el mes de inicio de esos socios.');
+                return;
+            }
+            const warning = `¿Eliminar el período ${getMonthYearLabel(monthKey)}?\n\nSe borrarán sus aportes, movimientos, notas y préstamos registrados. El saldo de los meses posteriores se recalculará. Esta acción no se puede deshacer.`;
+            if (!confirm(warning)) return;
+
+            // Si un socio comenzó en el período eliminado, su primer período visible pasa al siguiente disponible.
+            if (nextMonth) {
+                membersData.forEach(m => {
+                    if (m.startMonth === monthKey) m.startMonth = nextMonth;
+                    // Si la fecha de retiro era este mes, el primer período restante desde el que ya no participa es el siguiente.
+                    if (m.retiradoDesde === monthKey) m.retiradoDesde = nextMonth;
+                });
+            } else {
+                // El último período se puede eliminar solo si no hay socios cuyo inicio dependa de él.
+                membersData.forEach(m => {
+                    if (m.retiradoDesde === monthKey) m.retiradoDesde = null;
+                });
+            }
+
+            monthsList.splice(monthIndex, 1);
+            delete contributionsData[monthKey];
+            delete extraMovementsData[monthKey];
+            delete monthNotesData[monthKey];
+            loanRecordsData = (loanRecordsData || []).filter(loan => loan.month !== monthKey);
+            currentActiveTab = monthsList[Math.max(0, monthIndex - 1)] || monthsList[0];
+            saveState();
+            initApp();
+            alert(`Se eliminó el período ${getMonthYearLabel(monthKey)}.`);
+        }
+
+        function closeModals() {
+            document.getElementById('movementModal').classList.add('hidden');
+            document.getElementById('newMemberModal').classList.add('hidden');
+            document.getElementById('retireModal').classList.add('hidden');
+        }
+
+        function handleSaveMovement(event) {
+            event.preventDefault();
+            const mo = document.getElementById('movMonth').value;
+            const desc = document.getElementById('movDesc').value.trim();
+            const type = document.getElementById('movType').value;
+            const amount = parseInt(document.getElementById('movAmount').value, 10) || 0;
+            const date = document.getElementById('movDate').value || mo;
+
+            const memberId = document.getElementById('loanMemberSelect')?.value || '';
+            const dueDate = document.getElementById('loanDueDateInput')?.value || '';
+            if (type === 'egreso' && (!memberId || !dueDate)) { alert('Para registrar un préstamo, selecciona al socio y la fecha de vencimiento.'); return; }
+            if (!extraMovementsData[mo]) extraMovementsData[mo] = [];
+            extraMovementsData[mo].push({
+                desc,
+                date,
+                income: type === 'ingreso' ? amount : 0,
+                expense: type === 'egreso' ? amount : 0
+            });
+            if (type === 'egreso') {
+                const member = membersData.find(m => m.id === memberId);
+                loanRecordsData.push({
+                    id: 'loan-' + Date.now(), month: mo, date, desc, amount,
+                    memberId, memberName: member ? (member.shortName || member.name) : '',
+                    guarantee: document.getElementById('loanGuaranteeInput')?.value.trim() || '',
+                    dueDate: document.getElementById('loanDueDateInput')?.value || '',
+                    status: 'pendiente'
+                });
+            }
+            const guaranteeInput = document.getElementById('loanGuaranteeInput');
+            if (guaranteeInput) guaranteeInput.value = '';
+            const dueInput = document.getElementById('loanDueDateInput'); if (dueInput) dueInput.value = '';
+
+            saveState();
+            closeModals();
+            document.getElementById('movDesc').value = '';
+            document.getElementById('movAmount').value = '';
+            currentActiveTab = mo;
+            renderMonthTabs();
+            updateDashboard();
+            renderAnnualChart();
+        }
+
+        function handleSaveNewMember(event) {
+            event.preventDefault();
+            const fullName = document.getElementById('newMemberNameInput').value.trim().toUpperCase();
+            const shortName = document.getElementById('newMemberShortInput').value.trim() || fullName.split(' ').slice(0, 2).join(' ');
+            const pinVal = document.getElementById('newMemberPinInput').value.trim();
+            const startMo = document.getElementById('newMemberStartMonth').value;
+            if (!fullName) return;
+
+            const newId = 'm' + (Date.now());
+            membersData.push({
+                id: newId,
+                name: fullName,
+                shortName: shortName,
+                emoji: '🎮',
+                color: 'from-emerald-500 to-teal-600',
+                startMonth: startMo,
+                retiradoDesde: null,
+                pin: pinVal
+            });
+
+            saveState();
+            closeModals();
+            document.getElementById('newMemberNameInput').value = '';
+            document.getElementById('newMemberShortInput').value = '';
+            document.getElementById('newMemberPinInput').value = '';
+            initApp();
+            renderLoginProfiles();
+        }
+
+        function handleSaveRetirement(event) {
+            event.preventDefault();
+            const memberId = document.getElementById('retireMemberSelect').value;
+            const retireMo = document.getElementById('retireMonthSelect').value;
+            const mem = membersData.find(m => m.id === memberId);
+            if (mem) {
+                mem.retiradoDesde = retireMo ? retireMo : null;
+                saveState();
+                closeModals();
+                initApp();
+                renderLoginProfiles();
+            }
+        }
+
+        // BOOTSTRAP: Load cloud state from Google Sheets on start
+        loadCloudState();
+    </script>
+</body>
+</html>
